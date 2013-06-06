@@ -1,8 +1,9 @@
 ---
 layout: post
-title: "Dynamic IPV6 Tunnel Updates Between Hurricane Electric And Your Fritzbox"
+title: "Dynamic he.net IPV6 Tunnel Updates With Fritzbox"
 date: 2013-06-06 11:03
 comments: true
+author: bkw
 categories:
 - ipv6
 ---
