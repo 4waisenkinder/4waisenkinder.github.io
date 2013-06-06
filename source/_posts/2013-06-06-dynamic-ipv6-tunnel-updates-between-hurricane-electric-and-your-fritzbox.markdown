@@ -120,7 +120,7 @@ _User-defined_ for _Dynamic DNS provider_.
 Enter the following URL for _Update URL_, replacing _123456_ with the id of
 your he.net tunnel:
 
-    http://ipv4.tunnelbroker.net/nic/update?hostname=123456&username=<username>&password=<pass>
+    http://ipv4.tunnelbroker.net/nic/update?hostname=123456&myip=<ipaddr>&username=<username>&password=<pass>
 
 Do not replace the placeholders in angle brackets, your fritzbox will do that.
 
