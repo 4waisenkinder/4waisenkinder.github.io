@@ -3,6 +3,7 @@ layout: post
 title: "Fix cloud-init chef install on ubuntu 12.04 LTS"
 date: 2013-06-20 15:55
 comments: true
+published: false
 author: bkw
 categories:
 - chef
