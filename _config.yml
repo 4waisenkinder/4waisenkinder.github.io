@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://4waisenkinder.de
+url: http://4waisenkinder.github.io
 title: 4waisenkinder
 subtitle: A blogging diaspora.
 author: Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
@@ -90,7 +90,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: 4waisenkinderde
 disqus_show_comment_count: false
 
 # Google Analytics
