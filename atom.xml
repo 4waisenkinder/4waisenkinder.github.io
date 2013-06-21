@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-06-21T15:44:54+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Help me analyze travis build data]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/21/help-me-analyze-travis-build-data/"/>
+    <updated>2013-06-21T14:30:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/21/help-me-analyze-travis-build-data</id>
+    <content type="html"><![CDATA[<p>Hey, I study Media and Computer Science in Berlin and I need your help.
+The last goal of my studies is to write my bachelor thesis and I want to show you what it is about.</p>
+
+<p>I am in colaboration with <a href="http://travis-ci.org">Travis CI</a> (you may have heard about it) and my goal is to analyse the data Travis produces everyday. Data about every build that is triggered by any open source project over the world doing continuous integration.</p>
+
+<p>Travis provides the possibility to implement webhooks. Webhooks are part of the <a href="http://about.travis-ci.org/docs/user/notifications/">travis notifications</a> and are simple HTTP post requests to a given end point you define in your .travis.yml file (the general travis configuration file) triggered whenever a build at travis-ci end (no matter if successful or not). These requests include general data of the last build.</p>
+
+<p>I already built up a <a href="http://travalizit.org">web app</a> to play around with the data. Right now there are three charts included. One is showing the success/fail ratio of all builds in a particular time interval. Another one shows the distribution of different projects included in a given time.</p>
+
+<p>And the last one at the moment is one chart including data fetched from github.</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/stefanjudis/repochart.png" width="788" height="532" title="repo chart travalizit" alt="repo chart for my repo cushion-cli"></p>
+
+<p>I&rsquo;m really excited about this one. What you see in there are the last 20 builds (left side) of <a href="https://github.com/stefanjudis/cushion-cli">one of my private projects</a>. The nice thing about that is, that all the commits (right side) related to a given build are fetched from the github api. That means you can quickly figure out, which files are often causing a failed build (marked black and not red &ndash; like build with number 180).</p>
+
+<p>With the information provided by github I could build up a tool to answer a lot of questions.</p>
+
+<ul>
+<li>which files are touched more often and cause broken builds?</li>
+<li>how many commits are needed to fix a broken build?</li>
+<li>how long does it generally take to fix a broken build?</li>
+<li>how many commits included in one build cause a broken build?</li>
+<li>how many different contributors cause a broken build?</li>
+</ul>
+
+
+<p>I don&rsquo;t know If it is possible and/or valid to answer these questions with given data, but I would like to try to answer a few of them. And the point is:</p>
+
+<h4>If only one person really hears something new about his/her project it would be already a win.</h4>
+
+<p><strong>And hear is where you come into the game.</strong> When you use Travis CI please share your build data with me by implementing the webhook pointing to my webapp in your .travis.yml (just put it at the bottom of the file).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>notifications:
+</span><span class='line'>  webhooks: limitless-badlands-1553.herokuapp.com/builds</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Your data will be written into my database and will then be included into the charts.</p>
+
+<p>And after that please share your ideas about what you would like to see and what would be useful for you and your project with me. Drop me a line on <a href="https://twitter.com/stefanjudis">Twitter</a> or send me an <a href="mailto:stefanjudis@gmail.com">email</a>. That would be just great.</p>
+
+<p>The app is at a quite early stage right now, so if something is not working as expected or you see improvements get in touch as well.</p>
+
+<h4>Let us build something useful. ;)</h4>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Why work doesn't happen at work]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/09/why-work-doesnt-happen-at-work/"/>
+    <updated>2013-06-09T14:00:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/09/why-work-doesnt-happen-at-work</id>
+    <content type="html"><![CDATA[<p>I believe our working models and how we collaborate have to change. They
+haven&rsquo;t for years. In fact, they haven&rsquo;t changed much since the beginning of
+the 20th century: most of us sit in offices, at dedicated desks, participate
+in meetings now and then and hope to achive set goals within a reasonable time
+span.</p>
+
+<!-- more -->
+
+
+<p>Altough there is not solution yet, we&rsquo;re at the verge of dicovering it. Jason
+Fried has a radical theory of working: that the office isn&rsquo;t a good place to
+do it. He helt an inspiring talk at TEDxMidwest in October 2010.</p>
+
+<blockquote><p>[Facebook and Twitter] aren’t the real problems in the office. The real <br/>problems are what I like to call the M&Ms, the Managers and the Meetings.</p></blockquote>
+
+
+
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/5XD2kNopsUs "></iframe></div>
+
+
+<h3>About Jason</h3>
+
+<p>He thinks deeply about collaboration, productivity and the nature of work. At
+TEDxMidwest he lays out the main problems (call them the M&amp;Ms) and offers
+three suggestions to make work work.</p>
+
+<p>Fried is the co-author of the book Rework, about new ways to conceptualize
+working and creating. He is the co-founder and president of
+<a href="http://37signals.com/">37signals</a>, a Chicago-based company that builds
+webbased productivity tools that, in their words, &ldquo;do less than the
+competition &ndash; intentionally.&rdquo; 37signals&#8217; simple but powerful collaboration
+tools include Basecamp, Highrise, Backpack, Campfire, Ta-da List, and
+Writeboard. 37signals also developed and open-sourced the Ruby on Rails
+programming framework.</p>
+
+<h5>Sources:</h5>
+
+<p><a href="http://www.ted.com/speakers/jason_fried.html">Jason&rsquo;s Speaker Profile on TED.com</a>,
+<a href="http://www.ted.com/talks/jason_fried_why_work_doesn_t_happen_at_work.html">Jason&rsquo;s Talk on TED.com</a></p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/130112610052d9dad8ddb687038a31fa" alt="Patrick Venetz" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Patrick Venetz</h3>
+		<p>Web developer, in pursuit of sagacity</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/patrickvenetz">@patrickvenetz</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic he.net IPV6 Tunnel Updates With Fritzbox]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/06/dynamic-ipv6-tunnel-updates-between-hurricane-electric-and-your-fritzbox/"/>
+    <updated>2013-06-06T11:03:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/06/dynamic-ipv6-tunnel-updates-between-hurricane-electric-and-your-fritzbox</id>
+    <content type="html"><![CDATA[<h2>TL;DR:</h2>
+
+<p>Associate your tunnel with a dynamically updated hostname from a subomain at
+dns.he.net, use that host for fritzbox&#8217;es user-defined dynamic dns feature and
+hardcode your tunnelid into the &ldquo;Dynamic DNS provider&rdquo; url.</p>
+
+<h1>The Problem:</h1>
+
+<!-- more -->
+
+
+<p><a href="https://he.net">Hurricane Electric (he.net)</a> provides excellent free IPv6
+tunnels at <a href="https://tunnelbroker.net">tunnelbroker.net</a> together with free dns
+hosting.  If you don&rsquo;t have an account yet, head over there now and open one up.
+Do it now, you won&rsquo;t regret it. I&rsquo;ll wait.</p>
+
+<p>Users of the popular <a href="http://www.avm.de/de/Produkte/FRITZBox/">FRITZ!Box</a> home
+router enjoy some ipv6 support out of the box, i.e.
+<a href="http://www.sixxs.net">SixXs.net</a>-tunnels can be configured via the gui:</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/bkw/fritzbox-sixx.png" width="665" height="177" title="fritzbox sixxs tunnel config gui" alt="fritzbox gui screenshot"></p>
+
+<p>SixXs.net supports a protocol to remotely manage your tunnel endpoint.
+However, he.net tunnels use the plain <a href="http://en.wikipedia.org/wiki/6in4">6in4</a>
+mechanism, which is designed for static endpoints.</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/bkw/fritzbox-6in4.png" width="553" height="177" title="fritzbox 6in4 tunnel config gui" alt="fritzbox gui screenshot"></p>
+
+<p>This implies your remote tunnel endpoint is configured to point to one specific
+ip address at your end, presumably the one you had when you created the tunnel.</p>
+
+<p><strong>This means that whenever your ISP gives you a new ip, your tunnel stops working.</strong></p>
+
+<p>To remedy this, he.net provides a
+<a href="http://www.tunnelbroker.net/forums/index.php?topic=1994.0">dyndns compatible update mechanism</a>
+to update your tunnel endpoint remotely. Fritzbox also supports adding
+user-defined dyndns providers. So the naïve approach is to add he.net&rsquo;s url
+into the gui and use the tunnel id as a hostname, like
+<a href="http://www.tunnelbroker.net/forums/index.php?topic=1994.0">the documentation</a>
+suggests.</p>
+
+<p>Unfortunately (but very sensibly) fritzbox checks the dns record of the host to
+be updated before it actually calls the service. This makes perfect sense:
+Updates are only performed when neccessary. But in our case, the value of the
+hostname field is not an existing host, it&rsquo;s the tunnel id. The alternative
+hostnames (tunnel#.tunnelbroker.net, user-#.tunnel.tserv#.loc#.ipv6.he.net)
+also do not resolve. This results in the following log message on your fritzbox:</p>
+
+<pre><code>    Dynamic DNS error: Dynamic DNS update is disabled until the dynamic DNS registration data are changed.
+    Dynamic DNS error: The specified domain name cannot be resolved.
+</code></pre>
+
+<h1>The Solution</h1>
+
+<p>he.net offers another cool feature: If you host a domain or subdomain on their
+free dns service at <a href="https://dns.he.net/">dns.he.net</a>, you can enable dynamic
+updates for a hostname and have your tunnel endpoint updates set the dns record
+for that hostname, too! Let&rsquo;s walk through this:</p>
+
+<p>You can either:</p>
+
+<ul>
+<li><p>move the dns of the whole domain to dns.he.net by updating the NS-records at your current provider/registrar, or:</p></li>
+<li><p>use a subdomain and delegate it to dns.he.net. Just create NS records for
+something like <code>home.example.com</code> pointing to ns2.he.net, ns3.he.net, ns4.he.net and ns5.he.net.</p></li>
+</ul>
+
+
+<p>Either way, you should now have a (sub-)domain that you can control via
+dns.he.net. Create a host in that zone with any ip address and select <strong>enable
+entry for dynamic dns</strong>.</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/bkw/dns-henet-dynamic.png" width="605" height="325" title="dns.he.net dynamic host update gui" alt="dns.he.net gui screenshot"></p>
+
+<p>Next, in the listing of your domain&rsquo;s records, click the refresh symbol in this host&rsquo;s DDNS column:</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/bkw/dns-henet-dynamic-key.png" width="843" height="333" title="dns.he.net dynamic host update gui" alt="dns.he.net gui screenshot"></p>
+
+<p>Generate a key to use for updates to this host:</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/bkw/dns-henet-dynamic-key2.png" width="606" height="288" title="dns.he.net dynamic host update gui" alt="dns.he.net gui screenshot"></p>
+
+<p>Save that key, you&rsquo;ll need it in a minute.</p>
+
+<p>Now head over to <a href="https://tunnelbroker.net">tunnelbroker.net</a>, open up your
+tunnel&rsquo;s details and select the <strong>Advanced</strong> tab. Enter the dynamic hostname you configured in the last step and the key you generated.</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/bkw/tunnelbroker-dynamic-host.png" width="606" height="288" title="tunnelbroker dynamic host update gui" alt="tunnelbroker.net gui screenshot"></p>
+
+<p>Now, whenever the tunnel endpoint is updated, the hostname <em>gw.home.example.com</em> will be updated to your router&rsquo;s ipv4 address as well.</p>
+
+<p><strong>This allows us to use a valid and up-to-date host in the dynamic dns updater
+of the fritzbox.</strong></p>
+
+<p>Head over to your fritzbox GUI.</p>
+
+<p>Open Internet/Account Information/IPv6, check <em>IPv6 support enabled</em> and
+<em>Always use a tunnel protocol for the IPv6 connection</em>. Select tunnel protocol
+<em>6in4</em> in <em>Connection Settings</em>, fill in the values from your tunnel details
+page at tunnelbroker.net and hit <em>Apply</em>.</p>
+
+<h2>Now for the hack:</h2>
+
+<p>Open Internet/Permit Access/Dynamic DNS, check <em>Use dynamic DNS</em> and select
+<em>User-defined</em> for <em>Dynamic DNS provider</em>.</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/bkw/fritzbox-dyndns.png" width="606" height="288" title="fritzbox dyndns gui" alt="fritzbox gui screenshot"></p>
+
+<p>Enter the following URL for <em>Update URL</em>, replacing <em>123456</em> with the id of
+your he.net tunnel:</p>
+
+<pre><code>http://ipv4.tunnelbroker.net/nic/update?hostname=123456&amp;myip=&lt;ipaddr&gt;&amp;username=&lt;username&gt;&amp;password=&lt;pass&gt;
+</code></pre>
+
+<p>Do not replace the placeholders in angle brackets, your fritzbox will do that.</p>
+
+<p>Enter the dynamic host you configured earlier in the <em>Domain name</em> field.
+This will be used by the fritzbox to check whether the update needs to be
+performed.</p>
+
+<p>Enter your he.net username and password in the respective fields.</p>
+
+<p>Hit <em>Apply</em> and enjoy an auto updating IPv6 tunnel to hurricane electric.</p>
+
+<h2>How does this work?</h2>
+
+<p>The dynamic hostname (which is kept in sync by hurricane electric) is used for
+checking for changes, but the actual update is performed on the tunnel id hardcoded in the <em>Update URL</em>.</p>
+
+<h2>Bonus</h2>
+
+<p>As a useful side effect, from now on you can always reach your router and any
+port-forwared services under you own hostname <em>(gw.home.example.com)</em> in your
+very own domain!  How cool is that?</p>
+
+<p>Actually, now that you have IPv6, you don&rsquo;t really need those
+pesky port forwards any more: just assign any v6 address you like and use
+plain internet routing the way it was supposed to work in the first place.</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/ba794f1084b2a876705e2679c197c630" alt="Bernhard K. Weisshuhn" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Bernhard K. Weisshuhn</h3>
+		<p>Serial CTO and technology procrastinator</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/bernhorst">@bernhorst</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
+  
+</feed>
