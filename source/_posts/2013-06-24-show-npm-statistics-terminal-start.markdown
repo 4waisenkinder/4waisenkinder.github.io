@@ -3,7 +3,6 @@ layout: post
 title: "Show npm statistics at terminal start"
 date: 2013-06-24 22:21
 author : stefanjudis
-published: false
 comments: true
 categories:
 - npm
