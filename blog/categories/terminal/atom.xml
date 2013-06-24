@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: terminal | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/terminal/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-06-25T00:09:04+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Show npm statistics at terminal start]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/24/show-npm-statistics-terminal-start/"/>
+    <updated>2013-06-24T22:21:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/24/show-npm-statistics-terminal-start</id>
+    <content type="html"><![CDATA[<p>Two month ago I released my <a href="https://npmjs.org/package/cushion-cli">first npm module</a>. I got really excited (and I am still) about releasing something and showing it to the world. Since then the statistics written on top of the module page at NPM are checked by me on a daily basis. Unfortunately these statistics do not seem to be really precise. They are jumping from day to day and should not be taken to serious in my mind (No offense meant. I really like NPM and I think it is a great service).</p>
+
+<p>That is the reason why a friend of mine wrote a <a href="https://raw.github.com/Zoddy/geektool-desk/master/os_downloads.js">tiny script</a> to read the statistics directly from where the data is stored &ndash; a <a href="http://isaacs.iriscouch.com/">CouchDB</a> available for everyone. The script will be part of a <a href="https://github.com/Zoddy/geektool-desk">library for geeky stuff</a> and tools later on, but that is another story.</p>
+
+<p>Today I had the idea about showing this kind of information whenever I open a new terminal window to save some time and &ldquo;pimp my terminal&rdquo;.</p>
+
+<!-- more -->
+
+
+<p>I googled a bit and had to notice that it is not to easy to execute scripts on MacOS in the <code>/etc/motd</code> (message of the day). It seems to be much easier in the linux world &ndash; correct me when I&rsquo;m wrong please. ;)</p>
+
+<p>So I decided to execute the whole stuff inside of the shell configuration files placed in the given user root (information about NPM modules are probably user related, so after a bit of thinking I like that solution even more).</p>
+
+<p>To start you have to clone the Github project with the mentioned script (in my case <code>~/Sites/</code>).</p>
+
+<p><code>
+git clone https://github.com/Zoddy/geektool-desk.git
+</code></p>
+
+<p>After that we start editing the .bash_profile, .bashrc, .zshrc or whatever shell file your system and shell gives you.</p>
+
+<p>I prefer using ZSH. Adding the following lines does all the magic for me &ndash; look at this <a href="https://github.com/Zoddy/geektool-desk">readme</a> for further explanation how to use the script. This example is made for my &lsquo;cushion-cli&rsquo; project. I think you are not interested in this data, so please feel free to change it to your project names.</p>
+
+<p>```</p>
+
+<h3>show cushion-cli downloads</h3>
+
+<p>echo &ldquo;\nCUSHION-CLI DOWNLOADS\n&rdquo;</p>
+
+<p>echo &ldquo;TODAY / YESTERDAY:&rdquo;
+today=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli today)
+yesterday=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli yesterday)
+printf &ldquo;%s / %s downloads\n\n&rdquo; &ldquo;$today&rdquo; &ldquo;$yesterday&rdquo;</p>
+
+<p>echo &lsquo;CURRENT WEEK / LAST WEEK:&rsquo;
+week=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli current-week)
+last_week=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli last-week)
+printf &ldquo;%s / %s downloads\n\n&rdquo; &ldquo;$week&rdquo; &ldquo;$last_week&rdquo;</p>
+
+<p>echo &lsquo;CURRENT MONTH / LAST MONTH:&rsquo;
+month=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli current-month)
+last_month=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli last-month)
+printf &ldquo;%s / %s downloads\n\n&rdquo; &ldquo;$month&rdquo; &ldquo;$last_month&rdquo;
+```</p>
+
+<p>I am not a shell script wizard. If something is not correct with these lines let me know.</p>
+
+<p>And that is the result. Hope you enjoy it.</p>
+
+<p><img class="right" src="/images/blog/stefanjudis/npmPrompt.png" width="254" height="233" title="&lsquo;prompt with npm statistic&rsquo; &lsquo;prompt with npm statistic for cushion-cli&rsquo;" ></p>
+]]></content>
+  </entry>
+  
+</feed>

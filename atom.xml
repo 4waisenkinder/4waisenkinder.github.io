@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-06-25T00:07:53+02:00</updated>
+  <updated>2013-06-25T00:09:04+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,97 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Show npm statistics at terminal start]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/24/show-npm-statistics-terminal-start/"/>
+    <updated>2013-06-24T22:21:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/24/show-npm-statistics-terminal-start</id>
+    <content type="html"><![CDATA[<p>Two month ago I released my <a href="https://npmjs.org/package/cushion-cli">first npm module</a>. I got really excited (and I am still) about releasing something and showing it to the world. Since then the statistics written on top of the module page at NPM are checked by me on a daily basis. Unfortunately these statistics do not seem to be really precise. They are jumping from day to day and should not be taken to serious in my mind (No offense meant. I really like NPM and I think it is a great service).</p>
+
+<p>That is the reason why a friend of mine wrote a <a href="https://raw.github.com/Zoddy/geektool-desk/master/os_downloads.js">tiny script</a> to read the statistics directly from where the data is stored &ndash; a <a href="http://isaacs.iriscouch.com/">CouchDB</a> available for everyone. The script will be part of a <a href="https://github.com/Zoddy/geektool-desk">library for geeky stuff</a> and tools later on, but that is another story.</p>
+
+<p>Today I had the idea about showing this kind of information whenever I open a new terminal window to save some time and &ldquo;pimp my terminal&rdquo;.</p>
+
+<!-- more -->
+
+
+<p>I googled a bit and had to notice that it is not to easy to execute scripts on MacOS in the <code>/etc/motd</code> (message of the day). It seems to be much easier in the linux world &ndash; correct me when I&rsquo;m wrong please. ;)</p>
+
+<p>So I decided to execute the whole stuff inside of the shell configuration files placed in the given user root (information about NPM modules are probably user related, so after a bit of thinking I like that solution even more).</p>
+
+<p>To start you have to clone the Github project with the mentioned script (in my case <code>~/Sites/</code>).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone https://github.com/Zoddy/geektool-desk.git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After that we start editing the .bash_profile, .bashrc, .zshrc or whatever shell file your system and shell gives you.</p>
+
+<p>I prefer using ZSH. Adding the following lines does all the magic for me &ndash; look at this <a href="https://github.com/Zoddy/geektool-desk">readme</a> for further explanation how to use the script. This example is made for my &lsquo;cushion-cli&rsquo; project. I think you are not interested in this data, so please feel free to change it to your project names.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>### show cushion-cli downloads
+</span><span class='line'>
+</span><span class='line'>echo "\nCUSHION-CLI DOWNLOADS\n"
+</span><span class='line'>
+</span><span class='line'>echo "TODAY / YESTERDAY:"
+</span><span class='line'>today=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli today)
+</span><span class='line'>yesterday=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli yesterday)
+</span><span class='line'>printf "%s / %s downloads\n\n" "$today" "$yesterday"
+</span><span class='line'>
+</span><span class='line'>echo 'CURRENT WEEK / LAST WEEK:'
+</span><span class='line'>week=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli current-week)
+</span><span class='line'>last_week=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli last-week)
+</span><span class='line'>printf "%s / %s downloads\n\n" "$week" "$last_week"
+</span><span class='line'>
+</span><span class='line'>echo 'CURRENT MONTH / LAST MONTH:'
+</span><span class='line'>month=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli current-month)
+</span><span class='line'>last_month=$(node /Users/stefan/Sites/geektool-desk/os_downloads.js cushion-cli last-month)
+</span><span class='line'>printf "%s / %s downloads\n\n" "$month" "$last_month"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I am not a shell script wizard. If something is not correct with these lines let me know.</p>
+
+<p>And that is the result. Hope you enjoy it.</p>
+
+<p><img class="right" src="http://4waisenkinder.github.io/images/blog/stefanjudis/npmPrompt.png" width="254" height="233" title="prompt with npm statistic" alt="prompt with npm statistic for cushion-cli"></p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Help me analyze travis build data]]></title>
