@@ -4,19 +4,21 @@ title: "Help me analyze travis build data"
 date: 2013-06-21 14:30
 author : stefanjudis
 comments: true
-categories: 
+categories:
 - travis
 - data analysis
-- open source	
+- open source
 ---
 Hey, I study Media and Computer Science in Berlin and I need your help.
 The last goal of my studies is to write my bachelor thesis and I want to show you what it is about.
 
 I am in colaboration with [Travis CI](http://travis-ci.org) (you may have heard about it) and my goal is to analyse the data Travis produces everyday. Data about every build that is triggered by any open source project over the world doing continuous integration.
 
+<!-- more -->
+
 Travis provides the possibility to implement webhooks. Webhooks are part of the [travis notifications](http://about.travis-ci.org/docs/user/notifications/) and are simple HTTP post requests to a given end point you define in your .travis.yml file (the general travis configuration file) triggered whenever a build at travis-ci end (no matter if successful or not). These requests include general data of the last build.
 
-I already built up a [web app](http://travalizit.org) to play around with the data. Right now there are three charts included. One is showing the success/fail ratio of all builds in a particular time interval. Another one shows the distribution of different projects included in a given time. 
+I already built up a [web app](http://travalizit.org) to play around with the data. Right now there are three charts included. One is showing the success/fail ratio of all builds in a particular time interval. Another one shows the distribution of different projects included in a given time.
 
 And the last one at the moment is one chart including data fetched from github.
 
