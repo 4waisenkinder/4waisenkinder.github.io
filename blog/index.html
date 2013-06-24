@@ -109,66 +109,9 @@ The last goal of my studies is to write my bachelor thesis and I want to show yo
 
 <p>I am in colaboration with <a href="http://travis-ci.org">Travis CI</a> (you may have heard about it) and my goal is to analyse the data Travis produces everyday. Data about every build that is triggered by any open source project over the world doing continuous integration.</p>
 
-<p>Travis provides the possibility to implement webhooks. Webhooks are part of the <a href="http://about.travis-ci.org/docs/user/notifications/">travis notifications</a> and are simple HTTP post requests to a given end point you define in your .travis.yml file (the general travis configuration file) triggered whenever a build at travis-ci end (no matter if successful or not). These requests include general data of the last build.</p>
 
-<p>I already built up a <a href="http://travalizit.org">web app</a> to play around with the data. Right now there are three charts included. One is showing the success/fail ratio of all builds in a particular time interval. Another one shows the distribution of different projects included in a given time.</p>
-
-<p>And the last one at the moment is one chart including data fetched from github.</p>
-
-<p><img class="center" src="/images/blog/stefanjudis/repochart.png" width="788" height="532" title="repo chart travalizit" alt="repo chart for my repo cushion-cli"></p>
-
-<p>I&rsquo;m really excited about this one. What you see in there are the last 20 builds (left side) of <a href="https://github.com/stefanjudis/cushion-cli">one of my private projects</a>. The nice thing about that is, that all the commits (right side) related to a given build are fetched from the github api. That means you can quickly figure out, which files are often causing a failed build (marked black and not red &ndash; like build with number 180).</p>
-
-<p>With the information provided by github I could build up a tool to answer a lot of questions.</p>
-
-<ul>
-<li>which files are touched more often and cause broken builds?</li>
-<li>how many commits are needed to fix a broken build?</li>
-<li>how long does it generally take to fix a broken build?</li>
-<li>how many commits included in one build cause a broken build?</li>
-<li>how many different contributors cause a broken build?</li>
-</ul>
-
-
-<p>I don&rsquo;t know If it is possible and/or valid to answer these questions with given data, but I would like to try to answer a few of them. And the point is:</p>
-
-<h4>If only one person really hears something new about his/her project it would be already a win.</h4>
-
-<p><strong>And hear is where you come into the game.</strong> When you use Travis CI please share your build data with me by implementing the webhook pointing to my webapp in your .travis.yml (just put it at the bottom of the file).</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>notifications:
-</span><span class='line'>  webhooks: limitless-badlands-1553.herokuapp.com/builds</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Your data will be written into my database and will then be included into the charts.</p>
-
-<p>And after that please share your ideas about what you would like to see and what would be useful for you and your project with me. Drop me a line on <a href="https://twitter.com/stefanjudis">Twitter</a> or send me an <a href="mailto:stefanjudis@gmail.com">email</a>. That would be just great.</p>
-
-<p>The app is at a quite early stage right now, so if something is not working as expected or you see improvements get in touch as well.</p>
-
-<h4>Let us build something useful. ;)</h4>
-<div class='octopress-authorbox'>
-	<div class="author-pic">
-		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
-	</div>
-	
-	<div class="author-about">
-		<h3>Stefan Judis</h3>
-		<p>Frontend lover</p>
-		<ul class="author-links">
-			
-			<li>
-			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
-			</li>
-			
-			
-		</ul>
-	</div>
-</div>
 		
-		
+		<a href="/blog/2013/06/21/help-me-analyze-travis-build-data/" class="more-link">Read on &rarr;</a>
 	</div>
 
 
@@ -323,6 +266,18 @@ Powered by Octopress.
 </script>
 
 
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 
 
 

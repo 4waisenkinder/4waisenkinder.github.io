@@ -4,7 +4,7 @@
   <title><![CDATA[Category: data analysis | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/data-analysis/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-06-21T23:56:29+02:00</updated>
+  <updated>2013-06-24T22:15:48+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -22,6 +22,9 @@
 The last goal of my studies is to write my bachelor thesis and I want to show you what it is about.</p>
 
 <p>I am in colaboration with <a href="http://travis-ci.org">Travis CI</a> (you may have heard about it) and my goal is to analyse the data Travis produces everyday. Data about every build that is triggered by any open source project over the world doing continuous integration.</p>
+
+<!-- more -->
+
 
 <p>Travis provides the possibility to implement webhooks. Webhooks are part of the <a href="http://about.travis-ci.org/docs/user/notifications/">travis notifications</a> and are simple HTTP post requests to a given end point you define in your .travis.yml file (the general travis configuration file) triggered whenever a build at travis-ci end (no matter if successful or not). These requests include general data of the last build.</p>
 
