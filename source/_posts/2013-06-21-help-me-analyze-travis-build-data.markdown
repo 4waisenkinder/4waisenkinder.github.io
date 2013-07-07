@@ -42,7 +42,7 @@ I don't know If it is possible and/or valid to answer these questions with given
 
 ```
 notifications:
-  webhooks: limitless-badlands-1553.herokuapp.com/builds
+  webhooks: http://travalizit.org/builds
 ```
 Your data will be written into my database and will then be included into the charts.
 
