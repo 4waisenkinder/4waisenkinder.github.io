@@ -4,7 +4,7 @@
   <title><![CDATA[Category: travis | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/travis/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-06-25T00:09:04+02:00</updated>
+  <updated>2013-07-07T14:46:13+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -55,7 +55,7 @@ The last goal of my studies is to write my bachelor thesis and I want to show yo
 
 <p><code>
 notifications:
-  webhooks: limitless-badlands-1553.herokuapp.com/builds
+  webhooks: http://travalizit.org/builds
 </code>
 Your data will be written into my database and will then be included into the charts.</p>
 
