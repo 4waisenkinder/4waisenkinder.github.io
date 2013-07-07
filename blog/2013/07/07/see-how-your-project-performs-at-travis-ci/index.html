@@ -1,0 +1,258 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>See how your project performs at Travis CI  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">See How Your Project Performs at Travis CI</h2>
+	<div class="entry-content"><p>Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming languages and different versions of these ( e.g. node 0.8 / 0.9 / … ). Figuring out if there will be any problems or exceptions before switching to a new language version are easily done this way ( always assuming you are following the principles of test driven development ). <strong>Test your stuff at Travis first, then switch your server to the new version of language XY</strong>.</p>
+
+<!-- more -->
+
+
+<p>Tests that run in different languages are called &lsquo;jobs&rsquo; in travis context. You can define them in your .travis.yml.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: node_js
+</span><span class='line'>  node_js:
+</span><span class='line'>    - "0.8"
+</span><span class='line'>    - "0.9"
+</span><span class='line'>    - "0.10"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Later on you can see this configuration inside of the so called build-matrix at <a href="http://travis-ci.org">Travis</a>.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/buildMatrix.png" width="1225" height="184" title="build matrix cushion-cli" alt="build matrix for my project cushion-cli"></p>
+
+<p>Via Travalizit ( <a href="http://4waisenkinder.de/blog/2013/06/21/help-me-analyze-travis-build-data/">further explanation and introduction</a> ) you got the possibility to analyse your Travis build data. It is still in early stage, but I think you can already get some information, you did not know before. To have always the latest Travis information at Travalizit you only have to define a wekhook that sends the build data to Travalizit each time you finished a build ( checkout out explanation and introduction ).</p>
+
+<p>Yesterday night I implemented a new chart to compare different builds with including jobs in term of state and duration. With the help of this chart you can easily check if a new language version will increase performance or not.</p>
+
+<p>To check your project just go to <a href="http://travalizit.org">Travalizit</a>, add a new chart and choose type &ldquo;Travis job details&rdquo;.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/jobDetails.png" width="603" height="377" title="add job details chart action" alt="push the button ;)"></p>
+
+<p>After that you will probably get a message, that your build data is not included in the Travalizit database ( there is the small chance that it is, because I tested a lot ). Right now you got the possibility to fetch the latest builds from Travis.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/fetchData.png" width="867" height="655" title="fetch data action" alt="fetch data dialog if no build data is available"></p>
+
+<p>Press the &lsquo;fetch&rsquo; &ndash; button and you are done. This works only <strong>once</strong>, because the architecture is actual set up to receive recent build data via webhook. That means, if you want to come back and to see the latest builds, you have implement the hook. ;)</p>
+
+<p>And that is the result:</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/jobDetailsChart.png" width="882" height="670" title="job details for cushion-cli" alt="Travis job details chart for cushion-cli"></p>
+
+<p>Right now you can check the duration and state ( passed / errored / failed ) of the different jobs. If you want to see more, let me know.</p>
+
+<p>I would love to hear wishes, improvements and feedback. So, if it is not working for you and your project or you have something to say about that ping me on <a href="https://twitter.com/stefanjudis">Twitter</a>, write me an <a href="mailto:stefanjudis@gmail.com">email</a> or leave a comment.</p>
+
+<p>THX.</p>
+
+<p>PS. I started developing a <a href="https://npmjs.org/package/travalizit">Nodes.js Travis-Api</a> for this project. If someone is interested in that, give a sign. That keeps motivation high. ;)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-07T14:50:00+02:00" pubdate data-updated="true">Jul 7<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/data-analysis/'>data analysis</a>, <a class='category' href='/blog/categories/open-source/'>open source</a>, <a class='category' href='/blog/categories/performance/'>performance</a>, <a class='category' href='/blog/categories/travis/'>travis</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>

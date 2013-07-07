@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-07-07T14:46:13+02:00</updated>
+  <updated>2013-07-07T15:51:42+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,79 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[See how your project performs at Travis CI]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/"/>
+    <updated>2013-07-07T14:50:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci</id>
+    <content type="html"><![CDATA[<p>Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming languages and different versions of these ( e.g. node 0.8 / 0.9 / … ). Figuring out if there will be any problems or exceptions before switching to a new language version are easily done this way ( always assuming you are following the principles of test driven development ). <strong>Test your stuff at Travis first, then switch your server to the new version of language XY</strong>.</p>
+
+<!-- more -->
+
+
+<p>Tests that run in different languages are called &lsquo;jobs&rsquo; in travis context. You can define them in your .travis.yml.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: node_js
+</span><span class='line'>  node_js:
+</span><span class='line'>    - "0.8"
+</span><span class='line'>    - "0.9"
+</span><span class='line'>    - "0.10"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Later on you can see this configuration inside of the so called build-matrix at <a href="http://travis-ci.org">Travis</a>.</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/stefanjudis/buildMatrix.png" width="1225" height="184" title="build matrix cushion-cli" alt="build matrix for my project cushion-cli"></p>
+
+<p>Via Travalizit ( <a href="http://4waisenkinder.de/blog/2013/06/21/help-me-analyze-travis-build-data/">further explanation and introduction</a> ) you got the possibility to analyse your Travis build data. It is still in early stage, but I think you can already get some information, you did not know before. To have always the latest Travis information at Travalizit you only have to define a wekhook that sends the build data to Travalizit each time you finished a build ( checkout out explanation and introduction ).</p>
+
+<p>Yesterday night I implemented a new chart to compare different builds with including jobs in term of state and duration. With the help of this chart you can easily check if a new language version will increase performance or not.</p>
+
+<p>To check your project just go to <a href="http://travalizit.org">Travalizit</a>, add a new chart and choose type &ldquo;Travis job details&rdquo;.</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/stefanjudis/jobDetails.png" width="603" height="377" title="add job details chart action" alt="push the button ;)"></p>
+
+<p>After that you will probably get a message, that your build data is not included in the Travalizit database ( there is the small chance that it is, because I tested a lot ). Right now you got the possibility to fetch the latest builds from Travis.</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/stefanjudis/fetchData.png" width="867" height="655" title="fetch data action" alt="fetch data dialog if no build data is available"></p>
+
+<p>Press the &lsquo;fetch&rsquo; &ndash; button and you are done. This works only <strong>once</strong>, because the architecture is actual set up to receive recent build data via webhook. That means, if you want to come back and to see the latest builds, you have implement the hook. ;)</p>
+
+<p>And that is the result:</p>
+
+<p><img class="center" src="http://4waisenkinder.github.io/images/blog/stefanjudis/jobDetailsChart.png" width="882" height="670" title="job details for cushion-cli" alt="Travis job details chart for cushion-cli"></p>
+
+<p>Right now you can check the duration and state ( passed / errored / failed ) of the different jobs. If you want to see more, let me know.</p>
+
+<p>I would love to hear wishes, improvements and feedback. So, if it is not working for you and your project or you have something to say about that ping me on <a href="https://twitter.com/stefanjudis">Twitter</a>, write me an <a href="mailto:stefanjudis@gmail.com">email</a> or leave a comment.</p>
+
+<p>THX.</p>
+
+<p>PS. I started developing a <a href="https://npmjs.org/package/travalizit">Nodes.js Travis-Api</a> for this project. If someone is interested in that, give a sign. That keeps motivation high. ;)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Show npm statistics at terminal start]]></title>
