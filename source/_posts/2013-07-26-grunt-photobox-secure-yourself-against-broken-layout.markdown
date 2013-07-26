@@ -26,6 +26,8 @@ Woooohooooo!!! Let me explain how it works:
 - set up screensizes, that are important for you - think of responsive web design
 - set up a path to render the screenshots and an index.html
 
+Afterthat [phantomjs](http://phantomjs.org/) will visit the url's with given size and simply takes a picture of it. Nothing magically about it. ;)
+
 So let's set it up:
 
 I downloaded a nice "mobile-first" site from [html5boilerplate](http://html5boilerplate.com) and implemented grunt. When you're ready to go, you have to install ```grunt-photobox```.
