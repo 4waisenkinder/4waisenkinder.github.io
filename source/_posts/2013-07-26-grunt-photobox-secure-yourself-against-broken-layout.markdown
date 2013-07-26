@@ -34,7 +34,7 @@ I downloaded a nice "mobile-first" site from [html5boilerplate](http://html5boil
 $ npm install --save-dev grunt-photobox
 ```
 
-Your ```package.json``` should include inside of the ```devDepencies``` photobox afterwards:
+Your ```package.json``` should include inside of the ```devDependencies``` photobox afterwards:
 
 ```js
 {
@@ -89,7 +89,7 @@ So let's break something and check if we can detect a broken layout with it. I c
 
 {% img left /images/blog/stefanjudis/photoBoxBroken.png 1120 750 'broken layout' 'broken layout' %}
 
-**YEEEEESSSSS**. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without click and checking by ourselves. ;)
+**YEEEEESSSSS**. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without clicking around and checking by ourselves. ;)
 
 Inside of the generated index file you've got the possibility, to check the old and new version in seperate images or to overlay both pictures. What you see here, is the 'overlay' mode.
 
@@ -98,3 +98,7 @@ If you want to check out the output ```index.html``` of this example and play ar
 We will implement that at work soon. If you have any feedback or feature requests, please let me know and write me an [email](mailto:stefanjudis@gmail.com) or ping on [Twitter](https://twitter.com/stefanjudis). It is still in early stage, though. I would really like to have some feedback on that, because I think, it can speed up the qa-process heavily.
 
 THX.
+
+[grunt-photobox at NPM](https://npmjs.org/package/grunt-photobox)
+
+[grunt-photobox at Github](https://github.com/stefanjudis/grunt-photobox)
