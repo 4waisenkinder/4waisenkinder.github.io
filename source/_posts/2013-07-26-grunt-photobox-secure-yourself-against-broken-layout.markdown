@@ -26,7 +26,10 @@ Woooohooooo!!! Let me explain how it works:
 - set up screensizes, that are important for you - think of responsive web design
 - set up a path to render the screenshots and an index.html
 
+
 After that [phantomjs](http://phantomjs.org/) will visit the url's with given size and simply takes a picture of it. Nothing magically about it. ;)
+
+**Important:** You need to have ```$ phantomjs``` available. If not check out the installation guide at [phantomjs](http://phantomjs.org/). I will change that and remove this dependency later on, but for now, I think, it's not a big deal.
 
 So let's set it up:
 
