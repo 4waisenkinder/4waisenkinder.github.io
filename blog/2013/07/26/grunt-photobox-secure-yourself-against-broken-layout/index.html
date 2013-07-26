@@ -1,0 +1,328 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>grunt-photobox - secure yourself against broken layout  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Recently at work we ran into the issue, that we had a broken layout in production. Everybody knows that and sure everybody produced that already. &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Grunt-photobox - Secure Yourself Against Broken Layout</h2>
+	<div class="entry-content"><p>Recently at work we ran into the issue, that we had a broken layout in production. Everybody knows that and sure everybody produced that already. Most of the time it is not a big deal, but it is an uncomfortable situation to get the message like &ldquo;Hey, the product detail page is broken.&rdquo;. We implemented <a href="http://gruntjs.com">grunt</a> a few weeks before and got the idea to make the check for broken layout a bit easier for us and the QA-Team than clicking through the whole site in different screen sizes.</p>
+
+<!-- more -->
+
+
+<p>And this is the result of it:</p>
+
+<p><strong>grunt-photobox</strong></p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBox.png" width="420" height="300" title="grunt-photobox logo" alt="grunt-photobox logo"></p>
+
+<p>Woooohooooo!!! Let me explain how it works:</p>
+
+<ul>
+<li>set up url&rsquo;s, that are important for you</li>
+<li>set up screensizes, that are important for you &ndash; think of responsive web design</li>
+<li>set up a path to render the screenshots and an index.html</li>
+</ul>
+
+
+<p>So let&rsquo;s set it up:</p>
+
+<p>I downloaded a nice &ldquo;mobile-first&rdquo; site from <a href="http://html5boilerplate.com">html5boilerplate</a> and implemented grunt. When you&rsquo;re ready to go, you have to install <code>grunt-photobox</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>npm install --save-dev grunt-photobox
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Your <code>package.json</code> should include inside of the <code>devDepencies</code> photobox afterwards:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;grunt-photobox-tutorial&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">{},</span>
+</span><span class='line'>  <span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="s2">&quot;grunt&quot;</span><span class="o">:</span> <span class="s2">&quot;~0.4.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;grunt-photobox&quot;</span><span class="o">:</span> <span class="s2">&quot;~0.1.2&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After that let&rsquo;s start to configure grunt-photobox. We have to set the url&rsquo;s &ndash; in this case it is just <code>http://localhost/grunt-photobox-tutorial/</code>, because it is a dummy site. But at least we can set different screensizes to check if something broke and if the mobile site really works in a nice responsive way.</p>
+
+<p>Your <code>Gruntfile.js</code> should look like that:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">(</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">photobox</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// set needed url&#39;s</span>
+</span><span class='line'>        <span class="nx">urls</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;http://localhost/grunt-photobox-tutorial/&#39;</span> <span class="p">],</span>
+</span><span class='line'>        <span class="c1">// set needed screensizes</span>
+</span><span class='line'>        <span class="nx">screenSizes</span><span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;400x800&#39;</span><span class="p">,</span> <span class="s1">&#39;600x800&#39;</span><span class="p">,</span> <span class="s1">&#39;1200x800&#39;</span> <span class="p">]</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Load photobox plugin</span>
+</span><span class='line'>  <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span> <span class="s1">&#39;grunt-photobox&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Default task(s).</span>
+</span><span class='line'>  <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="s1">&#39;photobox&#39;</span> <span class="p">]</span> <span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>And that&rsquo;s it.</strong></p>
+
+<p>Now you can run <code>$ grunt</code>( we set photobox to default &ndash; if it&rsquo;s not default, run <code>$ grunt photobox</code>)</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBoxOutput.png" width="596" height="180" title="output of photobox grunt command" alt="output of photobox grunt command"></p>
+
+<p>It will tell you, that a new <code>index.html</code> was created. Per default it is <code>photobox/</code>, but you can change that inside of the options, if you want to. When you run photobox for the first time, there is nothing to compare &ndash;  keep that in mind, when calling the photobox index for the first time. ;)</p>
+
+<p>So let&rsquo;s break something and check if we can detect a broken layout with it. I commented out some css lines and ran photobox again. And here is the result:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBoxBroken.png" width="1120" height="750" title="broken layout" alt="broken layout"></p>
+
+<p><strong>YEEEEESSSSS</strong>. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without click and checking by ourselves. ;)</p>
+
+<p>Inside of the generated index file you&rsquo;ve got the possibility, to check the old and new version in seperate images or to overlay both pictures. What you see here, is the &lsquo;overlay&rsquo; mode.</p>
+
+<p>If you want to check out the output <code>index.html</code> of this example and play around with it &ndash; <a href="http://stefanjudis.github.io/grunt-photobox-tutorial/photobox">here it is</a>.</p>
+
+<p>We will implement that at work soon. If you have any feedback or feature requests, please let me know and write me an <a href="mailto:stefanjudis@gmail.com">email</a> or ping on <a href="https://twitter.com/stefanjudis">Twitter</a>. It is still in early stage, though. I would really like to have some feedback on that, because I think, it can speed up the qa-process heavily.</p>
+
+<p>THX.</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-26T00:32:00+02:00" pubdate data-updated="true">Jul 26<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/grunt/'>grunt</a>, <a class='category' href='/blog/categories/phantomjs/'>phantomjs</a>, <a class='category' href='/blog/categories/workflow/'>workflow</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: grunt | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/grunt/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-07-26T02:06:55+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[grunt-photobox - secure yourself against broken layout]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/"/>
+    <updated>2013-07-26T00:32:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout</id>
+    <content type="html"><![CDATA[<p>Recently at work we ran into the issue, that we had a broken layout in production. Everybody knows that and sure everybody produced that already. Most of the time it is not a big deal, but it is an uncomfortable situation to get the message like &ldquo;Hey, the product detail page is broken.&rdquo;. We implemented <a href="http://gruntjs.com">grunt</a> a few weeks before and got the idea to make the check for broken layout a bit easier for us and the QA-Team than clicking through the whole site in different screen sizes.</p>
+
+<!-- more -->
+
+
+<p>And this is the result of it:</p>
+
+<p><strong>grunt-photobox</strong></p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBox.png" width="420" height="300" title="&lsquo;grunt-photobox logo&rsquo; &lsquo;grunt-photobox logo&rsquo;" ></p>
+
+<p>Woooohooooo!!! Let me explain how it works:</p>
+
+<ul>
+<li>set up url&rsquo;s, that are important for you</li>
+<li>set up screensizes, that are important for you &ndash; think of responsive web design</li>
+<li>set up a path to render the screenshots and an index.html</li>
+</ul>
+
+
+<p>So let&rsquo;s set it up:</p>
+
+<p>I downloaded a nice &ldquo;mobile-first&rdquo; site from <a href="http://html5boilerplate.com">html5boilerplate</a> and implemented grunt. When you&rsquo;re ready to go, you have to install <code>grunt-photobox</code>.</p>
+
+<p><code>bash
+$ npm install --save-dev grunt-photobox
+</code></p>
+
+<p>Your <code>package.json</code> should include inside of the <code>devDepencies</code> photobox afterwards:</p>
+
+<p>```js
+{
+  &ldquo;name&rdquo;: &ldquo;grunt-photobox-tutorial&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;0.1.0&rdquo;,
+  &ldquo;dependencies&rdquo;: {},
+  &ldquo;devDependencies&rdquo;: {</p>
+
+<pre><code>"grunt": "~0.4.1",
+"grunt-photobox": "~0.1.2"
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>After that let&rsquo;s start to configure grunt-photobox. We have to set the url&rsquo;s &ndash; in this case it is just <code>http://localhost/grunt-photobox-tutorial/</code>, because it is a dummy site. But at least we can set different screensizes to check if something broke and if the mobile site really works in a nice responsive way.</p>
+
+<p>Your <code>Gruntfile.js</code> should look like that:</p>
+
+<p>```js
+module.exports = function(grunt) {
+  grunt.initConfig( {</p>
+
+<pre><code>pkg: grunt.file.readJSON('package.json'),
+
+photobox: {
+  options: {
+    // set needed url's
+    urls: [ 'http://localhost/grunt-photobox-tutorial/' ],
+    // set needed screensizes
+    screenSizes: [ '400x800', '600x800', '1200x800' ]
+  }
+}
+</code></pre>
+
+<p>  } );</p>
+
+<p>  // Load photobox plugin
+  grunt.loadNpmTasks( &lsquo;grunt-photobox&rsquo; );</p>
+
+<p>  // Default task(s).
+  grunt.registerTask( &lsquo;default&rsquo;, [ &lsquo;photobox&rsquo; ] );
+};</p>
+
+<p>```</p>
+
+<p><strong>And that&rsquo;s it.</strong></p>
+
+<p>Now you can run <code>$ grunt</code>( we set photobox to default &ndash; if it&rsquo;s not default, run <code>$ grunt photobox</code>)</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBoxOutput.png" width="596" height="180" title="&lsquo;output of photobox grunt command&rsquo; &lsquo;output of photobox grunt command&rsquo;" ></p>
+
+<p>It will tell you, that a new <code>index.html</code> was created. Per default it is <code>photobox/</code>, but you can change that inside of the options, if you want to. When you run photobox for the first time, there is nothing to compare &ndash;  keep that in mind, when calling the photobox index for the first time. ;)</p>
+
+<p>So let&rsquo;s break something and check if we can detect a broken layout with it. I commented out some css lines and ran photobox again. And here is the result:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/photoBoxBroken.png" width="1120" height="750" title="&lsquo;broken layout&rsquo; &lsquo;broken layout&rsquo;" ></p>
+
+<p><strong>YEEEEESSSSS</strong>. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without click and checking by ourselves. ;)</p>
+
+<p>Inside of the generated index file you&rsquo;ve got the possibility, to check the old and new version in seperate images or to overlay both pictures. What you see here, is the &lsquo;overlay&rsquo; mode.</p>
+
+<p>If you want to check out the output <code>index.html</code> of this example and play around with it &ndash; <a href="http://stefanjudis.github.io/grunt-photobox-tutorial/photobox">here it is</a>.</p>
+
+<p>We will implement that at work soon. If you have any feedback or feature requests, please let me know and write me an <a href="mailto:stefanjudis@gmail.com">email</a> or ping on <a href="https://twitter.com/stefanjudis">Twitter</a>. It is still in early stage, though. I would really like to have some feedback on that, because I think, it can speed up the qa-process heavily.</p>
+
+<p>THX.</p>
+]]></content>
+  </entry>
+  
+</feed>
