@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-07-26T02:06:55+02:00</updated>
+  <updated>2013-07-26T02:11:08+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -138,6 +138,10 @@
 <p>We will implement that at work soon. If you have any feedback or feature requests, please let me know and write me an <a href="mailto:stefanjudis@gmail.com">email</a> or ping on <a href="https://twitter.com/stefanjudis">Twitter</a>. It is still in early stage, though. I would really like to have some feedback on that, because I think, it can speed up the qa-process heavily.</p>
 
 <p>THX.</p>
+
+<p><a href="https://npmjs.org/package/grunt-photobox">grunt-photobox at NPM</a></p>
+
+<p><a href="https://github.com/stefanjudis/grunt-photobox">grunt-photobox at Github</a></p>
 <div class='octopress-authorbox'>
 	<div class="author-pic">
 		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
