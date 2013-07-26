@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-07-26T02:12:17+02:00</updated>
+  <updated>2013-07-26T02:51:03+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -129,7 +129,7 @@
 
 <p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/photoBoxBroken.png" width="1120" height="750" title="broken layout" alt="broken layout"></p>
 
-<p><strong>YEEEEESSSSS</strong>. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without click and checking by ourselves. ;)</p>
+<p><strong>YEEEEESSSSS</strong>. It is obvious, that something went wrong here with the size of 1200x800 and that we were able to notice that without clicking around and checking by ourselves. ;)</p>
 
 <p>Inside of the generated index file you&rsquo;ve got the possibility, to check the old and new version in seperate images or to overlay both pictures. What you see here, is the &lsquo;overlay&rsquo; mode.</p>
 
