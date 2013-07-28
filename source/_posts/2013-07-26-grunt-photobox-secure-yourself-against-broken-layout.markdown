@@ -29,8 +29,6 @@ Woooohooooo!!! Let me explain how it works:
 
 After that [phantomjs](http://phantomjs.org/) will visit the url's with given size and simply takes a picture of it. Nothing magically about it. ;)
 
-**Important:** You need to have ```$ phantomjs``` available. If not check out the installation guide at [phantomjs](http://phantomjs.org/). I will change that and remove this dependency later on, but for now, I think, it's not a big deal.
-
 So let's set it up:
 
 I downloaded a nice "mobile-first" site from [html5boilerplate](http://html5boilerplate.com) and implemented grunt. When you're ready to go, you have to install ```grunt-photobox```.
