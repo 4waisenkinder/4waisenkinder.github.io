@@ -4,7 +4,7 @@
   <title><![CDATA[Category: phantomjs | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/phantomjs/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-09T12:15:16+02:00</updated>
+  <updated>2013-08-09T12:20:21+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -29,7 +29,7 @@ $ phantomjs script.js
 <!-- more -->
 
 
-<p>Inside of this script you have got a few more global variables available than usual &ndash; check them out <a href="https://github.com/ariya/phantomjs/wiki/_pages">here</a>. For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a <code>require</code> function to get the functionality we need. When you do a lot of nodejs you are probably familiar with principle that already.</p>
+<p>Inside of this script you have got a few more global variables available than usual &ndash; check them out <a href="https://github.com/ariya/phantomjs/wiki/_pages">here</a>. For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a <code>require</code> function to get the functionality we need. When you do a lot of nodejs you are probably familiar with that principle already.</p>
 
 <p>The script has 50 lines and is not really complicated, so lets have a look:</p>
 
