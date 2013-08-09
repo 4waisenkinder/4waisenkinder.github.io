@@ -20,7 +20,7 @@ $ phantomjs script.js
 
 Inside of this script you have got a few more global variables available than usual - check them out [here](https://github.com/ariya/phantomjs/wiki/_pages). For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a ```require``` function to get the functionality we need. When you do a lot of nodejs you are probably familiar with that principle already.
 
-The script has 50 lines and is not really complicated, so lets have a look:
+[The script](https://github.com/stefanjudis/phantomjs-screenshot) for making screenshots has 50 lines and is not really complicated, so lets have a look:
 
 ```js
 var system = require( 'system' ),
@@ -33,7 +33,7 @@ var system = require( 'system' ),
 
 ```
 
-The variable declaration at top of the page ( yes, I know, Crockford-Style ;) ) show us all we need. ```system``` will take the responsibiliy of getting arguments with which we fired up phantomjs. This way is script is more generic and we will be able to pass in arguments like the url we want make a picture of, the path of the picture, and width and height of the headless browser window ( this becomes handy when you want to check your responsiv web desging ). ```webpage``` includes the actual browser functionality for opening a page and rendering it later on.
+The variable declaration at top of the page ( yes, I know, Crockford-Style ;) ) shows us all we need. ```system``` will take the responsibiliy of getting arguments with which we fired up phantomjs. This way the script is more generic and we will be able to pass in arguments like the url we want to make a picture of, the path of the picture, and width and height of the headless browser window ( this becomes handy when you want to check your responsive web design ). ```webpage``` includes the actual browser functionality for opening a page and rendering it later on.
 
 ```js
 page.onError = function ( msg ) {
@@ -61,7 +61,7 @@ page.clipRect = {
 
 To set up the size of the window we need to set the view port size of the ```page``` object, which was initialized at the beginning. In this case ```viewportSize``` means the actual size of the simulated window. But to make proper screenshots we have to define the property ```clipRect``` as well to make the image fitting to the actual window view size. According to phantomjs documentation ```clipRect``` defines the size of the area that should be rasterized when calling the ```render``` function.
 
-So let's to the last step:
+So let's do the last step:
 
 Photosession-Time!!! :)
 
@@ -92,7 +92,7 @@ The console output works here because we defined the listeners to write it to th
 
 The timeout is defined to provide some time to fetch images and execute included scripts. Many people are doing it this way. It is not 100% clean, but it does its job. If you don't like it, there is also the possibility to define a callback at ```page.onLoadFinished```. But it is fine for me now. :)
 
-And at the end exiting phantom. Per default it returns the status code 0, which means that everything was fine.
+And the last thing is to stop phantom with the ```exit``` command and return with a given status code. Per default it returns the status code 0, which means that everything was fine.
 
 That's all the "magic" you need to take pictures of any site. The command to start the script is:
 
@@ -102,9 +102,9 @@ Opened url with status: success
 Rendering ./img/google.com-1000x1200.png
 ```
 
-You can find the script [here](https://github.com/stefanjudis/phantomjs-screenshot). It probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)
+The script probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)
 
 
-If you are interested in more stuff, how I build it into a grunt plugin let me know. I am really excited about this whole phantomjs stuff and would like to share it.
+If you are interested in more stuff, how I build it into a grunt plugin, let me know. I am really excited about this whole phantomjs stuff and would like to share it.
 
 Thanks for reading and if you have any comments or thoughts leave a comment or ping me on [Twitter](https://twitter.com/stefanjudis).
