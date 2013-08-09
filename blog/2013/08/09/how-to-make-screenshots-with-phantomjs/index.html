@@ -9,7 +9,7 @@
 
 <meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
 
-<meta name="description" content="Recently I started developing my first grunt plugin call grunt-photobox. The goal was to make the layout QA-process before shipping a new feature &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="Recently I started developing my first grunt plugin called grunt-photobox. The goal was to make the layout QA-process before shipping a new feature &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -92,7 +92,7 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">How to Make Screenshots With Phantomjs</h2>
-	<div class="entry-content"><p>Recently I started developing my first grunt plugin call <a href="https://npmjs.org/package/grunt-photobox">grunt-photobox</a>. The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one &ndash; <a href="http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/">post about how to use it here</a>.</p>
+	<div class="entry-content"><p>Recently I started developing my first grunt plugin called <a href="https://npmjs.org/package/grunt-photobox">grunt-photobox</a>. The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one &ndash; <a href="http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/">post about how to use it here</a>.</p>
 
 <p>The base for that should be <a href="http://phantomjs.org/">phantomjs</a>. It&rsquo;s a headless webkit browser, that gives you all functionality a &ldquo;real&rdquo; browser has plus a few features for making screenshots or reading files from disk for example. You can run it via command line and pass in a script to execute inside the scope of phantomjs.</p>
 
@@ -119,10 +119,10 @@ $(document).ready(
 </pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">system</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s1">&#39;system&#39;</span> <span class="p">),</span>
 </span><span class='line'>    <span class="nx">webpage</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s1">&#39;webpage&#39;</span> <span class="p">),</span>
 </span><span class='line'>    <span class="nx">page</span> <span class="o">=</span> <span class="nx">webpage</span><span class="p">.</span><span class="nx">create</span><span class="p">(),</span>
-</span><span class='line'>    <span class="nx">url</span> <span class="o">=</span> <span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;http://4waisenkinder.de&#39;</span><span class="p">,</span> <span class="c1">// set a default value if arguments was not set</span>
-</span><span class='line'>    <span class="nx">path</span> <span class="o">=</span> <span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="c1">// set a default value if arguments was not set</span>
-</span><span class='line'>    <span class="nx">width</span> <span class="o">=</span> <span class="o">+</span><span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span> <span class="o">||</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// set a default value if arguments was not set</span>
-</span><span class='line'>    <span class="nx">height</span> <span class="o">=</span> <span class="o">+</span><span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span> <span class="o">||</span> <span class="mi">1200</span><span class="p">;</span> <span class="c1">// set a default value if arguments was not set</span>
+</span><span class='line'>    <span class="nx">url</span> <span class="o">=</span> <span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;http://4waisenkinder.de&#39;</span><span class="p">,</span> <span class="c1">// set a default value if argument was not set</span>
+</span><span class='line'>    <span class="nx">path</span> <span class="o">=</span> <span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="c1">// set a default value if argument was not set</span>
+</span><span class='line'>    <span class="nx">width</span> <span class="o">=</span> <span class="o">+</span><span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">3</span> <span class="p">]</span> <span class="o">||</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// set a default value if argument was not set</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">=</span> <span class="o">+</span><span class="nx">system</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span> <span class="mi">4</span> <span class="p">]</span> <span class="o">||</span> <span class="mi">1200</span><span class="p">;</span> <span class="c1">// set a default value if argument was not set</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -230,7 +230,7 @@ $(document).ready(
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This script probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
+<p>You can find the script <a href="https://github.com/stefanjudis/phantomjs-screenshot">here</a>. It probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
 
 <p>If you are interested in more stuff, how I build it into a grunt plugin let me know. I am really excited about this whole phantomjs stuff and would like to share it.</p>
 

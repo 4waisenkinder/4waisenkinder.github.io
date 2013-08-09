@@ -4,7 +4,7 @@
   <title><![CDATA[Category: phantomjs | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/phantomjs/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-09T12:11:41+02:00</updated>
+  <updated>2013-08-09T12:15:16+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,7 +18,7 @@
     <link href="http://4waisenkinder.github.io/blog/2013/08/09/how-to-make-screenshots-with-phantomjs/"/>
     <updated>2013-08-09T10:40:00+02:00</updated>
     <id>http://4waisenkinder.github.io/blog/2013/08/09/how-to-make-screenshots-with-phantomjs</id>
-    <content type="html"><![CDATA[<p>Recently I started developing my first grunt plugin call <a href="https://npmjs.org/package/grunt-photobox">grunt-photobox</a>. The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one &ndash; <a href="http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/">post about how to use it here</a>.</p>
+    <content type="html"><![CDATA[<p>Recently I started developing my first grunt plugin called <a href="https://npmjs.org/package/grunt-photobox">grunt-photobox</a>. The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one &ndash; <a href="http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/">post about how to use it here</a>.</p>
 
 <p>The base for that should be <a href="http://phantomjs.org/">phantomjs</a>. It&rsquo;s a headless webkit browser, that gives you all functionality a &ldquo;real&rdquo; browser has plus a few features for making screenshots or reading files from disk for example. You can run it via command line and pass in a script to execute inside the scope of phantomjs.</p>
 
@@ -38,10 +38,10 @@ var system = require( &lsquo;system&rsquo; ),</p>
 
 <pre><code>webpage = require( 'webpage' ),
 page = webpage.create(),
-url = system.args[ 1 ] || 'http://4waisenkinder.de', // set a default value if arguments was not set
-path = system.args[ 2 ] || './', // set a default value if arguments was not set
-width = +system.args[ 3 ] || 1000, // set a default value if arguments was not set
-height = +system.args[ 4 ] || 1200; // set a default value if arguments was not set
+url = system.args[ 1 ] || 'http://4waisenkinder.de', // set a default value if argument was not set
+path = system.args[ 2 ] || './', // set a default value if argument was not set
+width = +system.args[ 3 ] || 1000, // set a default value if argument was not set
+height = +system.args[ 4 ] || 1200; // set a default value if argument was not set
 </code></pre>
 
 <p>```</p>
@@ -127,7 +127,7 @@ Opened url with status: success
 Rendering ./img/google.com-1000x1200.png
 </code></p>
 
-<p>This script probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
+<p>You can find the script <a href="https://github.com/stefanjudis/phantomjs-screenshot">here</a>. It probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
 
 <p>If you are interested in more stuff, how I build it into a grunt plugin let me know. I am really excited about this whole phantomjs stuff and would like to share it.</p>
 
