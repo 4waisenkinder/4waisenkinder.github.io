@@ -8,7 +8,7 @@ categories:
 - phantomjs 
 ---
 
-Recently I started developing my first grunt plugin call [grunt-photobox](https://npmjs.org/package/grunt-photobox). The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one - [post about how to use it here](http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/).
+Recently I started developing my first grunt plugin called [grunt-photobox](https://npmjs.org/package/grunt-photobox). The goal was to make the layout QA-process before shipping a new feature much easier. It should take screenshots of every relevant site and compare it to the last one - [post about how to use it here](http://4waisenkinder.de/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/).
 
 The base for that should be [phantomjs](http://phantomjs.org/). It's a headless webkit browser, that gives you all functionality a "real" browser has plus a few features for making screenshots or reading files from disk for example. You can run it via command line and pass in a script to execute inside the scope of phantomjs.
 
@@ -26,10 +26,10 @@ The script has 50 lines and is not really complicated, so lets have a look:
 var system = require( 'system' ),
     webpage = require( 'webpage' ),
     page = webpage.create(),
-    url = system.args[ 1 ] || 'http://4waisenkinder.de', // set a default value if arguments was not set
-    path = system.args[ 2 ] || './', // set a default value if arguments was not set
-    width = +system.args[ 3 ] || 1000, // set a default value if arguments was not set
-    height = +system.args[ 4 ] || 1200; // set a default value if arguments was not set
+    url = system.args[ 1 ] || 'http://4waisenkinder.de', // set a default value if argument was not set
+    path = system.args[ 2 ] || './', // set a default value if argument was not set
+    width = +system.args[ 3 ] || 1000, // set a default value if argument was not set
+    height = +system.args[ 4 ] || 1200; // set a default value if argument was not set
 
 ```
 
@@ -102,7 +102,7 @@ Opened url with status: success
 Rendering ./img/google.com-1000x1200.png
 ```
 
-This script probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)
+You can find the script [here](https://github.com/stefanjudis/phantomjs-screenshot). It probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)
 
 
 If you are interested in more stuff, how I build it into a grunt plugin let me know. I am really excited about this whole phantomjs stuff and would like to share it.
