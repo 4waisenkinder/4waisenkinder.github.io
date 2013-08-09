@@ -107,7 +107,7 @@ $(document).ready(
 
 <p>Inside of this script you have got a few more global variables available than usual &ndash; check them out <a href="https://github.com/ariya/phantomjs/wiki/_pages">here</a>. For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a <code>require</code> function to get the functionality we need. When you do a lot of nodejs you are probably familiar with that principle already.</p>
 
-<p>The script has 50 lines and is not really complicated, so lets have a look:</p>
+<p><a href="https://github.com/stefanjudis/phantomjs-screenshot">The script</a> for making screenshots has 50 lines and is not really complicated, so lets have a look:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -126,7 +126,7 @@ $(document).ready(
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The variable declaration at top of the page ( yes, I know, Crockford-Style ;) ) show us all we need. <code>system</code> will take the responsibiliy of getting arguments with which we fired up phantomjs. This way is script is more generic and we will be able to pass in arguments like the url we want make a picture of, the path of the picture, and width and height of the headless browser window ( this becomes handy when you want to check your responsiv web desging ). <code>webpage</code> includes the actual browser functionality for opening a page and rendering it later on.</p>
+<p>The variable declaration at top of the page ( yes, I know, Crockford-Style ;) ) shows us all we need. <code>system</code> will take the responsibiliy of getting arguments with which we fired up phantomjs. This way the script is more generic and we will be able to pass in arguments like the url we want to make a picture of, the path of the picture, and width and height of the headless browser window ( this becomes handy when you want to check your responsive web design ). <code>webpage</code> includes the actual browser functionality for opening a page and rendering it later on.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -170,7 +170,7 @@ $(document).ready(
 
 <p>To set up the size of the window we need to set the view port size of the <code>page</code> object, which was initialized at the beginning. In this case <code>viewportSize</code> means the actual size of the simulated window. But to make proper screenshots we have to define the property <code>clipRect</code> as well to make the image fitting to the actual window view size. According to phantomjs documentation <code>clipRect</code> defines the size of the area that should be rasterized when calling the <code>render</code> function.</p>
 
-<p>So let&rsquo;s to the last step:</p>
+<p>So let&rsquo;s do the last step:</p>
 
 <p>Photosession-Time!!! :)</p>
 
@@ -217,7 +217,7 @@ $(document).ready(
 
 <p>The timeout is defined to provide some time to fetch images and execute included scripts. Many people are doing it this way. It is not 100% clean, but it does its job. If you don&rsquo;t like it, there is also the possibility to define a callback at <code>page.onLoadFinished</code>. But it is fine for me now. :)</p>
 
-<p>And at the end exiting phantom. Per default it returns the status code 0, which means that everything was fine.</p>
+<p>And the last thing is to stop phantom with the <code>exit</code> command and return with a given status code. Per default it returns the status code 0, which means that everything was fine.</p>
 
 <p>That&rsquo;s all the &ldquo;magic&rdquo; you need to take pictures of any site. The command to start the script is:</p>
 
@@ -230,9 +230,9 @@ $(document).ready(
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You can find the script <a href="https://github.com/stefanjudis/phantomjs-screenshot">here</a>. It probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
+<p>The script probably needs some improvements for error handling ( errors on page opening or missing system arguments ), but it has just the purpose to get started. :)</p>
 
-<p>If you are interested in more stuff, how I build it into a grunt plugin let me know. I am really excited about this whole phantomjs stuff and would like to share it.</p>
+<p>If you are interested in more stuff, how I build it into a grunt plugin, let me know. I am really excited about this whole phantomjs stuff and would like to share it.</p>
 
 <p>Thanks for reading and if you have any comments or thoughts leave a comment or ping me on <a href="https://twitter.com/stefanjudis">Twitter</a>.</p>
 <div class='octopress-authorbox'>
