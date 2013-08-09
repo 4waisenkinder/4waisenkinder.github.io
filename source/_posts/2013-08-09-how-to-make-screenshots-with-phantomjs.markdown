@@ -18,7 +18,7 @@ $ phantomjs script.js
 
 <!-- more -->
 
-Inside of this script you have got a few more global variables available than usual - check them out [here](https://github.com/ariya/phantomjs/wiki/_pages). For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a ```require``` function to get the functionality we need. When you do a lot of nodejs you are probably familiar with principle that already.
+Inside of this script you have got a few more global variables available than usual - check them out [here](https://github.com/ariya/phantomjs/wiki/_pages). For making screenshots we will use the webpage- and system-api ( will be explained later on ). Phantomjs provides a ```require``` function to get the functionality we need. When you do a lot of nodejs you are probably familiar with that principle already.
 
 The script has 50 lines and is not really complicated, so lets have a look:
 
