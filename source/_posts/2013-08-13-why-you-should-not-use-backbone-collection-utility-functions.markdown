@@ -5,6 +5,8 @@ date: 2013-08-13 23:15
 author: stefanjudis
 comments: true
 categories: 
+- Backbone
+- performance
 ---
 
 Today I ran into an issue that let me dive into the Backbone.js library. Very often developers just use the stuff that is in there because it just works fine, but when it does not do what it is supposed to do the best way is to have a look into the used library and figure out what is going on.
