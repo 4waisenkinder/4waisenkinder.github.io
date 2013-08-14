@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: performance | 4waisenkinder]]></title>
-  <link href="http://4waisenkinder.github.io/blog/categories/performance/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Backbone | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/backbone/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
   <updated>2013-08-14T21:16:52+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
@@ -125,61 +125,6 @@ _.indexOf( example.array, 2 );
 <p>No matter what, for me is clear that I will use the original utility function instead of the integrated ones.</p>
 
 <p>Thx for reading. Any ideas on that are really welcome. :)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[See how your project performs at Travis CI]]></title>
-    <link href="http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/"/>
-    <updated>2013-07-07T14:50:00+02:00</updated>
-    <id>http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci</id>
-    <content type="html"><![CDATA[<p>Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming languages and different versions of these ( e.g. node 0.8 / 0.9 / … ). Figuring out if there will be any problems or exceptions before switching to a new language version are easily done this way ( always assuming you are following the principles of test driven development ). <strong>Test your stuff at Travis first, then switch your server to the new version of language XY</strong>.</p>
-
-<!-- more -->
-
-
-<p>Tests that run in different languages are called &lsquo;jobs&rsquo; in travis context. You can define them in your .travis.yml.</p>
-
-<p>```
-language: node_js
-  node_js:</p>
-
-<pre><code>- "0.8"
-- "0.9"
-- "0.10"
-</code></pre>
-
-<p>```</p>
-
-<p>Later on you can see this configuration inside of the so called build-matrix at <a href="http://travis-ci.org">Travis</a>.</p>
-
-<p><img class="center" src="/images/blog/stefanjudis/buildMatrix.png" width="1225" height="184" title="&lsquo;build matrix cushion-cli&rsquo; &lsquo;build matrix for my project cushion-cli&rsquo;" ></p>
-
-<p>Via Travalizit ( <a href="http://4waisenkinder.de/blog/2013/06/21/help-me-analyze-travis-build-data/">further explanation and introduction</a> ) you got the possibility to analyse your Travis build data. It is still in early stage, but I think you can already get some information, you did not know before. To have always the latest Travis information at Travalizit you only have to define a wekhook that sends the build data to Travalizit each time you finished a build ( checkout out explanation and introduction ).</p>
-
-<p>Yesterday night I implemented a new chart to compare different builds with including jobs in term of state and duration. With the help of this chart you can easily check if a new language version will increase performance or not.</p>
-
-<p>To check your project just go to <a href="http://travalizit.org">Travalizit</a>, add a new chart and choose type &ldquo;Travis job details&rdquo;.</p>
-
-<p><img class="center" src="/images/blog/stefanjudis/jobDetails.png" width="603" height="377" title="&lsquo;add job details chart action&rsquo; &lsquo;push the button ;)&rsquo;" ></p>
-
-<p>After that you will probably get a message, that your build data is not included in the Travalizit database ( there is the small chance that it is, because I tested a lot ). Right now you got the possibility to fetch the latest builds from Travis.</p>
-
-<p><img class="center" src="/images/blog/stefanjudis/fetchData.png" width="867" height="655" title="&lsquo;fetch data action&rsquo; &lsquo;fetch data dialog if no build data is available&rsquo;" ></p>
-
-<p>Press the &lsquo;fetch&rsquo; &ndash; button and you are done. This works only <strong>once</strong>, because the architecture is actual set up to receive recent build data via webhook. That means, if you want to come back and to see the latest builds, you have implement the hook. ;)</p>
-
-<p>And that is the result:</p>
-
-<p><img class="center" src="/images/blog/stefanjudis/jobDetailsChart.png" width="882" height="670" title="&lsquo;job details for cushion-cli&rsquo; &lsquo;Travis job details chart for cushion-cli&rsquo;" ></p>
-
-<p>Right now you can check the duration and state ( passed / errored / failed ) of the different jobs. If you want to see more, let me know.</p>
-
-<p>I would love to hear wishes, improvements and feedback. So, if it is not working for you and your project or you have something to say about that ping me on <a href="https://twitter.com/stefanjudis">Twitter</a>, write me an <a href="mailto:stefanjudis@gmail.com">email</a> or leave a comment.</p>
-
-<p>THX.</p>
-
-<p>PS. I started developing a <a href="https://npmjs.org/package/travalizit">Nodes.js Travis-Api</a> for this project. If someone is interested in that, give a sign. That keeps motivation high. ;)</p>
 ]]></content>
   </entry>
   
