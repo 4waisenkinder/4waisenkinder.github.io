@@ -4,7 +4,7 @@
   <title><![CDATA[Category: performance | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/performance/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-14T21:16:52+02:00</updated>
+  <updated>2013-08-14T21:41:44+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -122,7 +122,7 @@ _.indexOf( example.array, 2 );
 
 <p>The reason for that difference is probably the needed context binding for the integrated utility functions to provide the LoDash/Underscore context inside of the function itself. But that is only guessing. ;)</p>
 
-<p>No matter what, for me is clear that I will use the original utility function instead of the integrated ones.</p>
+<p>No matter what, for me is clear that I will use the original utility functions instead of the integrated ones.</p>
 
 <p>Thx for reading. Any ideas on that are really welcome. :)</p>
 ]]></content>
