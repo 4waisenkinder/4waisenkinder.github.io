@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-14T21:55:58+02:00</updated>
+  <updated>2013-08-14T22:11:38+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -20,7 +20,7 @@
     <id>http://4waisenkinder.github.io/blog/2013/08/13/why-you-should-not-use-backbone-collection-utility-functions</id>
     <content type="html"><![CDATA[<p>Today I ran into an issue that let me dive into the Backbone.js library. Very often developers just use the stuff that is in there because it just works fine, but when it does not do what it is supposed to do the best way is to have a look into the used library and figure out what is going on.</p>
 
-<p>May case was the following:</p>
+<p>My case was the following:</p>
 
 <p>I had some lines for getting the index of a particular model stored inside of a Backbone collection.</p>
 
@@ -34,14 +34,14 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Not very complicated and it worked immediately. I did not really think about it. A colleage came around and pointed me into the direction, that the native Array function <em>indexOf</em> is only supported in IE9 and higher. I changed it to use the particular LoDash/Underscore utility function and it did not work anymore.</p>
+<p>Not very complicated and it worked immediately. I did not really think about it. A colleague came around and pointed me into the direction, that the native Array function <em>indexOf</em> is only supported in IE9 and higher. I changed it to use the particular LoDash/Underscore utility function and it did not work anymore.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">collection</span><span class="p">,</span> <span class="nx">model</span> <span class="p">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>So, what was going on? After thinking about it, the idea that a Backbone collection uses the native Array function <em>indexOf</em> does not even make sense. So where does it come from? I checked the code and noticed that Backbone collections implement the Array functions of LoDash/Underscore. I build a <a href="http://jsbin.com/apowiz/25/edit">JSBin</a> to try this principle myself.</p>
+<p>So, what was going on? After thinking about it, the idea that a Backbone collection uses the native Array function <em>indexOf</em> does not even make sense. So where does it come from? I checked the code and noticed that Backbone collections implement the Array functions of LoDash/Underscore. I created a <a href="http://jsbin.com/apowiz/25/edit">JSBin</a> to try this principle myself.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -124,7 +124,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This line was my first learning of digging into the Backbone codebase. Calling the Array function <em>slice</em> and passing in <em>arguments</em> is a common way to receive an Array out of the arguments object, which is available in every JavaScript function ( more information about that <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments">here</a> ). My usual way to do that is <em>Array.prototype.slice( arguments )</em>. Backbone cashes the slice function before using it for better performance ( which is proved <a href="http://jsperf.com/array-prototype-slice-call-vs-slice-call/7">here</a>). It is not huge difference, but when we can be faster, we should be faster. ;)</p>
+<p>This line was my first learning of digging into the Backbone codebase. Calling the Array function <em>slice</em> and passing in <em>arguments</em> is a common way to receive an Array out of the arguments object, which is available in every JavaScript function ( more information about that <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments">here</a> ). My usual way to do that is <em>Array.prototype.slice( arguments )</em>. Backbone caches the slice function before using it for better performance ( which is proved <a href="http://jsperf.com/array-prototype-slice-call-vs-slice-call/7">here</a>). It is not huge difference, but when we can be faster, we should be faster. ;)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">args</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="p">);</span>
