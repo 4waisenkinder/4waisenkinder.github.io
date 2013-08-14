@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-14T21:41:44+02:00</updated>
+  <updated>2013-08-14T21:47:07+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -151,7 +151,7 @@
 
 <p>No magic. but a nice way to make the usability of your objects more convenient.</p>
 
-<p>But there is also a bad part about that. I checked the performance of the origin utility methods and the integrated ones and there is really a huge difference ( check jsperf <a href="http://jsperf.com/integrated-utility-function-vs-utility-function-2">here</a> ). On my machine the new integrated functions are around 75% (!) percent slower. 75% is really way too much for convenience.</p>
+<p>But there is also a bad part about that. I checked the performance of the origin utility methods and the integrated ones and there is really a huge difference ( check jsperf <a href="http://jsperf.com/integrated-utility-function-vs-utility-function-2">here</a> ). On my machine the new integrated functions are around 75% (!) percent slower ( tested in Firefox, Chrome and Opera ). 75% is really way too much for convenience.</p>
 
 <p><img src="http://4waisenkinder.github.io/images/blog/stefanjudis/utilityFunctions.png" width="970" height="387" title="result of jsperf" alt="result of jsperf"></p>
 
