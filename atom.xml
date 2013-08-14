@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-08-09T12:31:48+02:00</updated>
+  <updated>2013-08-14T21:15:44+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,173 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why you shouldn't use Backbones built-in Array functions]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/08/13/why-you-should-not-use-backbone-collection-utility-functions/"/>
+    <updated>2013-08-13T23:15:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/08/13/why-you-should-not-use-backbone-collection-utility-functions</id>
+    <content type="html"><![CDATA[<p>Today I ran into an issue that let me dive into the Backbone.js library. Very often developers just use the stuff that is in there because it just works fine, but when it does not do what it is supposed to do the best way is to have a look into the used library and figure out what is going on.</p>
+
+<p>May case was the following:</p>
+
+<p>I had some lines for getting the index of a particular model stored inside of a Backbone collection.</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">model</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Not very complicated and it worked immediately. I did not really think about it. A colleage came around and pointed me into the direction, that the native Array function <em>indexOf</em> is only supported in IE9 and higher. I changed it to use the particular LoDash/Underscore utility function and it did not work anymore.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">collection</span><span class="p">,</span> <span class="nx">model</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, what was going on? After thinking about it, the idea that a Backbone collection uses the native Array function <em>indexOf</em> does not even make sense. So where does it come from? I checked the code and noticed that Backbone collections implement the Array functions of LoDash/Underscore. I build a <a href="http://jsbin.com/apowiz/25/edit">JSBin</a> to try this principle myself.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">ExampleObject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">array</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>   <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="o">=</span> <span class="nx">array</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// the methods we want to implement</span>
+</span><span class='line'><span class="c1">// in our object</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">utilityMethods</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;indexOf&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span> <span class="p">],</span>
+</span><span class='line'>    <span class="nx">slice</span>          <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// iterate over the wished methods</span>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">utilityMethods</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">method</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">ExampleObject</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span> <span class="nx">method</span> <span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">arguments</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">args</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">_</span><span class="p">[</span> <span class="nx">method</span> <span class="p">].</span><span class="nx">apply</span><span class="p">(</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">args</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// create the new object</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">example</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ExampleObject</span><span class="p">(</span> <span class="p">[</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// proof that indexOf works</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">example</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="p">);</span> <span class="c1">// output: 3</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// proof that filter workds</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+</span><span class='line'>  <span class="nx">example</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'><span class="p">);</span> <span class="c1">// output: [5, 3, 1]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let us dive into the stuff that goes on inside of the each loop.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">ExampleObject</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span> <span class="nx">method</span> <span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That is a basic pattern to extent the prototype of JavaScript object. In our case the prototype is <em>ExampleObject</em> and this way it has a method that is shared by every instance of <em>ExampleObject</em>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">arguments</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This line was my first learning of digging into the Backbone codebase. Calling the Array function <em>slice</em> and passing in <em>arguments</em> is a common way to receive an Array out of the arguments object, which is available in every JavaScript function ( more information about that <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments">here</a> ). My usual way to do that is <em>Array.prototype.slice( arguments )</em>. Backbone cashes the slice function before using it for better performance ( which is proved <a href="http://jsperf.com/array-prototype-slice-call-vs-slice-call/7">here</a>). It is not huge difference, but when we can be faster, we should be faster. ;)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">args</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This line puts the actual array ( &ndash;> <em>this.array</em> ) to this start of this new generated &ldquo;arguments array&rdquo; to make it fit into the way LoDash/Underscore functions expect the handed in arguments to be.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="k">return</span> <span class="nx">_</span><span class="p">[</span> <span class="nx">method</span> <span class="p">].</span><span class="nx">apply</span><span class="p">(</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">args</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And this is the final result. It is an actual call to the origin LoDash/Underscore function in the context of Underscore/LoDash. The context needs to be set to LoDash/Underscore itself, because we don&rsquo;t know, if the library calls other methods contained in itself. To sum up this line for example of <em>indexOf</em> is similar to:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">example</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="mi">2</span> <span class="p">);</span>
+</span><span class='line'><span class="c1">// calls under the hood</span>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">example</span><span class="p">.</span><span class="nx">array</span><span class="p">,</span> <span class="mi">2</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>No magic. but a nice way to make the usability of your objects more convenient.</p>
+
+<p>But there is also a bad part about that. I checked the performance of the origin utility methods and the integrated ones and there is really a huge difference ( check jsperf <a href="http://jsperf.com/integrated-utility-function-vs-utility-function-2">here</a> ). On my machine the new integrated functions are around 75% (!) percent slower. 75% is really way too much for convenience.</p>
+
+<p><img src="http://4waisenkinder.github.io/images/blog/stefanjudis/utilityFunctions.png" width="970" height="387" title="result of jsperf" alt="result of jsperf"></p>
+
+<p>The reason for that difference is probably the needed context binding for the integrated utility functions to provide the LoDash/Underscore context inside of the function itself. But that is only guessing. ;)</p>
+
+<p>No matter what, for me is clear that I will use the original utility function instead of the integrated ones.</p>
+
+<p>Thx for reading. Any ideas on that are really welcome. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to make screenshots with phantomjs]]></title>
