@@ -1,0 +1,531 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Getting started with web components and polymer.js  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="I spent a lot of time on codepen the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Getting Started With Web Components and polymer.js</h2>
+	<div class="entry-content"><p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect usecase to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month.</p>
+
+<!-- more -->
+
+
+<p>Web components are basically small encapsuled units inside of a website or web application. They include their own styling(CSS) and their own behaviour(JS). And this is the main advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose siblings are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
+
+<p>You can get more information about this topic <a href="http://html5-demos.appspot.com/static/webcomponents/index.html">here</a>.</p>
+
+<p>I started looking around and decided to use <a href="http://www.polymer-project.org">polymer.js</a>(written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills.</p>
+
+<p>So, here is my checkbox! Let&rsquo;s make a &ldquo;real&rdquo; new fancy web component out of it.</p>
+
+<pre class="codepen" data-height="400" data-type="result" data-href="ojDif" data-user="stefanjudis"><code> </code></pre>
+
+
+<script async src="http://codepen.io:/assets/embed/ei.js"></script>
+
+
+<p>I started by downloading the basic stuff from <a href="html5boilerplate.com">HTML5BOILERPLATE</a> and the polymer component library. The first things to start using it are implementing the polymer script inside of the <code>head</code> of the document and loading your first web component file.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!-- @start Polymer stuff --&gt;
+</span><span class='line'>&lt;script src="js/vendor/polymer.min.js"&gt;&lt;/script&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;link rel="import" href="components/sj-checkbox.html"&gt;
+</span><span class='line'>&lt;!-- @end Polymer stuff --&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next step is to create this component html file, that will define the new web component. I created a new folder for my web components and created the file <code>sj-checkbox.html</code>. Inside of that file I started to implement the new component regarding the polymer documentation.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;polymer-element name="sj-checkbox"&gt;
+</span><span class='line'>  &lt;template&gt;
+</span><span class='line'>    hello world
+</span><span class='line'>  &lt;/template&gt;
+</span><span class='line'>  &lt;script&gt;
+</span><span class='line'>    Polymer( 'sj-checkbox', {} );
+</span><span class='line'>  &lt;/script&gt;
+</span><span class='line'>&lt;/polymer-element&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That is all you need. Wrap everything in the <code>polymer-element</code> tag, set a name as attribute, use the new HTML5 template element to define your markup, call the Polymer constructor inside of a <code>script</code> tag and you are done. After that, you can use a new element inside of your &#8220;ìndex.html&#8220;`.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="switchesComponents"&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>&lt;/ul&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When you inspect this in a current version of Chrome Canary and you enabled the needed flags (look <a href="http://html5-demos.appspot.com/static/webcomponents/index.html#69">here</a>) you will see the power of this technique.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/simpleComponent.jpg" width="244" height="239" title="First simple web component" alt="First simple web component"></p>
+
+<p>Our little &lsquo;hello world&rsquo; message is visible on our screen and it is encapsulated inside of the <a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/">shadow DOM</a>. I mean, how awesome is that?</p>
+
+<p>After this success I started implementing the actual new checkbox markup and the needed styles.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;polymer-element name="sj-checkbox"&gt;
+</span><span class='line'>  &lt;template&gt;
+</span><span class='line'>    &lt;style&gt;
+</span><span class='line'>      /* all my styles here */
+</span><span class='line'>    &lt;/style&gt;
+</span><span class='line'>    &lt;div class="switch"&gt;
+</span><span class='line'>      &lt;div class="switch__circle"&gt;
+</span><span class='line'>          &lt;input id="switcher" class="switch__input" type="checkbox"&gt;
+</span><span class='line'>          &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+</span><span class='line'>          &lt;label class="switch__label" for="switcher"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>        &lt;/div&gt;
+</span><span class='line'>      &lt;/div&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  &lt;/template&gt;
+</span><span class='line'>  &lt;script&gt;
+</span><span class='line'>    Polymer( 'sj-checkbox', {});
+</span><span class='line'>  &lt;/script&gt;
+</span><span class='line'>&lt;/polymer-element&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That worked actually on first try and I saw the new checkbox and its &ldquo;hidden&rdquo; markup inside of the shadow DOM. I prepared the checkbox to be configurable easily so that it is possible to get it in three different sizes by just adding the class &ldquo;small&rdquo;, &ldquo;medium&rdquo; or &ldquo;big&rdquo;. To achieve that, you can easily add custom attributes to your new created web component.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="switchesComponents"&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="big"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="medium"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="small"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>&lt;/ul&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Additionally you have to define inside of your component html file (remember <code>components/sj-checkbox.html</code>) that this value is readable. This is done by setting a new attribute <code>attributes</code> to the <code>polymer-element</code> element defining the given values. It is also possible to set default value for the size attribute then. You can then access the value by calling the attribute name wrapped into two curly braces inside of your component html.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!-- define attributes here -->
+</span><span class='line'>&lt;polymer-element name="sj-checkbox" attributes="size">
+</span><span class='line'>  &lt;template>
+</span><span class='line'>    &lt;style>
+</span><span class='line'>    /* all my styles here */
+</span><span class='line'>    &lt;/style>
+</span><span class='line'>    &lt;!-- backslashes are not needed - but octopress forces me to do it like that :( -->
+</span><span class='line'>    &lt;div class="switch {{size}}">
+</span><span class='line'>      &lt;div class="switch__circle">
+</span><span class='line'>          &lt;input id="switcher" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked">
+</span><span class='line'>          &lt;div class="switch__innerCircles">&lt;/div>
+</span><span class='line'>          &lt;label class="switch__label" for="switcher">Switch me!!!&lt;/label>
+</span><span class='line'>        &lt;/div>
+</span><span class='line'>      &lt;/div>
+</span><span class='line'>    &lt;/div>
+</span><span class='line'>  &lt;/template>
+</span><span class='line'>  &lt;script>
+</span><span class='line'>      // define default values here
+</span><span class='line'>    Polymer( 'sj-checkbox', {
+</span><span class='line'>      size: 'medium'
+</span><span class='line'>    } );
+</span><span class='line'>  &lt;/script>
+</span><span class='line'>&lt;/polymer-element></span></code></pre></td></tr></table></div></figure>
+
+
+<p>So far so good. The checkbox appears with its full markup and depending styles.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/fullComponent.jpg" width="545" height="232" title="Full checkbox web component" alt="Full checkbox web component"></p>
+
+<p>After that the new checkboxes appear in different sizes and it is time to add some functionality to them. Usually the way is to bind an event listener to the change event of the input and than update whatever needs to be updated. Unfortunately this elements do not trigger any change events anymore, because they are hidden inside of the shadow DOM. Polymer provides an easy way to implement custom events to solve this problem.</p>
+
+<p>You only have to implement a <code>on-change</code> attribute on the input field hidden inside of the shadow DOM and define a callback function, that should be executed when the event is triggered. Inside of this function you are able to trigger an event using <code>this.fire()</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;polymer-element name="sj-checkbox" attributes="size">
+</span><span class='line'>  &lt;template>
+</span><span class='line'>    &lt;style>
+</span><span class='line'>    /* all my styles here */
+</span><span class='line'>    &lt;/style>
+</span><span class='line'>    &lt;div class="switch {{size}}">
+</span><span class='line'>      &lt;div class="switch__circle">
+</span><span class='line'>          &lt;input id="switcher" class="switch__input" type="checkbox" on-change="changeHandler" checked="checked">
+</span><span class='line'>          &lt;div class="switch__innerCircles">&lt;/div>
+</span><span class='line'>          &lt;label class="switch__label" for="switcher">Switch me!!!&lt;/label>
+</span><span class='line'>        &lt;/div>
+</span><span class='line'>      &lt;/div>
+</span><span class='line'>    &lt;/div>
+</span><span class='line'>  &lt;/template>
+</span><span class='line'>  &lt;script>
+</span><span class='line'>    Polymer( 'sj-checkbox', {
+</span><span class='line'>      size: 'medium',
+</span><span class='line'>      changeHandler: function( event ) {
+</span><span class='line'>        this.fire(
+</span><span class='line'>          'change',
+</span><span class='line'>          {
+</span><span class='line'>            id: event.target.id
+</span><span class='line'>          }
+</span><span class='line'>        );
+</span><span class='line'>      }
+</span><span class='line'>    } );
+</span><span class='line'>  &lt;/script>
+</span><span class='line'>&lt;/polymer-element></span></code></pre></td></tr></table></div></figure>
+
+
+<p>Afterwards you can easily listen to this event and react to it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="switchesComponents"&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="big"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="medium"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="small"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>&lt;/ul&gt;
+</span><span class='line'>&lt;div id="switchesComponentsNotifications" class="notification"&gt;&lt;/div&gt;
+</span><span class='line'>&lt;script&gt;
+</span><span class='line'>  ( function( document ) {
+</span><span class='line'>      var switchList    = document.getElementById( 'switchesComponents' );
+</span><span class='line'>
+</span><span class='line'>      switchList.addEventListener( 'change', changeHandler, false );
+</span><span class='line'>
+</span><span class='line'>      function changeHandler( event ) {
+</span><span class='line'>          var notification = document.getElementById( 'switchesComponentsNotifications' );
+</span><span class='line'>
+</span><span class='line'>          notification.innerHTML = '!!! ' + event.detail.id +' switched !!!';
+</span><span class='line'>      }
+</span><span class='line'>  } )( document );
+</span><span class='line'>&lt;/script&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the eventhandler under the <code>detail</code> key. In my case I am just handing over the id of the input element.</p>
+
+<h3>Stuff to be careful with</h3>
+
+<p>When checking browser compability of this I noticed that using id&rsquo;s inside of your web components can be really tricky. There is no problem in case the browser supports web components (id&rsquo;s are inside of the shadow DOM), but if not polymer does some magic and your component will appear in the form of normal html. Then you&rsquo;ve got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of <code>fallbackId</code> to the component.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;ul id="switchesComponents"&gt;
+</span><span class='line'>  &lt;li&gt;&lt;sj-checkbox size="big" fallbackId="checkboxBigComponent"&gt;&lt;/sj-checkbox&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="switch {{size}}">
+</span><span class='line'>  &lt;div class="switch__circle">
+</span><span class='line'>      &lt;input id="{{fallbackId}}" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked">
+</span><span class='line'>      &lt;div class="switch__innerCircles">&lt;/div>
+</span><span class='line'>      &lt;label class="switch__label" for="{{fallbackId}}">Switch me!!!&lt;/label>
+</span><span class='line'>    &lt;/div>
+</span><span class='line'>  &lt;/div>
+</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
+
+
+<p>Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation(which you see a few lines above) I defined the component to trigger a <code>change</code> event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called <code>componentChange</code> and that worked fine.</p>
+
+<p>Jap and that is it. You can check out the checkbox <a href="http://stefanjudis.github.io/webComponents-tutorial/">here</a>. I will continue playing around with this. My next goal is to achieve a new input element type like <code>&lt;input type="myFancyCheckbox"&gt;</code> that I actually can use inside of my forms, but I have got no idea how this works yet.</p>
+
+<p>So. thanks for reading. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-21T18:35:00+02:00" pubdate data-updated="true">Sep 21<span>st</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/web-components/'>web components</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
