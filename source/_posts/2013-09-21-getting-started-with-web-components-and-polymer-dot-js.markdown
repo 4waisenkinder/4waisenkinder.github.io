@@ -6,6 +6,8 @@ comments: true
 author: stefanjudis
 categories:
 - web components
+- polymer
+- future stuff
 ---
 I spent a lot of time on [codepen](http://codepen.io) the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect usecase to start playing around with this magic thing called "web components", that is heavily around since a few month.
 
