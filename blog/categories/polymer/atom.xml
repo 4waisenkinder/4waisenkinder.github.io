@@ -4,7 +4,7 @@
   <title><![CDATA[Category: polymer | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/polymer/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-21T23:11:15+02:00</updated>
+  <updated>2013-09-22T11:49:57+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,14 +18,21 @@
     <link href="http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/"/>
     <updated>2013-09-21T18:35:00+02:00</updated>
     <id>http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js</id>
-    <content type="html"><![CDATA[<p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect usecase to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month.</p>
+    <content type="html"><![CDATA[<p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect use case to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month and is probably the &ldquo;next big thing&rdquo; in web development.</p>
 
 <!-- more -->
 
 
-<p>Web components are basically small encapsuled units inside of a website or web application. They include their own styling(CSS) and their own behaviour(JS). And this is the main advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose siblings are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
+<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the main advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
 
-<p>You can get more information about this topic <a href="http://html5-demos.appspot.com/static/webcomponents/index.html">here</a>.</p>
+<p>If you are interested in that topic, recommended ressources are the following:</p>
+
+<ul>
+<li><a href="http://html5-demos.appspot.com/static/webcomponents/index.html">slides about web components created by Google</a></li>
+<li><a href="http://www.youtube.com/watch?v=U45e-zq4bTs&amp;feature=youtu.be">talk about web components at CSSconf.eu </a></li>
+<li><a href="http://www.w3.org/TR/2013/WD-components-intro-20130606/">W3C working draft about web components</a></li>
+</ul>
+
 
 <p>I started looking around and decided to use <a href="http://www.polymer-project.org">polymer.js</a>(written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills.</p>
 
@@ -34,7 +41,7 @@
 <p><pre class="codepen" data-height="400" data-type="result" data-href="ojDif" data-user="stefanjudis"><code> </code></pre>
 <script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
 
-<p>I started by downloading the basic stuff from <a href="html5boilerplate.com">HTML5BOILERPLATE</a> and the polymer component library. The first things to start using it are implementing the polymer script inside of the <code>head</code> of the document and loading your first web component file.</p>
+<p>I started by downloading the basic stuff from <a href="html5boilerplate.com">HTML5BOILERPLATE</a> and the polymer component library. The first things to start using it are implementing the polymer script inside of the <code>head</code> of the document and loading your first web component file. Web components need to include a hyphen inside of their name defined by the specs to avoid conflicts with existing elements.</p>
 
 <p>```</p>
 
@@ -70,7 +77,7 @@
 &lt;/polymer-element>
 ```</p>
 
-<p>That is all you need. Wrap everything in the <code>polymer-element</code> tag, set a name as attribute, use the new HTML5 template element to define your markup, call the Polymer constructor inside of a <code>script</code> tag and you are done. After that, you can use a new element inside of your ``ìndex.html```.</p>
+<p>That is all you need. Wrap everything in the <code>polymer-element</code> tag, set a name as attribute, use the new HTML5 template element to define your markup, call the Polymer constructor inside of a <code>script</code> tag and you are done. After that, you can use a new custom element inside of your ``ìndex.html```.</p>
 
 <p>```</p>
 
@@ -119,7 +126,7 @@
 
 <p>```</p>
 
-<p>That worked actually on first try and I saw the new checkbox and its &ldquo;hidden&rdquo; markup inside of the shadow DOM. I prepared the checkbox to be configurable easily so that it is possible to get it in three different sizes by just adding the class &ldquo;small&rdquo;, &ldquo;medium&rdquo; or &ldquo;big&rdquo;. To achieve that, you can easily add custom attributes to your new created web component.</p>
+<p>That worked actually on first try and I saw the new checkbox and its &ldquo;hidden&rdquo; markup inside of the shadow DOM tree. I prepared the checkbox to be configurable easily so that it is possible to get it in three different sizes by just adding the class &ldquo;small&rdquo;, &ldquo;medium&rdquo; or &ldquo;big&rdquo; to the <code>switch</code>container. To achieve that, you can easily add custom attributes to your new created web component.</p>
 
 <p>```</p>
 
@@ -209,9 +216,9 @@
 
 <p><img class="left" src="/images/blog/stefanjudis/fullComponent.jpg" width="545" height="232" title="&lsquo;Full checkbox web component&rsquo; &lsquo;Full checkbox web component&rsquo;" ></p>
 
-<p>After that the new checkboxes appear in different sizes and it is time to add some functionality to them. Usually the way is to bind an event listener to the change event of the input and than update whatever needs to be updated. Unfortunately this elements do not trigger any change events anymore, because they are hidden inside of the shadow DOM. Polymer provides an easy way to implement custom events to solve this problem.</p>
+<p>After that the checkboxes are implemented in different sizes and it is time to add some functionality to them. Usually the way is to bind an event listener to the change event of the input element and then update whatever needs to be updated. Unfortunately this elements do not trigger any change events anymore, because they are hidden inside of the shadow DOM. Polymer provides an easy way to implement custom events to solve this problem.</p>
 
-<p>You only have to implement a <code>on-change</code> attribute on the input field hidden inside of the shadow DOM and define a callback function, that should be executed when the event is triggered. Inside of this function you are able to trigger an event using <code>this.fire()</code>.</p>
+<p>You only have to implement a <code>on-change</code> attribute on the input field hidden inside of the shadow DOM and define a callback function, that should be executed when the event is triggered. Inside of this function you are able to trigger a custom event using <code>this.fire()</code>.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -313,11 +320,11 @@
 
 <p>```</p>
 
-<p>About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the eventhandler under the <code>detail</code> key. In my case I am just handing over the id of the input element.</p>
+<p>About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the event handler under the <code>detail</code> key. In my case I am just handing over the id of the input element.</p>
 
 <h3>Stuff to be careful with</h3>
 
-<p>When checking browser compability of this I noticed that using id&rsquo;s inside of your web components can be really tricky. There is no problem in case the browser supports web components (id&rsquo;s are inside of the shadow DOM), but if not polymer does some magic and your component will appear in the form of normal html. Then you&rsquo;ve got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of <code>fallbackId</code> to the component.</p>
+<p>When checking browser compability of this I noticed that using id&rsquo;s inside of your web components can be really tricky. There is no problem in case the browser supports web components (id&rsquo;s are inside of the shadow DOM and totally encapsulated), but if not polymer does some magic and your component will appear in the form of normal html. Then you&rsquo;ve got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of <code>fallbackId</code> to the component.</p>
 
 <p>```</p>
 
@@ -353,9 +360,11 @@
 
 <p>Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation(which you see a few lines above) I defined the component to trigger a <code>change</code> event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called <code>componentChange</code> and that worked fine.</p>
 
-<p>Jap and that is it. You can check out the checkbox <a href="http://stefanjudis.github.io/webComponents-tutorial/">here</a>. I will continue playing around with this. My next goal is to achieve a new input element type like <code>&lt;input type="myFancyCheckbox"&gt;</code> that I actually can use inside of my forms, but I have got no idea how this works yet.</p>
+<p>Jap and that is it. You can check out the result <a href="http://stefanjudis.github.io/webComponents-tutorial/">here</a> &ndash; check it out in Canaray, it&rsquo;s just awesome.</p>
 
-<p>So. thanks for reading. :)</p>
+<p>I will continue playing around with this. My next goal is to achieve a new input element type like <code>&lt;input type="myFancyCheckbox"&gt;</code> that I actually can use inside of my forms, but I have got no idea how this works yet. Addiontally implementing custom pseudo elements to make the components accessible and styleable from the outside seams to be a reasonable next step.</p>
+
+<p>So, thanks for reading. Feedback is as always really welcome. ;)</p>
 ]]></content>
   </entry>
   
