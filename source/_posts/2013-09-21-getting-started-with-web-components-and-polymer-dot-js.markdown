@@ -9,11 +9,11 @@ categories:
 - polymer
 - future stuff
 ---
-I spent a lot of time on [codepen](http://codepen.io) the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect use case to start playing around with this magic thing called "web components", that is heavily around since a few month and is probably the "next big thing" in web development.
+I spent a lot of time on [codepen](http://codepen.io) the last days to train my CSS skills and to relax a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came to me, that this checkbox is a perfect use case to start playing around with this magic thing called "web components", that is heavily around since a few month and is probably the "next big thing" in web development.
 
 <!-- more -->
 
-Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the main advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)
+Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)
 
 If you are interested in that topic, recommended ressources are the following:
 
