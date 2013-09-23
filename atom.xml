@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-22T11:49:57+02:00</updated>
+  <updated>2013-09-23T19:32:18+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,12 +18,12 @@
     <link href="http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/"/>
     <updated>2013-09-21T18:35:00+02:00</updated>
     <id>http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js</id>
-    <content type="html"><![CDATA[<p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relaxe a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came up to me, that this checkbox is a perfect use case to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month and is probably the &ldquo;next big thing&rdquo; in web development.</p>
+    <content type="html"><![CDATA[<p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relax a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came to me, that this checkbox is a perfect use case to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month and is probably the &ldquo;next big thing&rdquo; in web development.</p>
 
 <!-- more -->
 
 
-<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the main advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
+<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
 
 <p>If you are interested in that topic, recommended ressources are the following:</p>
 
