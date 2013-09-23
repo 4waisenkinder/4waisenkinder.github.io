@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-23T19:32:18+02:00</updated>
+  <updated>2013-09-23T19:35:16+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -23,7 +23,7 @@
 <!-- more -->
 
 
-<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
+<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling (CSS) and their own behaviour (JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
 
 <p>If you are interested in that topic, recommended ressources are the following:</p>
 
@@ -34,7 +34,7 @@
 </ul>
 
 
-<p>I started looking around and decided to use <a href="http://www.polymer-project.org">polymer.js</a>(written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills.</p>
+<p>I started looking around and decided to use <a href="http://www.polymer-project.org">polymer.js</a> (written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills.</p>
 
 <p>So, here is my checkbox! Let&rsquo;s make a &ldquo;real&rdquo; new fancy web component out of it.</p>
 
@@ -343,7 +343,7 @@
 </span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure>
 
 
-<p>Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation(which you see a few lines above) I defined the component to trigger a <code>change</code> event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called <code>componentChange</code> and that worked fine.</p>
+<p>Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation (which you see a few lines above) I defined the component to trigger a <code>change</code> event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called <code>componentChange</code> and that worked fine.</p>
 
 <p>Jap and that is it. You can check out the result <a href="http://stefanjudis.github.io/webComponents-tutorial/">here</a> &ndash; check it out in Canaray, it&rsquo;s just awesome.</p>
 
