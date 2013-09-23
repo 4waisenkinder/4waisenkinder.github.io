@@ -13,7 +13,7 @@ I spent a lot of time on [codepen](http://codepen.io) the last days to train my 
 
 <!-- more -->
 
-Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling(CSS) and their own behaviour(JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)
+Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling (CSS) and their own behaviour (JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)
 
 If you are interested in that topic, recommended ressources are the following:
 
@@ -21,7 +21,7 @@ If you are interested in that topic, recommended ressources are the following:
 - [talk about web components at CSSconf.eu ](http://www.youtube.com/watch?v=U45e-zq4bTs&feature=youtu.be)
 - [W3C working draft about web components](http://www.w3.org/TR/2013/WD-components-intro-20130606/)
 
-I started looking around and decided to use [polymer.js](http://www.polymer-project.org)(written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills. 
+I started looking around and decided to use [polymer.js](http://www.polymer-project.org) (written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills. 
 
 So, here is my checkbox! Let's make a "real" new fancy web component out of it.
 
@@ -215,7 +215,7 @@ When checking browser compability of this I noticed that using id's inside of yo
 </div>
 {% endraw %}{% endcodeblock %}
 
-Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation(which you see a few lines above) I defined the component to trigger a ```change``` event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called ```componentChange``` and that worked fine.
+Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation (which you see a few lines above) I defined the component to trigger a ```change``` event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called ```componentChange``` and that worked fine.
 
 Jap and that is it. You can check out the result [here](http://stefanjudis.github.io/webComponents-tutorial/) - check it out in Canaray, it's just awesome.
 
