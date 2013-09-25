@@ -4,7 +4,7 @@
   <title><![CDATA[Category: polymer | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/polymer/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-23T19:35:16+02:00</updated>
+  <updated>2013-09-25T21:12:58+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -323,6 +323,14 @@
 <p>About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the event handler under the <code>detail</code> key. In my case I am just handing over the id of the input element.</p>
 
 <h3>Stuff to be careful with</h3>
+
+<p>The two following issues with polymer are already reported bug tickets. Before continue reading you can check out the state of both here:</p>
+
+<ul>
+<li><a href="https://github.com/Polymer/polymer/issues/296">prevent event bubbling in fallback</a></li>
+<li><a href="https://github.com/Polymer/polymer/issues/295">prevent dublicate ID&rsquo;s in fallback</a></li>
+</ul>
+
 
 <p>When checking browser compability of this I noticed that using id&rsquo;s inside of your web components can be really tricky. There is no problem in case the browser supports web components (id&rsquo;s are inside of the shadow DOM and totally encapsulated), but if not polymer does some magic and your component will appear in the form of normal html. Then you&rsquo;ve got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of <code>fallbackId</code> to the component.</p>
 
