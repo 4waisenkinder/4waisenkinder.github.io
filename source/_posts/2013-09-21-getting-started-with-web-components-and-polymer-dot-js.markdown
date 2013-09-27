@@ -27,7 +27,7 @@ So, here is my checkbox! Let's make a "real" new fancy web component out of it.
 
 {% codepen ojDif stefanjudis result 400 %}
 
-I started by downloading the basic stuff from [HTML5BOILERPLATE](html5boilerplate.com) and the polymer component library. The first things to start using it are implementing the polymer script inside of the ```head``` of the document and loading your first web component file. Web components need to include a hyphen inside of their name defined by the specs to avoid conflicts with existing elements. 
+I started by downloading the basic stuff from [HTML5BOILERPLATE](http://html5boilerplate.com) and the polymer component library. The first things to start using it are implementing the polymer script inside of the ```head``` of the document and loading your first web component file. Web components need to include a hyphen inside of their name defined by the specs to avoid conflicts with existing elements. 
 
 ```
 <!-- @start Polymer stuff -->
@@ -196,6 +196,12 @@ Afterwards you can easily listen to this event and react to it.
 About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the event handler under the ```detail``` key. In my case I am just handing over the id of the input element.
 
 ### Stuff to be careful with
+
+The two following issues with polymer are already reported bug tickets. Before continue reading you can check out the state of both here:
+
+- [prevent event bubbling in fallback](https://github.com/Polymer/polymer/issues/296)
+- [prevent dublicate ID's in fallback](https://github.com/Polymer/polymer/issues/295)
+
 
 When checking browser compability of this I noticed that using id's inside of your web components can be really tricky. There is no problem in case the browser supports web components (id's are inside of the shadow DOM and totally encapsulated), but if not polymer does some magic and your component will appear in the form of normal html. Then you've got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of ```fallbackId``` to the component.
 
