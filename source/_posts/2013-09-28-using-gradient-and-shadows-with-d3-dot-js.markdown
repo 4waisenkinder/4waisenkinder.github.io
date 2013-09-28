@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using gradients and shadows with d3.js"
+title: "Using SVG gradients and filters with d3.js"
 date: 2013-09-28 21:53
 comments: true
 author: stefanjudis
