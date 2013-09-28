@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: d3 | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/d3/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-09-29T01:39:47+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using gradients and shadows with d3.js]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/09/28/using-gradient-and-shadows-with-d3-dot-js/"/>
+    <updated>2013-09-28T21:53:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/09/28/using-gradient-and-shadows-with-d3-dot-js</id>
+    <content type="html"><![CDATA[<p>I play around with the <a href="http://d3js.org/">d3.js</a> library for a while now and I always thought that stuff like gradients and shadows are not so easy to create with SVG and that it is simply not made for that. The reason for that is, that when I&rsquo;m browsing through the d3 <a href="https://github.com/mbostock/d3/wiki/Gallery">example gallery</a> there is so much awesome data visulation, but shadows and gradients are not really present. I know, we are inside of the &ldquo;flat design era&rdquo; right now, so who should care about that, but I really like shadows, when they are at the correct places. Gradients on the other hand make very often the tiny tiny difference of a good design and a great design.</p>
+
+<!-- more -->
+
+
+<p>I started working on a nice design I found at <a href="http://dribbble.com/shots/1244676-Cloud-Storage/attachments/168917">dribbble</a> (I know it&rsquo;s not pixel perfect) and came to the point to implement some nice d3 animations rather quickly. And here is the <a href="http://codepen.io/stefanjudis/full/jawGn">final result</a>.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/cloudStorageUi.jpg" width="740" height="473" title="&lsquo;Cloud storage user interface at codepen&rsquo; &lsquo;Cloud storage user interface at codepen&rsquo;" ></p>
+
+<p>The timeline diagram and the three circles are made in SVG. Both diagram types are supposed by the design to include multiple shadows and gradients. So let&rsquo;s have a look how that works.</p>
+
+<p>Shadows and gradients are so called graphical objects in terms of SVG. Depending on their type they won&rsquo;t be rendered. For gradients and filters (shadows are filters basically) is that the case. If you are interested and want to dive more into that, here are the general specs:</p>
+
+<ul>
+<li><a href="http://www.w3.org/TR/SVG/intro.html#TermGradientElement">spec for gradients</a></li>
+<li><a href="http://www.w3.org/TR/SVG/filters.html#FilterElement">spec for filters</a></li>
+</ul>
+
+
+<p>The way this works is, that you have to define these elements first and then reference them via id inside of the element you want to use them. Pretty straight forward. The spec recommends that all elements that will be referenced should be defined inside of a <code>defs</code> element.</p>
+
+<p>So let&rsquo;s start with that and see some d3 code! :)</p>
+
+<p>```js
+// append new svg
+// and center it
+var svg = d3container.append( &lsquo;svg&rsquo; )</p>
+
+<pre><code>                 .attr( 'width', width )
+                 .attr( 'height', height )
+                 .append( 'g' )
+                 .attr(
+                   'transform',
+                   'translate(' + width / 2 + ',' + height / 2 + ')'
+                 );
+</code></pre>
+
+<p>// filter stuff
+/<em> For the shadow filter&hellip; </em>/
+// everything that will be referenced
+// should be defined inside of a <defs> element ;)
+var defs = svg.append( &lsquo;defs&rsquo; );</p>
+
+<p>// append filter element
+var filter = defs.append( &lsquo;filter&rsquo; )</p>
+
+<pre><code>             .attr( 'id', 'dropshadow' ) /// !!! important - define id to reference it later
+</code></pre>
+
+<p>// append gaussian blur to filter
+filter.append( &lsquo;feGaussianBlur&rsquo; )</p>
+
+<pre><code>  .attr( 'in', 'SourceAlpha' )
+  .attr( 'stdDeviation', 3 ) // !!! important parameter - blur
+  .attr( 'result', 'blur' );
+</code></pre>
+
+<p>// append offset filter to result of gaussion blur filter
+filter.append( &lsquo;feOffset&rsquo; )</p>
+
+<pre><code>  .attr( 'in', 'blur' )
+  .attr( 'dx', 2 ) // !!! important parameter - x-offset
+  .attr( 'dy', 3 ) // !!! important parameter - y-offset
+  .attr( 'result', 'offsetBlur' );
+</code></pre>
+
+<p>// merge result with original image
+var feMerge = filter.append( &lsquo;feMerge&rsquo; );</p>
+
+<p>// first layer result of blur and offset
+feMerge.append( &lsquo;feMergeNode&rsquo; )</p>
+
+<pre><code>   .attr( 'in", "offsetBlur' )
+</code></pre>
+
+<p>// original image on top
+feMerge.append( &lsquo;feMergeNode&rsquo; )</p>
+
+<pre><code>   .attr( 'in', 'SourceGraphic' );
+</code></pre>
+
+<p>// end filter stuff
+```</p>
+
+<p>Applying a shadow to an element in the world of SVG needs a bit more than doing it CSS, but I have to admit, that the documentation for SVG filters is really good. The W3C provides a lot of example including one for <a href="http://www.w3.org/TR/SVG/filters.html#AnExample">shadows</a>. Developers that are used to work with CSS mostly care only about three parameters &ndash; x-offset, y-offset and blur. I marked them inside of the code example.</p>
+
+<p>The fourth parameter that is configurable in CSS is unfortunately not so easy to set. As long we are setting filters to a given element, it seems to me relatively hard to achieve a completely different color as a shadow color &ndash; but if anyone knows a way to do that, I would really like to know.</p>
+
+<p>To sum up, what basically happens here are three steps:</p>
+
+<ol>
+<li>create gaussion blur on alpha channel &ndash; <code>feGaussianBlur</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feGaussianBlurElement">spec</a></li>
+<li>move result of gaussian blur to wished position &ndash; <code>feOffset</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feOffsetElement">spec</a></li>
+<li>define output result by merge (original source graphic over result of offset operation)&ndash; <code>feMerge</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feMergeElement">spec</a></li>
+</ol>
+
+
+<p>And that is it for defining a shadow filter in SVG. After that we only need to reference it inside of our wished elements.</p>
+
+<p>```js
+var meter = svg.append( &lsquo;g&rsquo; )</p>
+
+<pre><code>           .attr( 'class', 'progress-meter' );
+</code></pre>
+
+<p>meter.append( &lsquo;title&rsquo; )</p>
+
+<pre><code> .text( 'Progress meter showing amount of space used for ' + type );
+</code></pre>
+
+<p>meter.data( [ { value : .0,  index : .5 } ] )</p>
+
+<pre><code> .append( 'path' )
+ .attr( 'class', 'ui__downloadList__backgroundCircle' )
+ .attr( 'd', arcBackground )
+ .attr( 'filter', 'url(#dropshadow)' ) // !!! important - set id of predefined filter
+ .transition()
+ .duration( duration )
+ .attrTween( 'd', tweenArcBackground( { value : 1 } ) );
+</code></pre>
+
+<p>```</p>
+
+<p>And here is the result with applied shadow filter to two <code>text</code> elements and two <code>path</code> elements:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/shadowResult.png" width="160" height="166" title="&lsquo;Result of SVG shadow filter&rsquo; &lsquo;Result of SVG shadow filter&rsquo;" ></p>
+
+<p>Gradients are quite similar to achieve. Let us check the needed d3 code to define a gradient element:</p>
+
+<p>```js
+var gradientForegroundPurple = defs.append( &lsquo;linearGradient&rsquo; )</p>
+
+<pre><code>                               .attr( 'id', 'gradientForegroundPurple' )
+                               .attr( 'x1', '0' )
+                               .attr( 'x2', '0' )
+                               .attr( 'y1', '0' )
+                               .attr( 'y2', '1' );
+</code></pre>
+
+<p>gradientForegroundPurple.append( &lsquo;stop&rsquo; )</p>
+
+<pre><code>                    .attr( 'class', 'purpleForegroundStop1' )
+                    .attr( 'offset', '0%' );
+</code></pre>
+
+<p>gradientForegroundPurple.append( &lsquo;stop&rsquo; )</p>
+
+<pre><code>                    .attr( 'class', 'purpleForegroundStop2' )
+                    .attr( 'offset', '100%' ); 
+</code></pre>
+
+<p>```</p>
+
+<p>Defining of the <code>gradient</code> element is not as complicated as the <code>filter</code> element. I decided to use a <code>linearGradient</code> (spec <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElement">here</a>). All we have to do is give it an id (we need to reference it later). Per default the linear gradient is a horizontal one. I wanted to have a vertical one and that is why there are coordinates set inside of the code example. The coordinates describe a vector which represents the gradient.</p>
+
+<p>By appending two <code>stop</code> elements we are able to define which color should be set where. This gradient is a really basic one defining colours from start to end point. Much more complicated things are possible and Mozilla has a few really good examples at <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients">MDN</a>.</p>
+
+<p>The nice thing about gradients is, that it is possible to define the colors inside of a stylesheet. I really like that, because everything related to colours belongs exactly there. That makes the whole thing much better maintainable.</p>
+
+<p>The <code>stop</code> points for the gradient include the class elements, which I can reference inside of my stylesheet (I prefer using <a href="http://compass-style.org/">Compass</a> by the way).</p>
+
+<p><code>css
+// $c-cyanBright = predefined colour variable
+// adjust-lightness = helper function include in compass
+.cyanBackgroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 7 ); }
+.cyanBackgroundStop2 { stop-color: $c-cyanBright; }
+.cyanForegroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 29 ); }
+.cyanForegroundStop2 { stop-color: adjust-lightness( $c-cyanBright, 15 ); }
+</code></p>
+
+<p>The last step is to set the gradient to the wished element. This is done by referencing it inside of the stylesheet by its id.</p>
+
+<p><code>css
+// yup, I'm trying out this fancy BEM way ;)
+.ui__downloadList__item.cyan .ui__downloadList__backgroundCircle {
+  fill: url(#gradientBackgroundCyan);
+}
+</code></p>
+
+<p>And here is the result:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/gradientResult.png" width="158" height="166" title="&lsquo;Result of SVG shadow filter&rsquo; &lsquo;Result of SVG shadow filter&rsquo;" ></p>
+
+<p>And that&rsquo;s it. If you want to play around with it check out the <a href="http://codepen.io/stefanjudis/pen/jawGn">pen</a> ad Codepen. Feedback is as always welcome and I hope you have as much fun playin around with d3 as I have. :)</p>
+]]></content>
+  </entry>
+  
+</feed>

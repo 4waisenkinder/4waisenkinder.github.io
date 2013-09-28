@@ -1,0 +1,448 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Using gradients and shadows with d3.js  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="I play around with the d3.js library for a while now and I always thought that stuff like gradients and shadows are not so easy to create with SVG &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Using Gradients and Shadows With d3.js</h2>
+	<div class="entry-content"><p>I play around with the <a href="http://d3js.org/">d3.js</a> library for a while now and I always thought that stuff like gradients and shadows are not so easy to create with SVG and that it is simply not made for that. The reason for that is, that when I&rsquo;m browsing through the d3 <a href="https://github.com/mbostock/d3/wiki/Gallery">example gallery</a> there is so much awesome data visulation, but shadows and gradients are not really present. I know, we are inside of the &ldquo;flat design era&rdquo; right now, so who should care about that, but I really like shadows, when they are at the correct places. Gradients on the other hand make very often the tiny tiny difference of a good design and a great design.</p>
+
+<!-- more -->
+
+
+<p>I started working on a nice design I found at <a href="http://dribbble.com/shots/1244676-Cloud-Storage/attachments/168917">dribbble</a> (I know it&rsquo;s not pixel perfect) and came to the point to implement some nice d3 animations rather quickly. And here is the <a href="http://codepen.io/stefanjudis/full/jawGn">final result</a>.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/cloudStorageUi.jpg" width="740" height="473" title="Cloud storage user interface at codepen" alt="Cloud storage user interface at codepen"></p>
+
+<p>The timeline diagram and the three circles are made in SVG. Both diagram types are supposed by the design to include multiple shadows and gradients. So let&rsquo;s have a look how that works.</p>
+
+<p>Shadows and gradients are so called graphical objects in terms of SVG. Depending on their type they won&rsquo;t be rendered. For gradients and filters (shadows are filters basically) is that the case. If you are interested and want to dive more into that, here are the general specs:</p>
+
+<ul>
+<li><a href="http://www.w3.org/TR/SVG/intro.html#TermGradientElement">spec for gradients</a></li>
+<li><a href="http://www.w3.org/TR/SVG/filters.html#FilterElement">spec for filters</a></li>
+</ul>
+
+
+<p>The way this works is, that you have to define these elements first and then reference them via id inside of the element you want to use them. Pretty straight forward. The spec recommends that all elements that will be referenced should be defined inside of a <code>defs</code> element.</p>
+
+<p>So let&rsquo;s start with that and see some d3 code! :)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="c1">// append new svg</span>
+</span><span class='line'><span class="c1">// and center it</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;svg&#39;</span> <span class="p">)</span>
+</span><span class='line'>                     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="nx">width</span> <span class="p">)</span>
+</span><span class='line'>                     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="nx">height</span> <span class="p">)</span>
+</span><span class='line'>                     <span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;g&#39;</span> <span class="p">)</span>
+</span><span class='line'>                     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span>
+</span><span class='line'>                       <span class="s1">&#39;transform&#39;</span><span class="p">,</span>
+</span><span class='line'>                       <span class="s1">&#39;translate(&#39;</span> <span class="o">+</span> <span class="nx">width</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+</span><span class='line'>                     <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// filter stuff</span>
+</span><span class='line'><span class="cm">/* For the shadow filter... */</span>
+</span><span class='line'><span class="c1">// everything that will be referenced</span>
+</span><span class='line'><span class="c1">// should be defined inside of a &lt;defs&gt; element ;)</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">defs</span> <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;defs&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// append filter element</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">filter</span> <span class="o">=</span> <span class="nx">defs</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;filter&#39;</span> <span class="p">)</span>
+</span><span class='line'>                 <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;dropshadow&#39;</span> <span class="p">)</span> <span class="c1">/// !!! important - define id to reference it later</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// append gaussian blur to filter</span>
+</span><span class='line'><span class="nx">filter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;feGaussianBlur&#39;</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="s1">&#39;SourceAlpha&#39;</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;stdDeviation&#39;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">)</span> <span class="c1">// !!! important parameter - blur</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;blur&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// append offset filter to result of gaussion blur filter</span>
+</span><span class='line'><span class="nx">filter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;feOffset&#39;</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="s1">&#39;blur&#39;</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;dx&#39;</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span> <span class="c1">// !!! important parameter - x-offset</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;dy&#39;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">)</span> <span class="c1">// !!! important parameter - y-offset</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;offsetBlur&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// merge result with original image</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">feMerge</span> <span class="o">=</span> <span class="nx">filter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;feMerge&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// first layer result of blur and offset</span>
+</span><span class='line'><span class="nx">feMerge</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;feMergeNode&#39;</span> <span class="p">)</span>
+</span><span class='line'>       <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;in&quot;, &quot;offsetBlur&#39;</span> <span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// original image on top</span>
+</span><span class='line'><span class="nx">feMerge</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;feMergeNode&#39;</span> <span class="p">)</span>
+</span><span class='line'>       <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="s1">&#39;SourceGraphic&#39;</span> <span class="p">);</span>
+</span><span class='line'><span class="c1">// end filter stuff</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Applying a shadow to an element in the world of SVG needs a bit more than doing it CSS, but I have to admit, that the documentation for SVG filters is really good. The W3C provides a lot of example including one for <a href="http://www.w3.org/TR/SVG/filters.html#AnExample">shadows</a>. Developers that are used to work with CSS mostly care only about three parameters &ndash; x-offset, y-offset and blur. I marked them inside of the code example.</p>
+
+<p>The fourth parameter that is configurable in CSS is unfortunately not so easy to set. As long we are setting filters to a given element, it seems to me relatively hard to achieve a completely different color as a shadow color &ndash; but if anyone knows a way to do that, I would really like to know.</p>
+
+<p>To sum up, what basically happens here are three steps:</p>
+
+<ol>
+<li>create gaussion blur on alpha channel &ndash; <code>feGaussianBlur</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feGaussianBlurElement">spec</a></li>
+<li>move result of gaussian blur to wished position &ndash; <code>feOffset</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feOffsetElement">spec</a></li>
+<li>define output result by merge (original source graphic over result of offset operation)&ndash; <code>feMerge</code> | <a href="http://www.w3.org/TR/SVG/filters.html#feMergeElement">spec</a></li>
+</ol>
+
+
+<p>And that is it for defining a shadow filter in SVG. After that we only need to reference it inside of our wished elements.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">meter</span> <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;g&#39;</span> <span class="p">)</span>
+</span><span class='line'>               <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;progress-meter&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">meter</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;title&#39;</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">text</span><span class="p">(</span> <span class="s1">&#39;Progress meter showing amount of space used for &#39;</span> <span class="o">+</span> <span class="nx">type</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">meter</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span> <span class="p">[</span> <span class="p">{</span> <span class="nx">value</span> <span class="o">:</span> <span class="p">.</span><span class="mi">0</span><span class="p">,</span>  <span class="nx">index</span> <span class="o">:</span> <span class="p">.</span><span class="mi">5</span> <span class="p">}</span> <span class="p">]</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;path&#39;</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;ui__downloadList__backgroundCircle&#39;</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="nx">arcBackground</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;url(#dropshadow)&#39;</span> <span class="p">)</span> <span class="c1">// !!! important - set id of predefined filter</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">duration</span><span class="p">(</span> <span class="nx">duration</span> <span class="p">)</span>
+</span><span class='line'>     <span class="p">.</span><span class="nx">attrTween</span><span class="p">(</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="nx">tweenArcBackground</span><span class="p">(</span> <span class="p">{</span> <span class="nx">value</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span> <span class="p">)</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And here is the result with applied shadow filter to two <code>text</code> elements and two <code>path</code> elements:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/shadowResult.png" width="160" height="166" title="Result of SVG shadow filter" alt="Result of SVG shadow filter"></p>
+
+<p>Gradients are quite similar to achieve. Let us check the needed d3 code to define a gradient element:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">var</span> <span class="nx">gradientForegroundPurple</span> <span class="o">=</span> <span class="nx">defs</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;linearGradient&#39;</span> <span class="p">)</span>
+</span><span class='line'>                                   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;gradientForegroundPurple&#39;</span> <span class="p">)</span>
+</span><span class='line'>                                   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span> <span class="p">)</span>
+</span><span class='line'>                                   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span> <span class="p">)</span>
+</span><span class='line'>                                   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;y1&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span> <span class="p">)</span>
+</span><span class='line'>                                   <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;y2&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">gradientForegroundPurple</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;stop&#39;</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;purpleForegroundStop1&#39;</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="s1">&#39;0%&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">gradientForegroundPurple</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;stop&#39;</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;purpleForegroundStop2&#39;</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="s1">&#39;100%&#39;</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Defining of the <code>gradient</code> element is not as complicated as the <code>filter</code> element. I decided to use a <code>linearGradient</code> (spec <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElement">here</a>). All we have to do is give it an id (we need to reference it later). Per default the linear gradient is a horizontal one. I wanted to have a vertical one and that is why there are coordinates set inside of the code example. The coordinates describe a vector which represents the gradient.</p>
+
+<p>By appending two <code>stop</code> elements we are able to define which color should be set where. This gradient is a really basic one defining colours from start to end point. Much more complicated things are possible and Mozilla has a few really good examples at <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients">MDN</a>.</p>
+
+<p>The nice thing about gradients is, that it is possible to define the colors inside of a stylesheet. I really like that, because everything related to colours belongs exactly there. That makes the whole thing much better maintainable.</p>
+
+<p>The <code>stop</code> points for the gradient include the class elements, which I can reference inside of my stylesheet (I prefer using <a href="http://compass-style.org/">Compass</a> by the way).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">//</span> <span class="err">$</span><span class="nt">c-cyanBright</span> <span class="o">=</span> <span class="nt">predefined</span> <span class="nt">colour</span> <span class="nt">variable</span>
+</span><span class='line'><span class="o">//</span> <span class="nt">adjust-lightness</span> <span class="o">=</span> <span class="nt">helper</span> <span class="nt">function</span> <span class="nt">include</span> <span class="nt">in</span> <span class="nt">compass</span>
+</span><span class='line'><span class="nc">.cyanBackgroundStop1</span> <span class="p">{</span> <span class="n">stop</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="n">adjust</span><span class="o">-</span><span class="n">lightness</span><span class="p">(</span> <span class="err">$</span><span class="n">c</span><span class="o">-</span><span class="n">cyanBright</span><span class="o">,</span> <span class="m">7</span> <span class="p">);</span> <span class="p">}</span>
+</span><span class='line'><span class="nc">.cyanBackgroundStop2</span> <span class="p">{</span> <span class="n">stop</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="err">$</span><span class="n">c</span><span class="o">-</span><span class="n">cyanBright</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'><span class="nc">.cyanForegroundStop1</span> <span class="p">{</span> <span class="n">stop</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="n">adjust</span><span class="o">-</span><span class="n">lightness</span><span class="p">(</span> <span class="err">$</span><span class="n">c</span><span class="o">-</span><span class="n">cyanBright</span><span class="o">,</span> <span class="m">29</span> <span class="p">);</span> <span class="p">}</span>
+</span><span class='line'><span class="nc">.cyanForegroundStop2</span> <span class="p">{</span> <span class="n">stop</span><span class="o">-</span><span class="k">color</span><span class="o">:</span> <span class="n">adjust</span><span class="o">-</span><span class="n">lightness</span><span class="p">(</span> <span class="err">$</span><span class="n">c</span><span class="o">-</span><span class="n">cyanBright</span><span class="o">,</span> <span class="m">15</span> <span class="p">);</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The last step is to set the gradient to the wished element. This is done by referencing it inside of the stylesheet by its id.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">//</span> <span class="nt">yup</span><span class="o">,</span> <span class="nt">I</span><span class="err">&#39;</span><span class="nt">m</span> <span class="nt">trying</span> <span class="nt">out</span> <span class="nt">this</span> <span class="nt">fancy</span> <span class="nt">BEM</span> <span class="nt">way</span> <span class="o">;)</span>
+</span><span class='line'><span class="nc">.ui__downloadList__item.cyan</span> <span class="nc">.ui__downloadList__backgroundCircle</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">fill</span><span class="o">:</span> <span class="sx">url(#gradientBackgroundCyan)</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And here is the result:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/gradientResult.png" width="158" height="166" title="Result of SVG shadow filter" alt="Result of SVG shadow filter"></p>
+
+<p>And that&rsquo;s it. If you want to play around with it check out the <a href="http://codepen.io/stefanjudis/pen/jawGn">pen</a> ad Codepen. Feedback is as always welcome and I hope you have as much fun playin around with d3 as I have. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-28T21:53:00+02:00" pubdate data-updated="true">Sep 28<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/d3/'>d3</a>, <a class='category' href='/blog/categories/svg/'>svg</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/09/28/using-gradient-and-shadows-with-d3-dot-js/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/09/28/using-gradient-and-shadows-with-d3-dot-js/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
