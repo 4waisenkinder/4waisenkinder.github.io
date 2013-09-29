@@ -138,7 +138,7 @@ The ```stop``` points for the gradient include the class elements, which I can r
 
 ```css
 // $c-cyanBright = predefined colour variable
-// adjust-lightness = helper function include in compass
+// adjust-lightness = helper function included in compass
 .cyanBackgroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 7 ); }
 .cyanBackgroundStop2 { stop-color: $c-cyanBright; }
 .cyanForegroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 29 ); }
