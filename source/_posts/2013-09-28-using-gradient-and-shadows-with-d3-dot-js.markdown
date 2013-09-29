@@ -86,6 +86,21 @@ To sum up, what basically happens here are three steps:
 2. move result of gaussian blur to wished position - ```feOffset``` | [spec](http://www.w3.org/TR/SVG/filters.html#feOffsetElement)
 3. define output result by merge (original source graphic over result of offset operation)- ```feMerge``` | [spec](http://www.w3.org/TR/SVG/filters.html#feMergeElement)
 
+And that is the result of the d3 operations inside of the SVG:
+
+```xml
+<defs>
+  <filter id="dropshadow">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"></feGaussianBlur>
+    <feOffset in="blur" dx="2" dy="3" result="offsetBlur"></feOffset>
+    <feMerge>
+      <feMergeNode></feMergeNode>
+      <feMergeNode in="SourceGraphic"></feMergeNode>
+    </feMerge>
+  </filter>
+</defs>
+```
+
 And that is it for defining a shadow filter in SVG. After that we only need to reference it inside of our wished elements.
 
 ```js
@@ -131,6 +146,17 @@ gradientForegroundPurple.append( 'stop' )
 Defining of the ```gradient``` element is not as complicated as the ```filter``` element. I decided to use a ```linearGradient``` (spec [here](http://www.w3.org/TR/SVG/pservers.html#LinearGradientElement)). All we have to do is give it an id (we need to reference it later). Per default the linear gradient is a horizontal one. I wanted to have a vertical one and that is why there are coordinates set inside of the code example. The coordinates describe a vector which represents the gradient.
 
 By appending two ```stop``` elements we are able to define which color should be set where. This gradient is a really basic one defining colours from start to end point. Much more complicated things are possible and Mozilla has a few really good examples at [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients).
+
+And that is the result of the d3 operations inside of the SVG:
+
+```xml
+<defs>
+  <linearGradient id="gradientForegroundPurple" x1="0" x2="0" y1="0" y2="1">
+    <stop class="purpleForegroundStop1" offset="0%"></stop>
+    <stop class="purpleForegroundStop2" offset="100%"></stop>
+  </linearGradient>
+</defs>
+```
 
 The nice thing about gradients is, that it is possible to define the colors inside of a stylesheet. I really like that, because everything related to colours belongs exactly there. That makes the whole thing much better maintainable.
 
