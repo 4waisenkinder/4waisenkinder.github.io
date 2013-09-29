@@ -4,7 +4,7 @@
   <title><![CDATA[Category: d3 | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/d3/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-29T03:17:50+02:00</updated>
+  <updated>2013-09-29T21:08:35+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -115,6 +115,24 @@ feMerge.append( &lsquo;feMergeNode&rsquo; )</p>
 </ol>
 
 
+<p>And that is the result of the d3 operations inside of the SVG:</p>
+
+<p>```xml
+<defs>
+  <filter id="dropshadow"></p>
+
+<pre><code>&lt;feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"&gt;&lt;/feGaussianBlur&gt;
+&lt;feOffset in="blur" dx="2" dy="3" result="offsetBlur"&gt;&lt;/feOffset&gt;
+&lt;feMerge&gt;
+  &lt;feMergeNode&gt;&lt;/feMergeNode&gt;
+  &lt;feMergeNode in="SourceGraphic"&gt;&lt;/feMergeNode&gt;
+&lt;/feMerge&gt;
+</code></pre>
+
+<p>  </filter>
+</defs>
+```</p>
+
 <p>And that is it for defining a shadow filter in SVG. After that we only need to reference it inside of our wished elements.</p>
 
 <p>```js
@@ -174,6 +192,20 @@ var gradientForegroundPurple = defs.append( &lsquo;linearGradient&rsquo; )</p>
 <p>Defining of the <code>gradient</code> element is not as complicated as the <code>filter</code> element. I decided to use a <code>linearGradient</code> (spec <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElement">here</a>). All we have to do is give it an id (we need to reference it later). Per default the linear gradient is a horizontal one. I wanted to have a vertical one and that is why there are coordinates set inside of the code example. The coordinates describe a vector which represents the gradient.</p>
 
 <p>By appending two <code>stop</code> elements we are able to define which color should be set where. This gradient is a really basic one defining colours from start to end point. Much more complicated things are possible and Mozilla has a few really good examples at <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients">MDN</a>.</p>
+
+<p>And that is the result of the d3 operations inside of the SVG:</p>
+
+<p>```xml
+<defs>
+  <linearGradient id="gradientForegroundPurple" x1="0" x2="0" y1="0" y2="1"></p>
+
+<pre><code>&lt;stop class="purpleForegroundStop1" offset="0%"&gt;&lt;/stop&gt;
+&lt;stop class="purpleForegroundStop2" offset="100%"&gt;&lt;/stop&gt;
+</code></pre>
+
+<p>  </linearGradient>
+</defs>
+```</p>
 
 <p>The nice thing about gradients is, that it is possible to define the colors inside of a stylesheet. I really like that, because everything related to colours belongs exactly there. That makes the whole thing much better maintainable.</p>
 

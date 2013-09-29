@@ -221,6 +221,31 @@ $(document).ready(
 </ol>
 
 
+<p>And that is the result of the d3 operations inside of the SVG:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;defs&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;filter</span> <span class="na">id=</span><span class="s">&quot;dropshadow&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;feGaussianBlur</span> <span class="na">in=</span><span class="s">&quot;SourceAlpha&quot;</span> <span class="na">stdDeviation=</span><span class="s">&quot;2&quot;</span> <span class="na">result=</span><span class="s">&quot;blur&quot;</span><span class="nt">&gt;&lt;/feGaussianBlur&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;feOffset</span> <span class="na">in=</span><span class="s">&quot;blur&quot;</span> <span class="na">dx=</span><span class="s">&quot;2&quot;</span> <span class="na">dy=</span><span class="s">&quot;3&quot;</span> <span class="na">result=</span><span class="s">&quot;offsetBlur&quot;</span><span class="nt">&gt;&lt;/feOffset&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;feMerge&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;feMergeNode&gt;&lt;/feMergeNode&gt;</span>
+</span><span class='line'>      <span class="nt">&lt;feMergeNode</span> <span class="na">in=</span><span class="s">&quot;SourceGraphic&quot;</span><span class="nt">&gt;&lt;/feMergeNode&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/feMerge&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/filter&gt;</span>
+</span><span class='line'><span class="nt">&lt;/defs&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>And that is it for defining a shadow filter in SVG. After that we only need to reference it inside of our wished elements.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -294,6 +319,23 @@ $(document).ready(
 <p>Defining of the <code>gradient</code> element is not as complicated as the <code>filter</code> element. I decided to use a <code>linearGradient</code> (spec <a href="http://www.w3.org/TR/SVG/pservers.html#LinearGradientElement">here</a>). All we have to do is give it an id (we need to reference it later). Per default the linear gradient is a horizontal one. I wanted to have a vertical one and that is why there are coordinates set inside of the code example. The coordinates describe a vector which represents the gradient.</p>
 
 <p>By appending two <code>stop</code> elements we are able to define which color should be set where. This gradient is a really basic one defining colours from start to end point. Much more complicated things are possible and Mozilla has a few really good examples at <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Gradients">MDN</a>.</p>
+
+<p>And that is the result of the d3 operations inside of the SVG:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;defs&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;linearGradient</span> <span class="na">id=</span><span class="s">&quot;gradientForegroundPurple&quot;</span> <span class="na">x1=</span><span class="s">&quot;0&quot;</span> <span class="na">x2=</span><span class="s">&quot;0&quot;</span> <span class="na">y1=</span><span class="s">&quot;0&quot;</span> <span class="na">y2=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;stop</span> <span class="na">class=</span><span class="s">&quot;purpleForegroundStop1&quot;</span> <span class="na">offset=</span><span class="s">&quot;0%&quot;</span><span class="nt">&gt;&lt;/stop&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;stop</span> <span class="na">class=</span><span class="s">&quot;purpleForegroundStop2&quot;</span> <span class="na">offset=</span><span class="s">&quot;100%&quot;</span><span class="nt">&gt;&lt;/stop&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;/linearGradient&gt;</span>
+</span><span class='line'><span class="nt">&lt;/defs&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The nice thing about gradients is, that it is possible to define the colors inside of a stylesheet. I really like that, because everything related to colours belongs exactly there. That makes the whole thing much better maintainable.</p>
 
