@@ -4,7 +4,7 @@
   <title><![CDATA[Category: svg | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/svg/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-29T01:41:36+02:00</updated>
+  <updated>2013-09-29T03:17:50+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -181,7 +181,7 @@ var gradientForegroundPurple = defs.append( &lsquo;linearGradient&rsquo; )</p>
 
 <p><code>css
 // $c-cyanBright = predefined colour variable
-// adjust-lightness = helper function include in compass
+// adjust-lightness = helper function included in compass
 .cyanBackgroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 7 ); }
 .cyanBackgroundStop2 { stop-color: $c-cyanBright; }
 .cyanForegroundStop1 { stop-color: adjust-lightness( $c-cyanBright, 29 ); }
