@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-09-29T21:08:35+02:00</updated>
+  <updated>2013-10-06T15:57:01+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,471 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with web components and polymer.js - II]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii/"/>
+    <updated>2013-10-05T18:36:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii</id>
+    <content type="html"><![CDATA[<p>This is the second article of a tutorial series (I do not know yet how many articles will follow, but let us call it a series) about how to get started with web components and polymer.js. In case you missed the first article you can check it <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">here</a>. This article will describe things to improve the checkbox component, that got built up in the last article. By improving I mean making the web component more configurable and making it stylable from the &ldquo;outside&rdquo;. Additionally it will cover some mistakes that were made in first place, but let us just dive into it. ;)</p>
+
+<!-- more -->
+
+
+<h3>Bugs discovered in last article</h3>
+
+<p><strong>First of all I got a lot of feedback about the first article and I really want to thank everyone that read it, commented it, retweeted it and &ldquo;whatever&rdquo; it. Thank you &ndash; that was really awesome!</strong></p>
+
+<p>In the last article I discovered two bugs inside of polymer.js library:</p>
+
+<ul>
+<li>events are bubbling out of the &ldquo;Shadow DOM&rdquo; in polyfill</li>
+<li>using ID&rsquo;s can lead to misbehaviour in polyfill</li>
+</ul>
+
+
+<p>In my case the first bug was, that the <code>change</code> event that out the custom element provided by polymer (<a href="https://github.com/Polymer/polymer/issues/296">bug</a> is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the <a href="http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped">spec</a> there are only specific events defined, that are not allowed to bubble out of the element&rsquo;s Shadow DOM.</p>
+
+<blockquote><p>&ldquo;The following events must always be stopped at the nearest shadow boundary:</p>
+
+<ul>
+<li>abort</li>
+<li>error</li>
+<li>select</li>
+<li>change</li>
+<li>load</li>
+<li>reset</li>
+<li>resize</li>
+<li>scroll</li>
+<li>selectstart&#8221;</li>
+</ul>
+</blockquote>
+
+<p>I do not know, what is the base for this event definition, but when dealing with input fields for example it is really good to know, that events like <code>keypress</code> are supposed to bubble up and for example the <code>change</code> event is not.</p>
+
+<p>For me that means, when I will build up custom elements, I will stick to custom events to avoid misbehaviour in first plase. It feels a bit strange to me that I am &ldquo;allowed&rdquo; to attach listener to the <code>keypress</code> event and not to the <code>change</code> event (which I would personally prefer), but I guess I have to deal with it. ;)</p>
+
+<p>The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canaray ;)), but if you want to have multiple elements of the same custom element in one document you will end up with duplicate ID&rsquo;s and in specific cases (using <code>label-for-relation</code>) with misbehaviour. It doesn&rsquo;t look like there will be a solution for that soon (<a href="https://github.com/Polymer/polymer/issues/295">bug ticket</a>), but I described a workaround in the <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">first article</a>.</p>
+
+<h3>@host rule and defining styles for host element</h3>
+
+<p>There was on thing I did not notice when developing the first web component version of my checkbox. It has no width and height.</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/componentHeightWidthZero.png" width="527" height="249" title="Custom element with width & height equal 0px" alt="Custom element with width & height equal 0px"></p>
+
+<p>The reasion for that is, that when defining new custom elements they are defined to be <code>display : inline</code> per default. To solve this issue the custom element itself needs to be styled. The web components spec defines a <code>@host</code> rule for this purpose (read spec <a href="http://www.w3.org/TR/2013/WD-components-intro-20130606/#css-and-shadow-dom">here</a>).</p>
+
+<p>The old checkbox markup up was the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;template&gt;
+</span><span class='line'>  &lt;style&gt;
+</span><span class='line'>    /* lot of styles here */
+</span><span class='line'>  &lt;/style&gt;
+</span><span class='line'>  &lt;div class="switch "&gt;
+</span><span class='line'>    &lt;div class="switch__circle"&gt;
+</span><span class='line'>      &lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+</span><span class='line'>      &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+</span><span class='line'>      &lt;label class="switch__label" for=""&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  &lt;/div&gt;
+</span><span class='line'>&lt;/template&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It implemented a container, that had the class <code>switch</code>. This container included all the checkbox markup which got styled and represents the checkbox. By using the <code>@host</code> rule I was able to get rid of this container (because the host element itself takes the function as a container). By using the <code>@host</code> rule it is possible to set the custom element to <code>display : block</code>, which leads to a proper width and height.</p>
+
+<p>There is no magic going on with that, but what you have to keep in mind is that <strong>the <code>@host</code> rule has to be the first rule inside of your style definitions inside of your template</strong>. It cost me a long time debugging to discover that commented lines before the <code>@host</code> rule are making it not work.</p>
+
+<p>According to the spec you have to use a <code>:scope</code> selector to apply your styling to the shadow host. <code>:scope</code> is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it.</p>
+
+<p>After cleaning up and using <code>@host</code> rule I ended up with this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;polymer-element name="sj-checkbox" attributes="size fallbackId"&gt;
+</span><span class='line'>  &lt;template&gt;
+</span><span class='line'>    &lt;style&gt;
+</span><span class='line'>      @host {
+</span><span class='line'>        :scope {
+</span><span class='line'>          /* no width and height set */
+</span><span class='line'>          /* you wonder why? */
+</span><span class='line'>          /* Keep on reading. ;) */
+</span><span class='line'>          position: relative;
+</span><span class='line'>          display: block;
+</span><span class='line'>          background-color: #baf0d8;
+</span><span class='line'>          border-radius: 20%;
+</span><span class='line'>          overflow-x: hidden;
+</span><span class='line'>          -webkit-box-shadow: 0 0.333em 0.75em #393939;
+</span><span class='line'>          -moz-box-shadow: 0 0.333em 0.75em #393939;
+</span><span class='line'>          box-shadow: 0 0.333em 0.75em #393939;
+</span><span class='line'>          z-index: 0;
+</span><span class='line'>        }
+</span><span class='line'>  
+</span><span class='line'>      /* more host styles here */
+</span><span class='line'>      
+</span><span class='line'>      /* defining preset sizes */
+</span><span class='line'>        :scope.small {
+</span><span class='line'>          width: 50px;
+</span><span class='line'>          height: 50px;
+</span><span class='line'>          font-size: 0.5em;
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        /* more size presets here */
+</span><span class='line'>      }
+</span><span class='line'>      
+</span><span class='line'>    /* other styles here */
+</span><span class='line'>  
+</span><span class='line'>    &lt;/style&gt;
+</span><span class='line'>    &lt;div class="switch__circle" pseudo="x-sj-circle"&gt;
+</span><span class='line'>        &lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+</span><span class='line'>        &lt;div class="switch__innerCircles" pseudo="x-sj-inner-circles"&gt;&lt;/div&gt;
+</span><span class='line'>        &lt;label class="switch__label" for="" pseudo="x-sj-label"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  &lt;/template&gt;
+</span><span class='line'>&lt;/polymer-element&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The template now includes one div less and the CSS rules that were applied to the old div container moved into <code>@host :scope</code>. I really liked that, because it is always nice to have less markup for the same result. ;)</p>
+
+<p>After that I decided to set no width and height for the custom element <code>sj-checkbox</code> at default, but provided three default sizes, which will be applied when setting a given class to the custom element. This way the custom element is configurable by just adding a class to it. That makes the web component easier to handle and it is relatively clear, what is going on, when looking at the markup for the dependent custom element.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;li&gt;&lt;sj-checkbox class="big" fallbackId="checkboxBigStyled"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="medium" fallbackId="checkboxMediumStyled"&gt;&lt;/sj-checkbox&gt;
+</span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="small" fallbackId="checkboxSmallStyled"&gt;&lt;/sj-checkbox&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The reason why I set no default width and height is the following. If you want to define your desired styling to the custom element and it already has defined the rules for the element host you want to set, it will not work. Here are few examples what will work and what not:</p>
+
+<p>Not working:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;style&gt;
+</span><span class='line'>#switchesComponentsStyled .customWidth {
+</span><span class='line'>  width: 80px;
+</span><span class='line'>  height: 80px;
+</span><span class='line'>}
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>
+</span><span class='line'>/* sj checkbox has width and height defined in '@host :scope' */
+</span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"&gt;&lt;/sj-checkbox&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Kind of working, but I try always to avoid usage of <code>!important</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;style&gt;
+</span><span class='line'>#switchesComponentsStyled .customWidth {
+</span><span class='line'>  width: 80px !important;
+</span><span class='line'>  height: 80px !important;
+</span><span class='line'>}
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>
+</span><span class='line'>/* sj checkbox has width and height defined in '@host :scope' */
+</span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"&gt;&lt;/sj-checkbox&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Workin:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;style&gt;
+</span><span class='line'>#switchesComponentsStyled .customWidth {
+</span><span class='line'>  width: 80px;
+</span><span class='line'>  height: 80px;
+</span><span class='line'>}
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>
+</span><span class='line'>/* sj checkbox has no width and height defined in '@host :scope' */
+</span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"&gt;&lt;/sj-checkbox&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For me the third option is the best solution. The user is able to define the width and height of the custom element (if he/she wants) and by providing three default classes it can be set quickly.</p>
+
+<p>By defining <code>@host</code> styles the custom element now has a proper width and height. :)</p>
+
+<p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/componentProperWidthHeight.png" width="447" height="223" title="Custom element with width & height equal 0px" alt="Custom element with width & height equal 0px"></p>
+
+<h3>Making it configurable using pseudo attributes | part pseudo elements</h3>
+
+<p>I really like the way the checkbox is styled, but we are in the era of &ldquo;Flat Design&rdquo; now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows if he/she want to. This can be done by defining so called pseudo ID&rsquo;s or part pseudo elements.</p>
+
+<h4>Using pseudo ID&rsquo;s</h4>
+
+<p>By defining pseudo ID&rsquo;s the creator of the web component gives the user the possibility to set styles to elements, that are hidden inside of the Shadow DOM. Everybody who styled a default input element probably noticed that already.</p>
+
+<p>The tricky part about them is, that they have to be prefixed with <code>x-</code>. According to the <a href="http://www.w3.org/TR/shadow-dom/#custom-pseudo-elements">spec</a> custom pseudo-element values must be considered invalid, if they are not prefixed the correct way.</p>
+
+<blockquote><p>&ldquo;The custom pseudo-element value must be considered valid if it starts with a U+0078 LATIN SMALL LETTER X, followed by U+002D HYPHEN-MINUS. Otherwise, the custom pseudo-element value must be considered invalid.&rdquo;</p></blockquote>
+
+<p>After implementation of the pseudo ID&rsquo;s the template for checkbox looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;template&gt;
+</span><span class='line'>  &lt;style&gt;
+</span><span class='line'>  /* lot of styles here */
+</span><span class='line'>  &lt;/style&gt;
+</span><span class='line'>  /* new pseudo ID's implemented */
+</span><span class='line'>  &lt;div class="switch__circle" pseudo="x-sj-circle"&gt;
+</span><span class='line'>    &lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+</span><span class='line'>    &lt;div class="switch__innerCircles" pseudo="x-sj-inner-circles"&gt;&lt;/div&gt;
+</span><span class='line'>    &lt;label class="switch__label" for="" pseudo="x-sj-label"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>  &lt;/div&gt;
+</span><span class='line'>&lt;/template&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now it is possible to remove all the shadows, because the dependent elements are stylable from the &ldquo;outside&rdquo; with the following rules:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/**</span>
+</span><span class='line'><span class="c"> * Styling with pseudo ID&#39;s</span>
+</span><span class='line'><span class="c"> */</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">/* style for native shadow DOM support */</span>
+</span><span class='line'><span class="nf">#switchesComponentsStyled</span> <span class="nt">sj-checkbox</span><span class="o">:</span><span class="nd">:x-sj-circle:after</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">/* style for polifill */</span>
+</span><span class='line'><span class="nf">#switchesComponentsStyled</span> <span class="nt">sj-checkbox</span> <span class="o">[</span><span class="nt">pseudo</span><span class="o">=</span><span class="nt">x-sj-circle</span><span class="o">]</span><span class="nd">:after</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">/* all the other ID&#39;s here */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>About that is to say, that I really try the component to behave and look the same in shadow DOM supporting and not supporting browsers. That is why I implemented two rules. The first rule shows how to access elements with given pseudo ID&rsquo;s. The second one is for the polyfill. We can just access the dependent element via the attribute CSS selector, because there is no &ldquo;real&rdquo; shadow DOM, where it could be hidden in. The polyfill just renders HTML inside of a custom element, which makes it really easy to select needed elements.</p>
+
+<h4>Using part pseudo elements</h4>
+
+<p>When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID&rsquo;s. I thought about that and it is the perfect use case to use a class or something like that to achieve the goal. Remember the coding principle DRY (<em>Don not repeat yourself</em>)? ;)</p>
+
+<p>The spec defines something called <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#part-pseudo-elements">part pseudo-elements</a> for that situation.</p>
+
+<p>All you have to do for that is to give all elements a <code>part</code>-attribute.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">&lt;</span><span class="nt">template</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nt">style</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="c">/* lot of styles here */</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="nt">style</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="c">/* new part attribute */</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&quot;switch__circle&quot;</span> <span class="nt">part</span><span class="o">=</span><span class="s2">&quot;shadow&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nt">input</span> <span class="nt">id</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&quot;switch__input&quot;</span> <span class="nt">type</span><span class="o">=</span><span class="s2">&quot;checkbox&quot;</span> <span class="nt">on-change</span><span class="o">=</span><span class="s2">&quot;changeHandler&quot;</span><span class="nt">checked</span><span class="o">=</span><span class="s2">&quot;checked&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&quot;switch__innerCircles&quot;</span> <span class="nt">part</span><span class="o">=</span><span class="s2">&quot;shadow&quot;</span><span class="o">&gt;&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="nt">label</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&quot;switch__label&quot;</span> <span class="nt">for</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="nt">part</span><span class="o">=</span><span class="s2">&quot;shadow&quot;</span><span class="o">&gt;</span><span class="nt">Switch</span> <span class="nt">me</span><span class="o">!!!&lt;/</span><span class="nt">label</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="nt">div</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="nt">template</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After implementing the new attributes, you can use the part pseudo element selector to style the matching elements.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/**</span>
+</span><span class='line'><span class="c"> * Styling with part pseudo elements</span>
+</span><span class='line'><span class="c"> */</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">/* style for native shadow DOM support */</span>
+</span><span class='line'><span class="c">/* fancy selector isn&#39;t it? :) */</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span><span class="o">:</span><span class="nd">:part</span><span class="o">(</span><span class="nt">shadow</span><span class="o">),</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span><span class="o">:</span><span class="nd">:part</span><span class="o">(</span><span class="nt">shadow</span><span class="o">)</span><span class="nd">:before</span><span class="o">,</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span><span class="o">:</span><span class="nd">:part</span><span class="o">(</span><span class="nt">shadow</span><span class="o">)</span><span class="nd">:after</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">/* style for polifill */</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span> <span class="o">[</span><span class="nt">part</span><span class="o">=</span><span class="nt">shadow</span><span class="o">],</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span> <span class="o">[</span><span class="nt">part</span><span class="o">=</span><span class="nt">shadow</span><span class="o">]</span><span class="nd">:before</span><span class="o">,</span>
+</span><span class='line'><span class="nt">sj-checkbox-part</span> <span class="o">[</span><span class="nt">part</span><span class="o">=</span><span class="nt">shadow</span><span class="o">]</span><span class="nd">:after</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That looks much better. After using the <code>part</code> attribute there is only one rule needed to give three elements the wished styling.</p>
+
+<p>I implemented again to rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)</p>
+
+<p>By using the part pseudo element we can provide the option to apply the same styling for a lot of elements. I really like that. It makes everything much cleaner.</p>
+
+<h3>Stuff to be careful with and keep in mind</h3>
+
+<ul>
+<li>make sure you set proper styles for hosting element using <code>@host</code></li>
+<li>think of prefixing pseudo ID&rsquo;s with &lsquo;x-&rsquo;</li>
+<li>think of browsers that will not support the new fancy shadow DOM stuff</li>
+</ul>
+
+
+<p>And that is it for today. You can find the actual implementation <a href="http://stefanjudis.github.io/webComponents-tutorial-II/">here</a>. Next steps will be to implement some functionality via JavaScript to the checkbox and to use the content of the custom element to place it inside of the shadow DOM. A friend and I are also planning to build up a complete audio player web component, but let us make small steps first. :)</p>
+
+<p>I hope you enjoyed the article and feedback is as always really welcome.</p>
+
+<p>Thx for reading. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using SVG gradients and filters with d3.js]]></title>
