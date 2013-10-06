@@ -228,3 +228,5 @@ Jap and that is it. You can check out the result [here](http://stefanjudis.githu
 I will continue playing around with this. My next goal is to achieve a new input element type like ```<input type="myFancyCheckbox">``` that I actually can use inside of my forms, but I have got no idea how this works yet. Addiontally implementing custom pseudo elements to make the components accessible and styleable from the outside seams to be a reasonable next step.
 
 So, thanks for reading. Feedback is as always really welcome. ;)
+
+A follow up post about making the checkbox customizable can be found [here](http://4waisenkinder.de/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii/).
