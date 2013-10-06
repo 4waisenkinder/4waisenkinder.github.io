@@ -40,7 +40,7 @@ I do not know, what is the base for this event definition, but when dealing with
 
 For me that means, when I will build up custom elements, I will stick to custom events to avoid misbehaviour in first plase. It feels a bit strange to me that I am "allowed" to attach listener to the `keypress` event and not to the `change` event (which I would personally prefer), but I guess I have to deal with it. ;)
 
-The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canaray ;)), but if you want to have multiple elements of the same custom element in one document you will end up with duplicate ID's and in specific cases (using `label-for-relation`) with misbehaviour. It doesn't look like there will be a solution for that soon ([bug ticket](https://github.com/Polymer/polymer/issues/295)), but I described a workaround in the [first article](http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/).
+The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canary ;)), but if you want to have multiple elements of the same custom element in one document, you will end up with duplicate ID's and in specific cases (using `label-for-relation`) with misbehaviour. It doesn't look like there will be a solution for that soon ([bug ticket](https://github.com/Polymer/polymer/issues/295)), but I described a workaround in the [first article](http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/).
 
 ### @host rule and defining styles for host element
 
@@ -175,7 +175,7 @@ Workin:
 <li><sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"></sj-checkbox>
 ```
 
-For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decided, what is wished and can implement it easily.
+For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decide, what is wished and can implement it easily.
 
 By defining `@host` styles (including rules for `display`, `width` and `height`) the custom element now has a proper width and height. :)
 
@@ -249,7 +249,7 @@ All you have to do for that is to give all elements a `part`-attribute.
   <style>
   /* lot of styles here */
   </style>
-  /* new part attribute */
+  /* new part attributes implemented */
   <div class="switch__circle" part="shadow">
     <input id="{{fallbackId}}" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked">
     <div class="switch__innerCircles" part="shadow"></div>
