@@ -179,7 +179,7 @@ For me the third option is the best solution. The user is forced to define the w
 
 By defining `@host` styles (including rules for `display`, `width` and `height`) the custom element now has a proper width and height. :)
 
-{% img left /images/blog/stefanjudis/componentProperWidthHeight.png 447 223 'Custom element with proper width and height' 'Custom element with proper width and heightra' %}
+{% img left /images/blog/stefanjudis/componentProperWidthHeight.png 447 223 'Custom element with proper width and height' 'Custom element with proper width and height' %}
 
 ### Making it configurable using pseudo attributes | part pseudo elements
 
