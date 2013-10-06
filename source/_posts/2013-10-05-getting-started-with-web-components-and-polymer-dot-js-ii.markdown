@@ -22,7 +22,7 @@ In the last article I discovered two bugs inside of polymer.js library:
 - events are bubbling out of the "Shadow DOM" in polyfill
 - using ID's can lead to misbehaviour in polyfill
 
-In my case the first bug was, that the `change` event that out the custom element provided by polymer ([bug](https://github.com/Polymer/polymer/issues/296) is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the [spec](http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped) there are only specific events defined, that are not allowed to bubble out of the element's Shadow DOM.
+In my case the first bug was, that the `change` event bubbled out of the custom element provided by polymer ([bug](https://github.com/Polymer/polymer/issues/296) is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the [spec](http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped) there are only specific events defined, that are not allowed to bubble out of the element's Shadow DOM.
 
 > "The following events must always be stopped at the nearest shadow boundary:
 >
