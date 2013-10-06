@@ -13,7 +13,7 @@ This is the second article of a tutorial series (I do not know yet how many arti
 
 <!-- more -->
 
-**First of all I got a lot of feedback on the first article and I really want to thank everyone that read it, commented it, retweeted it and "whatever" it. Thank you - that was really awesome!**
+**First of all I got a lot of feedback on the first article and I really want to thank everyone who read it, commented it, retweeted it and "whatever" it. Thank you - that was really awesome!**
 
 ### Bugs discovered in last article
 
@@ -179,7 +179,7 @@ For me the third option is the best solution. The user is forced to define the w
 
 By defining `@host` styles (including rules for `display`, `width` and `height`) the custom element now has a proper width and height. :)
 
-{% img left /images/blog/stefanjudis/componentProperWidthHeight.png 447 223 'Custom element with proper width and height' 'Custom element with proper width and height' %}
+{% img left /images/blog/stefanjudis/componentProperWidthHeight.png 447 223 'Custom element with proper width and height' 'Custom element with proper width and heightra' %}
 
 ### Making it configurable using pseudo attributes | part pseudo elements
 
