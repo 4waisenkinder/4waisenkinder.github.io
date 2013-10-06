@@ -9,7 +9,7 @@ categories:
 - polymer
 - future stuff
 ---
-This is the second article of a tutorial series (I do not know yet how many articles will follow, but let us call it a series) about how to get started with web components and polymer.js. In case you missed the first article you can check it [here](http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/). This article will describe things to improve the checkbox component, that got built up in the last article. By improving I mean making the web component more configurable and making it stylable from the "outside". Additionally it will cover some mistakes that were made in first place, but let us just dive into it. ;)
+This is the second article of a tutorial series (I do not know yet how many articles will follow, but let us call it a series) about how to get started with web components and [polymer.js](http://www.polymer-project.org/). In case you missed the first article you can check it [here](http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/). This article will describe things to improve the checkbox component, that got built up in the last article. By improving I mean making the web component more configurable and making it stylable from the "outside". Additionally it will cover some mistakes that were made in first place, but let us just dive into it. ;)
 
 <!-- more -->
 
