@@ -4,7 +4,7 @@
   <title><![CDATA[Category: future stuff | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/future-stuff/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-06T16:17:03+02:00</updated>
+  <updated>2013-10-06T16:26:28+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -56,7 +56,7 @@
 
 <p>For me that means, when I will build up custom elements, I will stick to custom events to avoid misbehaviour in first plase. It feels a bit strange to me that I am &ldquo;allowed&rdquo; to attach listener to the <code>keypress</code> event and not to the <code>change</code> event (which I would personally prefer), but I guess I have to deal with it. ;)</p>
 
-<p>The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canaray ;)), but if you want to have multiple elements of the same custom element in one document you will end up with duplicate ID&rsquo;s and in specific cases (using <code>label-for-relation</code>) with misbehaviour. It doesn&rsquo;t look like there will be a solution for that soon (<a href="https://github.com/Polymer/polymer/issues/295">bug ticket</a>), but I described a workaround in the <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">first article</a>.</p>
+<p>The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canary ;)), but if you want to have multiple elements of the same custom element in one document, you will end up with duplicate ID&rsquo;s and in specific cases (using <code>label-for-relation</code>) with misbehaviour. It doesn&rsquo;t look like there will be a solution for that soon (<a href="https://github.com/Polymer/polymer/issues/295">bug ticket</a>), but I described a workaround in the <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">first article</a>.</p>
 
 <h3>@host rule and defining styles for host element</h3>
 
@@ -186,7 +186,7 @@
 <li>&lt;sj-checkbox class=&ldquo;customWidth&rdquo; fallbackId=&ldquo;checkboxCustomStyled&rdquo;>&lt;/sj-checkbox>
 ```</p>
 
-<p>For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decided, what is wished and can implement it easily.</p>
+<p>For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decide, what is wished and can implement it easily.</p>
 
 <p>By defining <code>@host</code> styles (including rules for <code>display</code>, <code>width</code> and <code>height</code>) the custom element now has a proper width and height. :)</p>
 
@@ -266,7 +266,7 @@
   <style>
   /<em> lot of styles here </em>/
   </style>
-  /<em> new part attribute </em>/
+  /<em> new part attributes implemented </em>/
   <div class="switch__circle" part="shadow"></p>
 
 <pre><code>&lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
