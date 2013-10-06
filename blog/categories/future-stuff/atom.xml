@@ -4,7 +4,7 @@
   <title><![CDATA[Category: future stuff | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/future-stuff/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-06T16:01:13+02:00</updated>
+  <updated>2013-10-06T16:02:26+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -35,7 +35,7 @@
 </ul>
 
 
-<p>In my case the first bug was, that the <code>change</code> event that out the custom element provided by polymer (<a href="https://github.com/Polymer/polymer/issues/296">bug</a> is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the <a href="http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped">spec</a> there are only specific events defined, that are not allowed to bubble out of the element&rsquo;s Shadow DOM.</p>
+<p>In my case the first bug was, that the <code>change</code> event bubbled out of the custom element provided by polymer (<a href="https://github.com/Polymer/polymer/issues/296">bug</a> is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the <a href="http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped">spec</a> there are only specific events defined, that are not allowed to bubble out of the element&rsquo;s Shadow DOM.</p>
 
 <blockquote><p>&ldquo;The following events must always be stopped at the nearest shadow boundary:</p>
 
