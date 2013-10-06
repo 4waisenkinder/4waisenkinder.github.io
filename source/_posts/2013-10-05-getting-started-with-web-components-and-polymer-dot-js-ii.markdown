@@ -48,7 +48,7 @@ There was on thing I did not notice when developing the first web component vers
 
 {% img left /images/blog/stefanjudis/componentHeightWidthZero.png 527 249 'Custom element with width & height equal 0px' 'Custom element with width & height equal 0px' %}
 
-The reasion for that is, that when defining new custom elements they are defined to be `display : inline` per default. To solve this issue the custom element itself needs to be styled. The web components spec defines a `@host` rule for this purpose (read spec [here](http://www.w3.org/TR/2013/WD-components-intro-20130606/#css-and-shadow-dom)). 
+The reason for that is, that when defining new custom elements they are defined to be `display : inline` per default. To solve this issue the custom element itself needs to be styled. The web components spec defines a `@host` rule for this purpose (read spec [here](http://www.w3.org/TR/2013/WD-components-intro-20130606/#css-and-shadow-dom)). 
 
 The old checkbox markup up was the following:
 
