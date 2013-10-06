@@ -4,7 +4,7 @@
   <title><![CDATA[Category: web components | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/web-components/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-06T16:27:14+02:00</updated>
+  <updated>2013-10-06T16:50:10+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -688,6 +688,8 @@ sj-checkbox-part [part=shadow]:after {
 <p>I will continue playing around with this. My next goal is to achieve a new input element type like <code>&lt;input type="myFancyCheckbox"&gt;</code> that I actually can use inside of my forms, but I have got no idea how this works yet. Addiontally implementing custom pseudo elements to make the components accessible and styleable from the outside seams to be a reasonable next step.</p>
 
 <p>So, thanks for reading. Feedback is as always really welcome. ;)</p>
+
+<p>A follow up post about making the checkbox customizable can be found <a href="http://4waisenkinder.de/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii/">here</a>.</p>
 ]]></content>
   </entry>
   
