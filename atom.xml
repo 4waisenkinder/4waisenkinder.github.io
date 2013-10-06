@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-06T16:02:26+02:00</updated>
+  <updated>2013-10-06T16:15:20+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -60,7 +60,7 @@
 
 <h3>@host rule and defining styles for host element</h3>
 
-<p>There was on thing I did not notice when developing the first web component version of my checkbox. It has no width and height.</p>
+<p>There was on thing I did not notice when developing the first web component version of my checkbox. It had no width and height.</p>
 
 <p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/componentHeightWidthZero.png" width="527" height="249" title="Custom element with width & height equal 0px" alt="Custom element with width & height equal 0px"></p>
 
@@ -94,11 +94,11 @@
 </span><span class='line'>&lt;/template&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>It implemented a container, that had the class <code>switch</code>. This container included all the checkbox markup which got styled and represents the checkbox. By using the <code>@host</code> rule I was able to get rid of this container (because the host element itself takes the function as a container). By using the <code>@host</code> rule it is possible to set the custom element to <code>display : block</code>, which leads to a proper width and height.</p>
+<p>It implemented a container, that had the class <code>switch</code>. This container included all the checkbox markup which got styled and represented the actual checkbox. By using the <code>@host</code> rule I was able to get rid of this container (because the host element itself takes the function as a container). Inside of it, it is possible to set the custom element to <code>display : block</code>, which leads to a proper width and height.</p>
 
-<p>There is no magic going on with that, but what you have to keep in mind is that <strong>the <code>@host</code> rule has to be the first rule inside of your style definitions inside of your template</strong>. It cost me a long time debugging to discover that commented lines before the <code>@host</code> rule are making it not work.</p>
+<p>There is no magic going on with that, but what you have to keep in mind is that <strong>the <code>@host</code> rule has to be the first rule inside of your style definitions inside of your template</strong>. It cost me a long time debugging to discover that commented lines above the <code>@host</code> rule are making it not work.</p>
 
-<p>According to the spec you have to use a <code>:scope</code> selector to apply your styling to the shadow host. <code>:scope</code> is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it.</p>
+<p>According to the spec, you have to use a <code>:scope</code> selector to apply your styling to the shadow host. <code>:scope</code> is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it.</p>
 
 <p>After cleaning up and using <code>@host</code> rule I ended up with this:</p>
 
@@ -267,15 +267,15 @@
 </span><span class='line'>&lt;li&gt;&lt;sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"&gt;&lt;/sj-checkbox&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>For me the third option is the best solution. The user is able to define the width and height of the custom element (if he/she wants) and by providing three default classes it can be set quickly.</p>
+<p>For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decided, what is wished and can implement it easily.</p>
 
-<p>By defining <code>@host</code> styles the custom element now has a proper width and height. :)</p>
+<p>By defining <code>@host</code> styles (including rules for <code>display</code>, <code>width</code> and <code>height</code>) the custom element now has a proper width and height. :)</p>
 
 <p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/componentProperWidthHeight.png" width="447" height="223" title="Custom element with width & height equal 0px" alt="Custom element with width & height equal 0px"></p>
 
 <h3>Making it configurable using pseudo attributes | part pseudo elements</h3>
 
-<p>I really like the way the checkbox is styled, but we are in the era of &ldquo;Flat Design&rdquo; now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows if he/she want to. This can be done by defining so called pseudo ID&rsquo;s or part pseudo elements.</p>
+<p>I really like the way the checkbox is styled, but we are in the era of &ldquo;Flat Design&rdquo; now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows, if he/she want to. This can be done by defining so called pseudo ID&rsquo;s or part pseudo elements.</p>
 
 <h4>Using pseudo ID&rsquo;s</h4>
 
@@ -358,7 +358,7 @@
 
 <h4>Using part pseudo elements</h4>
 
-<p>When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID&rsquo;s. I thought about that and it is the perfect use case to use a class or something like that to achieve the goal. Remember the coding principle DRY (<em>Don not repeat yourself</em>)? ;)</p>
+<p>When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID&rsquo;s. I thought about that and it is the perfect use case for a class or something like that to achieve the goal. Remember the coding principle DRY (<em>Do not repeat yourself</em>)? ;)</p>
 
 <p>The spec defines something called <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#part-pseudo-elements">part pseudo-elements</a> for that situation.</p>
 
@@ -438,16 +438,16 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>That looks much better. After using the <code>part</code> attribute there is only one rule needed to give three elements the wished styling.</p>
+<p>That looks much better. After using part pseudo attributes there is only one rule needed to give three elements the wished styling.</p>
 
-<p>I implemented again to rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)</p>
+<p>I implemented again two rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)</p>
 
 <p>By using the part pseudo element we can provide the option to apply the same styling for a lot of elements. I really like that. It makes everything much cleaner.</p>
 
 <h3>Stuff to be careful with and keep in mind</h3>
 
 <ul>
-<li>make sure you set proper styles for hosting element using <code>@host</code></li>
+<li>make sure you set proper styles for the hosting element using <code>@host :scope</code></li>
 <li>think of prefixing pseudo ID&rsquo;s with &lsquo;x-&rsquo;</li>
 <li>think of browsers that will not support the new fancy shadow DOM stuff</li>
 </ul>
