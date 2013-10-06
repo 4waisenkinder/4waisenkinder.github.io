@@ -13,9 +13,9 @@ This is the second article of a tutorial series (I do not know yet how many arti
 
 <!-- more -->
 
-### Bugs discovered in last article
-
 **First of all I got a lot of feedback about the first article and I really want to thank everyone that read it, commented it, retweeted it and "whatever" it. Thank you - that was really awesome!**
+
+### Bugs discovered in last article
 
 In the last article I discovered two bugs inside of polymer.js library:
 
