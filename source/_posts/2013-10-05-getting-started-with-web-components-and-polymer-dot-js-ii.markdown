@@ -44,7 +44,7 @@ The second bug is about ID handling inside of the polymer polyfill. There is no 
 
 ### @host rule and defining styles for host element
 
-There was on thing I did not notice when developing the first web component version of my checkbox. It has no width and height. 
+There was on thing I did not notice when developing the first web component version of my checkbox. It had no width and height. 
 
 {% img left /images/blog/stefanjudis/componentHeightWidthZero.png 527 249 'Custom element with width & height equal 0px' 'Custom element with width & height equal 0px' %}
 
@@ -67,11 +67,11 @@ The old checkbox markup up was the following:
 </template>
 ```
 
-It implemented a container, that had the class `switch`. This container included all the checkbox markup which got styled and represents the checkbox. By using the `@host` rule I was able to get rid of this container (because the host element itself takes the function as a container). By using the `@host` rule it is possible to set the custom element to `display : block`, which leads to a proper width and height.
+It implemented a container, that had the class `switch`. This container included all the checkbox markup which got styled and represented the actual checkbox. By using the `@host` rule I was able to get rid of this container (because the host element itself takes the function as a container). Inside of it, it is possible to set the custom element to `display : block`, which leads to a proper width and height.
 
-There is no magic going on with that, but what you have to keep in mind is that **the `@host` rule has to be the first rule inside of your style definitions inside of your template**. It cost me a long time debugging to discover that commented lines before the `@host` rule are making it not work.
+There is no magic going on with that, but what you have to keep in mind is that **the `@host` rule has to be the first rule inside of your style definitions inside of your template**. It cost me a long time debugging to discover that commented lines above the `@host` rule are making it not work.
 
-According to the spec you have to use a `:scope` selector to apply your styling to the shadow host. `:scope` is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it. 
+According to the spec, you have to use a `:scope` selector to apply your styling to the shadow host. `:scope` is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it. 
 
 After cleaning up and using `@host` rule I ended up with this:
 
@@ -175,15 +175,15 @@ Workin:
 <li><sj-checkbox class="customWidth" fallbackId="checkboxCustomStyled"></sj-checkbox>
 ```
 
-For me the third option is the best solution. The user is able to define the width and height of the custom element (if he/she wants) and by providing three default classes it can be set quickly.
+For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decided, what is wished and can implement it easily.
 
-By defining `@host` styles the custom element now has a proper width and height. :)
+By defining `@host` styles (including rules for `display`, `width` and `height`) the custom element now has a proper width and height. :)
 
 {% img left /images/blog/stefanjudis/componentProperWidthHeight.png 447 223 'Custom element with width & height equal 0px' 'Custom element with width & height equal 0px' %}
 
 ### Making it configurable using pseudo attributes | part pseudo elements
 
-I really like the way the checkbox is styled, but we are in the era of "Flat Design" now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows if he/she want to. This can be done by defining so called pseudo ID's or part pseudo elements.
+I really like the way the checkbox is styled, but we are in the era of "Flat Design" now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows, if he/she want to. This can be done by defining so called pseudo ID's or part pseudo elements.
 
 #### Using pseudo ID's
 
@@ -238,7 +238,7 @@ About that is to say, that I really try the component to behave and look the sam
 
 #### Using part pseudo elements
 
-When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID's. I thought about that and it is the perfect use case to use a class or something like that to achieve the goal. Remember the coding principle DRY (*Don not repeat yourself*)? ;)
+When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID's. I thought about that and it is the perfect use case for a class or something like that to achieve the goal. Remember the coding principle DRY (*Do not repeat yourself*)? ;)
 
 The spec defines something called [part pseudo-elements](https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#part-pseudo-elements) for that situation. 
 
@@ -285,15 +285,15 @@ sj-checkbox-part [part=shadow]:after {
 }
 ```
 
-That looks much better. After using the `part` attribute there is only one rule needed to give three elements the wished styling.
+That looks much better. After using part pseudo attributes there is only one rule needed to give three elements the wished styling.
 
-I implemented again to rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)
+I implemented again two rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)
 
 By using the part pseudo element we can provide the option to apply the same styling for a lot of elements. I really like that. It makes everything much cleaner.
 
 ### Stuff to be careful with and keep in mind
 
-- make sure you set proper styles for hosting element using `@host`
+- make sure you set proper styles for the hosting element using `@host :scope`
 - think of prefixing pseudo ID's with 'x-'
 - think of browsers that will not support the new fancy shadow DOM stuff
 
