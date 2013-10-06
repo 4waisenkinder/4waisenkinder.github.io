@@ -162,7 +162,7 @@ Kind of working, but I try always to avoid usage of `!important`:
 ```
 
 
-Workin:
+Working:
 ```
 <style>
 #switchesComponentsStyled .customWidth {
