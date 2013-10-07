@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-07T21:56:35+02:00</updated>
+  <updated>2013-10-07T22:16:22+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -97,8 +97,6 @@
 
 
 <p>It implemented a container, that had the class <code>switch</code>. This container included all the checkbox markup which got styled and represented the actual checkbox. By using the <code>@host</code> rule I was able to get rid of this container (because the host element itself takes the function as a container). Inside of it, it is possible to set the custom element to <code>display : block</code>, which leads to a proper width and height.</p>
-
-<p>There is no magic going on with that, but what you have to keep in mind is that <strong>the <code>@host</code> rule has to be the first rule inside of your style definitions inside of your template</strong>. It cost me a long time debugging to discover that commented lines above the <code>@host</code> rule are making it not work.</p>
 
 <p>According to the spec, you have to use a <code>:scope</code> selector to apply your styling to the shadow host. <code>:scope</code> is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it.</p>
 
@@ -449,7 +447,6 @@
 <h3>Stuff to be careful with and keep in mind</h3>
 
 <ul>
-<li>make sure you set proper styles for the hosting element using <code>@host :scope</code></li>
 <li>think of prefixing pseudo ID&rsquo;s with &lsquo;x-&rsquo;</li>
 <li>think of browsers that will not support the new fancy shadow DOM stuff</li>
 </ul>
