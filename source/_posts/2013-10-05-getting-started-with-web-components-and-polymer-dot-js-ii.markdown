@@ -71,8 +71,6 @@ The old checkbox markup up was the following:
 
 It implemented a container, that had the class `switch`. This container included all the checkbox markup which got styled and represented the actual checkbox. By using the `@host` rule I was able to get rid of this container (because the host element itself takes the function as a container). Inside of it, it is possible to set the custom element to `display : block`, which leads to a proper width and height.
 
-There is no magic going on with that, but what you have to keep in mind is that **the `@host` rule has to be the first rule inside of your style definitions inside of your template**. It cost me a long time debugging to discover that commented lines above the `@host` rule are making it not work.
-
 According to the spec, you have to use a `:scope` selector to apply your styling to the shadow host. `:scope` is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it. 
 
 After cleaning up and using `@host` rule I ended up with this:
@@ -295,7 +293,6 @@ By using the part pseudo element we can provide the option to apply the same sty
 
 ### Stuff to be careful with and keep in mind
 
-- make sure you set proper styles for the hosting element using `@host :scope`
 - think of prefixing pseudo ID's with 'x-'
 - think of browsers that will not support the new fancy shadow DOM stuff
 
