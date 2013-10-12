@@ -143,6 +143,8 @@ $(document).ready(
 </span></code></pre></td></tr></table></div></figure>
 
 
+<h3>_.pluck</h3>
+
 <blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>all their heights</strong>?</p></blockquote>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -159,8 +161,6 @@ $(document).ready(
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
 </span><span class='line'>  <span class="p">{</span>
 </span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
@@ -172,11 +172,9 @@ $(document).ready(
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">]</span>
 </span><span class='line'>
-</span><span class='line'><span class="nx">personsHeights</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'><span class="nx">personsHeights</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">pluck</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span> <span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// =&gt; [ 190, 183 ]</span>
+</span><span class='line'><span class="c1">// =&gt; [ 195, 183 ]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

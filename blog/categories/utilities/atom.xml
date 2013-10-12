@@ -4,7 +4,7 @@
   <title><![CDATA[Category: utilities | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/utilities/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-12T18:09:20+02:00</updated>
+  <updated>2013-10-12T20:14:14+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -57,6 +57,8 @@ height : 183
 <p>// => [ { height: 190, name: &ldquo;Bob&rdquo; }, { height: 178, name: &ldquo;Stefan&rdquo; } ]  <br/>
 ```</p>
 
+<h3>_.pluck</h3>
+
 <blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>all their heights</strong>?</p></blockquote>
 
 <p>```javascript
@@ -77,11 +79,9 @@ height : 183
 <p>  }
 ]</p>
 
-<p>personsHeights = _.map( persons, function( person ) {
-  return person.height;
-} );</p>
+<p>personsHeights = _.pluck( persons, &lsquo;height&rsquo; );</p>
 
-<p>// => [ 190, 183 ]
+<p>// => [ 195, 183 ]
 ```</p>
 
 <h3>_.reduce</h3>
