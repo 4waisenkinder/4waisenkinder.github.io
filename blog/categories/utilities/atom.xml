@@ -4,7 +4,7 @@
   <title><![CDATA[Category: utilities | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/utilities/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-12T17:55:55+02:00</updated>
+  <updated>2013-10-12T18:09:20+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -23,6 +23,8 @@
 <p>I see this blog as a kind of ressource for myself to store and discover stuff, that I want to remember and not to forget. To get a bit better at using these libraries I decided to have a more detailed look at the functions I do not use and to figure out use cases to make my code better and my workflow quicker in the future.</p>
 
 <p>So let us dive into that and imagine my friend and colleague Bob comes to my table and wants to solve a problem he has. ;)</p>
+
+<p><em>Note: If you only have to support modern browsers, you are able to use native Array functions like <code>map</code>, <code>filter</code> and <code>reduce</code>. Then there is probably no need to use underscore/lo-dash for these. They are supported in IE9 and higher.</em></p>
 
 <h3>_.map</h3>
 
@@ -323,7 +325,7 @@ incomes : [
 
 <h3>Conclusion</h3>
 
-<p>Especially the last example shows the power of utility libraries. There are no foreach loops and no if-statements needed &ndash; no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.</p>
+<p>Especially the last example shows the power of utility libraries (or Array functions). There are no foreach loops and no if-statements needed &ndash; no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.</p>
 
 <p>For me that means, especially when I have to deal with Arrays, I will always have a first look inside of the documentation of my utility library and check if the author provides me a way to solve my problem. Solving problems that are already solved should not be my job and <strong>I really should not reinvent the wheel</strong>. ;)</p>
 
