@@ -4,7 +4,7 @@
   <title><![CDATA[Category: underscore | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/underscore/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-12T17:53:33+02:00</updated>
+  <updated>2013-10-12T17:55:55+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,7 +18,7 @@
     <link href="http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash/"/>
     <updated>2013-10-12T12:00:00+02:00</updated>
     <id>http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash</id>
-    <content type="html"><![CDATA[<p>Many projects include utility libraries like underscore/lo-dash these days. The reasons for that can be different. Either a MV* framework like <a href="http://backbonejs.org/">Backbone.js</a> is on bord and has it as dependency or the developers just discovered how much value these utility libraries provide. They are able to improve your daily workflow heavily by giving you a bunch of useful functions and helpers that will work across all the common browsers. I am using underscore for quite a long time now and last week I had to discover, that I am still not using all the features and that I reinvent the wheel in some cases for stuff that could (and should) be done by these libraries. <!-- more -->It is not a big deal, if it works at the end, but if you load underscore/lo-dash you should get out all of it. Additionally there is to say, that these libraries are built to give you the best solution performance wise. So the chance is quite high, that your solution will not perform as well (and as quick) as the underscore/lo-dash implementation does. Performance is important, so let us go the &ldquo;quicker way&rdquo;!</p>
+    <content type="html"><![CDATA[<p>Many projects include utility libraries like <a href="http://underscorejs.org/">underscore</a>/<a href="http://lodash.com/">lo-dash</a> these days. The reasons for that can be different. Either a MV* framework like <a href="http://backbonejs.org/">Backbone.js</a> is on bord and has it as dependency or the developers just discovered how much value these utility libraries provide. They are able to improve your daily workflow heavily by giving you a bunch of useful functions and helpers that will work across all the common browsers. I am using underscore for quite a long time now and last week I had to discover, that I am still not using all the features and that I reinvent the wheel in some cases for stuff that could (and should) be done by these libraries. <!-- more -->It is not a big deal, if it works at the end, but if you load underscore/lo-dash you should get out all of it. Additionally there is to say, that these libraries are built to give you the best solution performance wise. So the chance is quite high, that your solution will not perform as well (and as quick) as the underscore/lo-dash implementation does. Performance is important, so let us go the &ldquo;quicker way&rdquo;!</p>
 
 <p>I see this blog as a kind of ressource for myself to store and discover stuff, that I want to remember and not to forget. To get a bit better at using these libraries I decided to have a more detailed look at the functions I do not use and to figure out use cases to make my code better and my workflow quicker in the future.</p>
 
