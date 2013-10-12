@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-12T17:48:46+02:00</updated>
+  <updated>2013-10-12T17:50:57+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -344,7 +344,7 @@
 
 <h3>More complex use case</h3>
 
-<blockquote><p>Hey Stefan, I have got a list of persons including their incomes. How can I get the sum of all freelance incomes?</p></blockquote>
+<blockquote><p>Hey Stefan, I have got a list of persons including their incomes. How can I get <strong>the sum of all freelance incomes</strong>?</p></blockquote>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
