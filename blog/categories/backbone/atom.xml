@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: backbone | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/backbone/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Why you shouldn't use Backbone's built-in Array functions]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/08/13/why-you-should-not-use-backbone-collection-utility-functions/"/>
+    <updated>2013-08-13T23:15:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/08/13/why-you-should-not-use-backbone-collection-utility-functions</id>
+    <content type="html"><![CDATA[<p>Today I ran into an issue that let me dive into the Backbone.js library. Very often developers just use the stuff that is in there because it just works fine, but when it does not do what it is supposed to do the best way is to have a look into the used library and figure out what is going on.</p>
+
+<p>My case was the following:</p>
+
+<p>I had some lines for getting the index of a particular model stored inside of a Backbone collection.</p>
+
+<!-- more -->
+
+
+<p><code>js
+var index = collection.indexOf( model );
+</code></p>
+
+<p>Not very complicated and it worked immediately. I did not really think about it. A colleague came around and pointed me into the direction, that the native Array function <em>indexOf</em> is only supported in IE9 and higher. I changed it to use the particular LoDash/Underscore utility function and it did not work anymore.</p>
+
+<p><code>js
+var index = _.indexOf( collection, model );
+</code></p>
+
+<p>So, what was going on? After thinking about it, the idea that a Backbone collection uses the native Array function <em>indexOf</em> does not even make sense. So where does it come from? I checked the code and noticed that Backbone collections implement the Array functions of LoDash/Underscore. I created a <a href="http://jsbin.com/apowiz/25/edit">JSBin</a> to try this principle myself.</p>
+
+<p>```js
+var ExampleObject = function( array ) {
+   this.array = array;
+};</p>
+
+<p>// the methods we want to implement
+// in our object
+var utilityMethods = [ &lsquo;indexOf&rsquo;, &lsquo;filter&rsquo; ],</p>
+
+<pre><code>slice          = [].slice;
+</code></pre>
+
+<p>// iterate over the wished methods
+_.each( utilityMethods, function( method ) {
+  ExampleObject.prototype[ method ] = function() {</p>
+
+<pre><code>var args = slice.call( arguments );
+
+args.unshift( this.array );
+
+return _[ method ].apply( _, args );
+</code></pre>
+
+<p>  };
+});</p>
+
+<p>// create the new object
+var example = new ExampleObject( [ 5, 4, 3, 2, 1 ] );</p>
+
+<p>// proof that indexOf works
+console.log( example.indexOf( 2 ) ); // output: 3</p>
+
+<p>// proof that filter workds
+console.log(
+  example.filter( function( value ) {</p>
+
+<pre><code>return value % 2;
+</code></pre>
+
+<p>  } )
+); // output: [5, 3, 1]
+```</p>
+
+<p>Let us dive into the stuff that goes on inside of the each loop.</p>
+
+<p><code>js
+ExampleObject.prototype[ method ] = function() {};
+</code></p>
+
+<p>That is a basic pattern to extent the prototype of JavaScript object. In our case the prototype is <em>ExampleObject</em> and this way it has a method that is shared by every instance of <em>ExampleObject</em>.</p>
+
+<p><code>js
+var args = slice.call( arguments );
+</code></p>
+
+<p>This line was my first learning of digging into the Backbone codebase. Calling the Array function <em>slice</em> and passing in <em>arguments</em> is a common way to receive an Array out of the arguments object, which is available in every JavaScript function ( more information about that <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments">here</a> ). My usual way to do that is <em>Array.prototype.slice( arguments )</em>. Backbone caches the slice function before using it for better performance ( which is proved <a href="http://jsperf.com/array-prototype-slice-call-vs-slice-call/7">here</a>). It is not huge difference, but when we can be faster, we should be faster. ;)</p>
+
+<p><code>js
+args.unshift( this.array );
+</code></p>
+
+<p>This line puts the actual array ( &ndash;> <em>this.array</em> ) to this start of this new generated &ldquo;arguments array&rdquo; to make it fit into the way LoDash/Underscore functions expect the handed in arguments to be.</p>
+
+<p><code>js
+return _[ method ].apply( _, args );
+</code></p>
+
+<p>And this is the final result. It is an actual call to the origin LoDash/Underscore function in the context of Underscore/LoDash. The context needs to be set to LoDash/Underscore itself, because we don&rsquo;t know, if the library calls other methods contained in itself. To sum up this line for example of <em>indexOf</em> is similar to:</p>
+
+<p><code>js
+example.indexOf( 2 );
+// calls under the hood
+_.indexOf( example.array, 2 );
+</code></p>
+
+<p>No magic. but a nice way to make the usability of your objects more convenient.</p>
+
+<p>But there is also a bad part about that. I checked the performance of the origin utility methods and the integrated ones and there is really a huge difference ( check jsperf <a href="http://jsperf.com/integrated-utility-function-vs-utility-function-2">here</a> ). On my machine the new integrated functions are around 75% (!) percent slower ( tested in Firefox, Chrome and Opera ). 75% is really way too much for convenience.</p>
+
+<p><img src="/images/blog/stefanjudis/utilityFunctions.png" width="970" height="387" title="&lsquo;result of jsperf&rsquo; &lsquo;result of jsperf&rsquo;" ></p>
+
+<p>The reason for that difference is probably the needed context binding for the integrated utility functions to provide the LoDash/Underscore context inside of the function itself. But that is only guessing. ;)</p>
+
+<p>No matter what, for me is clear that I will use the original utility functions instead of the integrated ones.</p>
+
+<p>Thx for reading. Any ideas on that are really welcome. :)</p>
+]]></content>
+  </entry>
+  
+</feed>

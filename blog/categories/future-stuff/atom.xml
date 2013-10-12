@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: future stuff | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/future-stuff/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with web components and polymer.js - II]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii/"/>
+    <updated>2013-10-05T18:36:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii</id>
+    <content type="html"><![CDATA[<p><strong>This article describes still rarely supported Shadow DOM features. If you want to see them in action, make sure you use Chrome Canary with turned on &ldquo;Experimental web platform features&rdquo; found at <code>about:flags</code>.</strong></p>
+
+<p>This is the second article of a tutorial series (I do not know yet how many articles will follow, but let us call it a series) about how to get started with web components and <a href="http://www.polymer-project.org/">polymer.js</a>. In case you missed the first article you can check it <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">here</a>. This article will describe things to improve the checkbox component, that got built up in the last article. By improving I mean making the web component more configurable and making it stylable from the &ldquo;outside&rdquo;. Additionally it will cover some mistakes that were made in first place, but let us just dive into it. ;)</p>
+
+<!-- more -->
+
+
+<p><strong>First of all I got a lot of feedback on the first article and I really want to thank everyone who read it, commented it, retweeted it and &ldquo;whatever&rdquo; it. Thank you &ndash; that was really awesome!</strong></p>
+
+<h3>Bugs discovered in last article</h3>
+
+<p>In the last article I discovered two bugs inside of polymer.js library:</p>
+
+<ul>
+<li>events are bubbling out of the &ldquo;Shadow DOM&rdquo; in polyfill</li>
+<li>using ID&rsquo;s can lead to misbehaviour in polyfill</li>
+</ul>
+
+
+<p>In my case the first bug was, that the <code>change</code> event bubbled out of the custom element provided by polymer (<a href="https://github.com/Polymer/polymer/issues/296">bug</a> is already reported). After noticing this, I checked out the spec for Shadow DOM and had to discover something interesting. According to the <a href="http://www.w3.org/TR/shadow-dom/#events-that-are-always-stopped#events-that-are-always-stopped">spec</a> there are only specific events defined, that are not allowed to bubble out of the element&rsquo;s Shadow DOM.</p>
+
+<blockquote><p>&ldquo;The following events must always be stopped at the nearest shadow boundary:</p>
+
+<ul>
+<li>abort</li>
+<li>error</li>
+<li>select</li>
+<li>change</li>
+<li>load</li>
+<li>reset</li>
+<li>resize</li>
+<li>scroll</li>
+<li>selectstart"</li>
+</ul>
+</blockquote>
+
+<p>I do not know, what is the base for this event definition, but when dealing with input fields for example it is really good to know, that events like <code>keypress</code> are supposed to bubble up and for example the <code>change</code> event is not.</p>
+
+<p>For me that means, when I will build up custom elements, I will stick to custom events to avoid misbehaviour in first plase. It feels a bit strange to me that I am &ldquo;allowed&rdquo; to attach listener to the <code>keypress</code> event and not to the <code>change</code> event (which I would personally prefer), but I guess I have to deal with it. ;)</p>
+
+<p>The second bug is about ID handling inside of the polymer polyfill. There is no solution for ID handling yet. It is not a big deal, when you want to use your new custom element only once (or you only have to support Chrome canary ;)), but if you want to have multiple elements of the same custom element in one document, you will end up with duplicate ID&rsquo;s and in specific cases (using <code>label-for-relation</code>) with misbehaviour. It doesn&rsquo;t look like there will be a solution for that soon (<a href="https://github.com/Polymer/polymer/issues/295">bug ticket</a>), but I described a workaround in the <a href="http://4waisenkinder.de/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/">first article</a>.</p>
+
+<h3>@host rule and defining styles for host element</h3>
+
+<p>There was on thing I did not notice when developing the first web component version of my checkbox. It had no width and height.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/componentHeightWidthZero.png" width="527" height="249" title="&lsquo;Custom element with width &amp; height equal 0px&rsquo; &lsquo;Custom element with width &amp; height equal 0px&rsquo;" ></p>
+
+<p>The reason for that is, that when defining new custom elements they are defined to be <code>display : inline</code> per default. To solve this issue the custom element itself needs to be styled. The web components spec defines a <code>@host</code> rule for this purpose (read spec <a href="http://www.w3.org/TR/2013/WD-components-intro-20130606/#css-and-shadow-dom">here</a>).</p>
+
+<p>The old checkbox markup up was the following:</p>
+
+<p>```
+<template>
+  <style></p>
+
+<pre><code>/* lot of styles here */
+</code></pre>
+
+<p>  </style>
+  <div class="switch "></p>
+
+<pre><code>&lt;div class="switch__circle"&gt;
+  &lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+  &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+  &lt;label class="switch__label" for=""&gt;Switch me!!!&lt;/label&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>  </div>
+</template>
+```</p>
+
+<p>It implemented a container, that had the class <code>switch</code>. This container included all the checkbox markup which got styled and represented the actual checkbox. By using the <code>@host</code> rule I was able to get rid of this container (because the host element itself takes the function as a container). Inside of it, it is possible to set the custom element to <code>display : block</code>, which leads to a proper width and height.</p>
+
+<p>According to the spec, you have to use a <code>:scope</code> selector to apply your styling to the shadow host. <code>:scope</code> is a bit redundant in this case, but I already saw some people complaining about that, so I guess, the spec will change later on. For now you have to use it.</p>
+
+<p>After cleaning up and using <code>@host</code> rule I ended up with this:</p>
+
+<p>```
+&lt;polymer-element name=&ldquo;sj-checkbox&rdquo; attributes=&ldquo;size fallbackId&rdquo;>
+  <template></p>
+
+<pre><code>&lt;style&gt;
+  @host {
+    :scope {
+      /* no width and height set */
+      /* you wonder why? */
+      /* Keep on reading. ;) */
+      position: relative;
+      display: block;
+      background-color: #baf0d8;
+      border-radius: 20%;
+      overflow-x: hidden;
+      -webkit-box-shadow: 0 0.333em 0.75em #393939;
+      -moz-box-shadow: 0 0.333em 0.75em #393939;
+      box-shadow: 0 0.333em 0.75em #393939;
+      z-index: 0;
+    }
+
+    /* more host styles here */
+
+    /* defining preset sizes */
+    :scope.small {
+      width: 50px;
+      height: 50px;
+      font-size: 0.5em;
+    }
+
+    /* more size presets here */
+  }
+
+  /* other styles here */
+
+&lt;/style&gt;
+&lt;div class="switch__circle" pseudo="x-sj-circle"&gt;
+    &lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+    &lt;div class="switch__innerCircles" pseudo="x-sj-inner-circles"&gt;&lt;/div&gt;
+    &lt;label class="switch__label" for="" pseudo="x-sj-label"&gt;Switch me!!!&lt;/label&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>  </template>
+&lt;/polymer-element>
+```</p>
+
+<p>The template now includes one div less and the CSS rules that were applied to the old div container moved into <code>@host :scope</code>. I really liked that, because it is always nice to have less markup for the same result. ;)</p>
+
+<p>After that I decided to set no width and height for the custom element <code>sj-checkbox</code> at default, but provided three default sizes, which will be applied when setting a given class to the custom element. This way the custom element is configurable by just adding a class to it. That makes the web component easier to handle and it is relatively clear, what is going on, when looking at the markup for the dependent custom element.</p>
+
+<p><code>
+&lt;li&gt;&lt;sj-checkbox class="big" fallbackId="checkboxBigStyled"&gt;&lt;/sj-checkbox&gt;
+&lt;li&gt;&lt;sj-checkbox class="medium" fallbackId="checkboxMediumStyled"&gt;&lt;/sj-checkbox&gt;
+&lt;li&gt;&lt;sj-checkbox class="small" fallbackId="checkboxSmallStyled"&gt;&lt;/sj-checkbox&gt;
+</code></p>
+
+<p>The reason why I set no default width and height is the following. If you want to define your desired styling to the custom element and it already has defined the rules for the element host you want to set, it will not work. Here are few examples what will work and what not:</p>
+
+<p>Not working:</p>
+
+<p>```</p>
+
+
+
+<p>/<em> sj checkbox has width and height defined in &lsquo;@host :scope&rsquo; </em>/
+<li>&lt;sj-checkbox class=&ldquo;customWidth&rdquo; fallbackId=&ldquo;checkboxCustomStyled&rdquo;>&lt;/sj-checkbox></p>
+
+<p>```</p>
+
+<p>Kind of working, but I try always to avoid usage of <code>!important</code>:</p>
+
+<p>```</p>
+
+
+
+<p>/<em> sj checkbox has width and height defined in &lsquo;@host :scope&rsquo; </em>/
+<li>&lt;sj-checkbox class=&ldquo;customWidth&rdquo; fallbackId=&ldquo;checkboxCustomStyled&rdquo;>&lt;/sj-checkbox>
+```</p>
+
+<p>Working:
+```</p>
+
+
+
+<p>/<em> sj checkbox has no width and height defined in &lsquo;@host :scope&rsquo; </em>/
+<li>&lt;sj-checkbox class=&ldquo;customWidth&rdquo; fallbackId=&ldquo;checkboxCustomStyled&rdquo;>&lt;/sj-checkbox>
+```</p>
+
+<p>For me the third option is the best solution. The user is forced to define the width and height of the custom element by himself/herself or set a given class to use predefined rules. This way he/she has always to decide, what is wished and can implement it easily.</p>
+
+<p>By defining <code>@host</code> styles (including rules for <code>display</code>, <code>width</code> and <code>height</code>) the custom element now has a proper width and height. :)</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/componentProperWidthHeight.png" width="447" height="223" title="&lsquo;Custom element with proper width and height&rsquo; &lsquo;Custom element with proper width and height&rsquo;" ></p>
+
+<h3>Making it configurable using pseudo attributes | part pseudo elements</h3>
+
+<p>I really like the way the checkbox is styled, but we are in the era of &ldquo;Flat Design&rdquo; now, right? So I decided to make it a bit more flexible and give the user of this component the possibility to remove the shadows, if he/she want to. This can be done by defining so called pseudo ID&rsquo;s or part pseudo elements.</p>
+
+<h4>Using pseudo ID&rsquo;s</h4>
+
+<p>By defining pseudo ID&rsquo;s the creator of the web component gives the user the possibility to set styles to elements, that are hidden inside of the Shadow DOM. Everybody who styled a default input element probably noticed that already.</p>
+
+<p>The tricky part about them is, that they have to be prefixed with <code>x-</code>. According to the <a href="http://www.w3.org/TR/shadow-dom/#custom-pseudo-elements">spec</a> custom pseudo-element values must be considered invalid, if they are not prefixed the correct way.</p>
+
+<blockquote><p>&ldquo;The custom pseudo-element value must be considered valid if it starts with a U+0078 LATIN SMALL LETTER X, followed by U+002D HYPHEN-MINUS. Otherwise, the custom pseudo-element value must be considered invalid.&rdquo;</p></blockquote>
+
+<p>After implementation of the pseudo ID&rsquo;s the template for checkbox looks like this:</p>
+
+<p>```
+<template>
+  <style>
+  /<em> lot of styles here </em>/
+  </style>
+  /<em> new pseudo ID&rsquo;s implemented </em>/
+  <div class="switch__circle" pseudo="x-sj-circle"></p>
+
+<pre><code>&lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+&lt;div class="switch__innerCircles" pseudo="x-sj-inner-circles"&gt;&lt;/div&gt;
+&lt;label class="switch__label" for="" pseudo="x-sj-label"&gt;Switch me!!!&lt;/label&gt;
+</code></pre>
+
+<p>  </div>
+</template>
+```</p>
+
+<p>Now it is possible to remove all the shadows, because the dependent elements are stylable from the &ldquo;outside&rdquo; with the following rules:</p>
+
+<p>```css
+/<em>*
+ * Styling with pseudo ID&rsquo;s
+ </em>/</p>
+
+<p>/<em> style for native shadow DOM support </em>/</p>
+
+<h1>switchesComponentsStyled sj-checkbox::x-sj-circle:after {</h1>
+
+<p>  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}</p>
+
+<p>/<em> style for polifill </em>/</p>
+
+<h1>switchesComponentsStyled sj-checkbox [pseudo=x-sj-circle]:after {</h1>
+
+<p>  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}</p>
+
+<p>/<em> all the other ID&rsquo;s here </em>/
+```</p>
+
+<p>About that is to say, that I really try the component to behave and look the same in shadow DOM supporting and not supporting browsers. That is why I implemented two rules. The first rule shows how to access elements with given pseudo ID&rsquo;s. The second one is for the polyfill. We can just access the dependent element via the attribute CSS selector, because there is no &ldquo;real&rdquo; shadow DOM, where it could be hidden in. The polyfill just renders HTML inside of a custom element, which makes it really easy to select needed elements.</p>
+
+<h4>Using part pseudo elements</h4>
+
+<p>When implementing this ID solution, I did basically the same for all the elements. Reseting the styles for three different ID&rsquo;s. I thought about that and it is the perfect use case for a class or something like that to achieve the goal. Remember the coding principle DRY (<em>Do not repeat yourself</em>)? ;)</p>
+
+<p>The spec defines something called <a href="https://dvcs.w3.org/hg/webcomponents/raw-file/tip/spec/shadow/index.html#part-pseudo-elements">part pseudo-elements</a> for that situation.</p>
+
+<p>All you have to do for that is to give all elements a <code>part</code>-attribute.</p>
+
+<p>```
+<template>
+  <style>
+  /<em> lot of styles here </em>/
+  </style>
+  /<em> new part attributes implemented </em>/
+  <div class="switch__circle" part="shadow"></p>
+
+<pre><code>&lt;input id="" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+&lt;div class="switch__innerCircles" part="shadow"&gt;&lt;/div&gt;
+&lt;label class="switch__label" for="" part="shadow"&gt;Switch me!!!&lt;/label&gt;
+</code></pre>
+
+<p>  </div>
+</template>
+```</p>
+
+<p>After implementing the new attributes, you can use the part pseudo element selector to style the matching elements.</p>
+
+<p>```css
+/<em>*
+ * Styling with part pseudo elements
+ </em>/</p>
+
+<p>/<em> style for native shadow DOM support </em>/
+/<em> fancy selector isn&rsquo;t it? :) </em>/
+sj-checkbox-part::part(shadow),
+sj-checkbox-part::part(shadow):before,
+sj-checkbox-part::part(shadow):after {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}</p>
+
+<p>/<em> style for polifill </em>/
+sj-checkbox-part [part=shadow],
+sj-checkbox-part [part=shadow]:before,
+sj-checkbox-part [part=shadow]:after {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+```</p>
+
+<p>That looks much better. After using part pseudo attributes there is only one rule needed to give three elements the wished styling.</p>
+
+<p>I implemented again two rules, to make it work for supporting and not supporting browsers. We have to be friendly to everyone, right? ;)</p>
+
+<p>By using the part pseudo element we can provide the option to apply the same styling for a lot of elements. I really like that. It makes everything much cleaner.</p>
+
+<h3>Stuff to be careful with and keep in mind</h3>
+
+<ul>
+<li>think of prefixing pseudo ID&rsquo;s with &lsquo;x-&rsquo;</li>
+<li>think of browsers that will not support the new fancy shadow DOM stuff</li>
+</ul>
+
+
+<p>And that is it for today. You can find the actual implementation <a href="http://stefanjudis.github.io/webComponents-tutorial-II/">here</a>. Next steps will be to implement some functionality via JavaScript to the checkbox and to use the content of the custom element to place it inside of the shadow DOM. A friend and I are also planning to build up a complete audio player web component, but let us make small steps first. :)</p>
+
+<p>I hope you enjoyed the article and feedback is as always really welcome.</p>
+
+<p>Thx for reading. :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Getting started with web components and polymer.js]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js/"/>
+    <updated>2013-09-21T18:35:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/09/21/getting-started-with-web-components-and-polymer-dot-js</id>
+    <content type="html"><![CDATA[<p><strong>This article describes still rarely supported Shadow DOM features. If you want to see them in action, make sure you use Chrome Canary with turned on &ldquo;Experimental web platform features&rdquo; found at <code>about:flags</code>.</strong></p>
+
+<p>I spent a lot of time on <a href="http://codepen.io">codepen</a> the last days to train my CSS skills and to relax a bit (it is really awesome to just play around there while watching a movie). One thing I created was a styled checkbox. And while doing that, the idea came to me, that this checkbox is a perfect use case to start playing around with this magic thing called &ldquo;web components&rdquo;, that is heavily around since a few month and is probably the &ldquo;next big thing&rdquo; in web development.</p>
+
+<!-- more -->
+
+
+<p>Web components are basically small encapsuled units inside of a website or web application(like for example the HTML5 video element). They include their own styling (CSS) and their own behaviour (JS). And this is the biggest advantage of them. Imagine little pieces inside of your web app, that are not influenced by the global stylesheet and whose children are not affected by any written JavaScript function. This way you end up with a box of bricks and the only thing to do is putting them together easily. Additionally you can use them whereever you want, because they include everything they need to look awesome and to behave awesome. Sounds really like a dream to me. :)</p>
+
+<p>If you are interested in that topic, recommended ressources are the following:</p>
+
+<ul>
+<li><a href="http://html5-demos.appspot.com/static/webcomponents/index.html">slides about web components created by Google</a></li>
+<li><a href="http://www.youtube.com/watch?v=U45e-zq4bTs&amp;feature=youtu.be">talk about web components at CSSconf.eu </a></li>
+<li><a href="http://www.w3.org/TR/2013/WD-components-intro-20130606/">W3C working draft about web components</a></li>
+</ul>
+
+
+<p>I started looking around and decided to use <a href="http://www.polymer-project.org">polymer.js</a> (written by the Google guys) to play around with the principle of web components. Unfortunately they are rarely supported these days and this library gives me the opportunity to use this technique already today by providing needed polyfills.</p>
+
+<p>So, here is my checkbox! Let&rsquo;s make a &ldquo;real&rdquo; new fancy web component out of it.</p>
+
+<p><pre class="codepen" data-height="400" data-type="result" data-href="ojDif" data-user="stefanjudis"><code> </code></pre>
+<script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
+
+<p>I started by downloading the basic stuff from <a href="http://html5boilerplate.com">HTML5BOILERPLATE</a> and the polymer component library. The first things to start using it are implementing the polymer script inside of the <code>head</code> of the document and loading your first web component file. Web components need to include a hyphen inside of their name defined by the specs to avoid conflicts with existing elements.</p>
+
+<p>```</p>
+
+<!-- @start Polymer stuff -->
+
+
+<script src="js/vendor/polymer.min.js"></script>
+
+
+<p><link rel="import" href="components/sj-checkbox.html"></p>
+
+<!-- @end Polymer stuff -->
+
+
+<p>```</p>
+
+<p>Next step is to create this component html file, that will define the new web component. I created a new folder for my web components and created the file <code>sj-checkbox.html</code>. Inside of that file I started to implement the new component regarding the polymer documentation.</p>
+
+<p>```
+&lt;polymer-element name=&ldquo;sj-checkbox&rdquo;>
+  <template></p>
+
+<pre><code>hello world
+</code></pre>
+
+<p>  </template>
+  <script></p>
+
+<pre><code>Polymer( 'sj-checkbox', {} );
+</code></pre>
+
+<p>  </script>
+&lt;/polymer-element>
+```</p>
+
+<p>That is all you need. Wrap everything in the <code>polymer-element</code> tag, set a name as attribute, use the new HTML5 template element to define your markup, call the Polymer constructor inside of a <code>script</code> tag and you are done. After that, you can use a new custom element inside of your ``ìndex.html```.</p>
+
+<p>```</p>
+
+<ul id="switchesComponents">
+    <li><sj-checkbox></sj-checkbox>
+    <li><sj-checkbox></sj-checkbox>
+    <li><sj-checkbox></sj-checkbox>
+</ul>
+
+
+<p>```</p>
+
+<p>When you inspect this in a current version of Chrome Canary and you enabled the needed flags (look <a href="http://html5-demos.appspot.com/static/webcomponents/index.html#69">here</a>) you will see the power of this technique.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/simpleComponent.jpg" width="244" height="239" title="&lsquo;First simple web component&rsquo; &lsquo;First simple web component&rsquo;" ></p>
+
+<p>Our little &lsquo;hello world&rsquo; message is visible on our screen and it is encapsulated inside of the <a href="http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/">shadow DOM</a>. I mean, how awesome is that?</p>
+
+<p>After this success I started implementing the actual new checkbox markup and the needed styles.</p>
+
+<p>```
+&lt;polymer-element name=&ldquo;sj-checkbox&rdquo;>
+  <template></p>
+
+<pre><code>&lt;style&gt;
+  /* all my styles here */
+&lt;/style&gt;
+&lt;div class="switch"&gt;
+  &lt;div class="switch__circle"&gt;
+      &lt;input id="switcher" class="switch__input" type="checkbox"&gt;
+      &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+      &lt;label class="switch__label" for="switcher"&gt;Switch me!!!&lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>  </template>
+  <script></p>
+
+<pre><code>Polymer( 'sj-checkbox', {});
+</code></pre>
+
+<p>  </script>
+&lt;/polymer-element></p>
+
+<p>```</p>
+
+<p>That worked actually on first try and I saw the new checkbox and its &ldquo;hidden&rdquo; markup inside of the shadow DOM tree. I prepared the checkbox to be configurable easily so that it is possible to get it in three different sizes by just adding the class &ldquo;small&rdquo;, &ldquo;medium&rdquo; or &ldquo;big&rdquo; to the <code>switch</code>container. To achieve that, you can easily add custom attributes to your new created web component.</p>
+
+<p>```</p>
+
+<ul id="switchesComponents">
+  <li><sj-checkbox size="big"></sj-checkbox>
+  <li><sj-checkbox size="medium"></sj-checkbox>
+  <li><sj-checkbox size="small"></sj-checkbox>
+</ul>
+
+
+<p>```</p>
+
+<p>Additionally you have to define inside of your component html file (remember <code>components/sj-checkbox.html</code>) that this value is readable. This is done by setting a new attribute <code>attributes</code> to the <code>polymer-element</code> element defining the given values. It is also possible to set default value for the size attribute then. You can then access the value by calling the attribute name wrapped into two curly braces inside of your component html.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;!-- define attributes here -->
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&lt;polymer-element name=&ldquo;sj-checkbox&rdquo; attributes=&ldquo;size&rdquo;>
+</span><span class='line'>  &lt;template>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;style&gt;
+</span><span class='line'>  /* all my styles here */
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>&lt;!-- backslashes are not needed - but octopress forces me to do it like that :( --&gt;
+</span><span class='line'>&lt;div class="switch {{size}}"&gt;
+</span><span class='line'>  &lt;div class="switch__circle"&gt;
+</span><span class='line'>      &lt;input id="switcher" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+</span><span class='line'>      &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+</span><span class='line'>      &lt;label class="switch__label" for="switcher"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  &lt;/div&gt;
+</span><span class='line'>&lt;/div&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/template>
+</span><span class='line'>  &lt;script>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>// define default values here
+</span><span class='line'>Polymer( 'sj-checkbox', {
+</span><span class='line'>  size: 'medium'
+</span><span class='line'>} );
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/script>
+</span><span class='line'>&lt;/polymer-element>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>So far so good. The checkbox appears with its full markup and depending styles.</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/fullComponent.jpg" width="545" height="232" title="&lsquo;Full checkbox web component&rsquo; &lsquo;Full checkbox web component&rsquo;" ></p>
+
+<p>After that the checkboxes are implemented in different sizes and it is time to add some functionality to them. Usually the way is to bind an event listener to the change event of the input element and then update whatever needs to be updated. Unfortunately this elements do not trigger any change events anymore, because they are hidden inside of the shadow DOM. Polymer provides an easy way to implement custom events to solve this problem.</p>
+
+<p>You only have to implement a <code>on-change</code> attribute on the input field hidden inside of the shadow DOM and define a callback function, that should be executed when the event is triggered. Inside of this function you are able to trigger a custom event using <code>this.fire()</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;polymer-element name=&ldquo;sj-checkbox&rdquo; attributes=&ldquo;size&rdquo;>
+</span><span class='line'>  &lt;template>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>&lt;style&gt;
+</span><span class='line'>  /* all my styles here */
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>&lt;div class="switch {{size}}"&gt;
+</span><span class='line'>  &lt;div class="switch__circle"&gt;
+</span><span class='line'>      &lt;input id="switcher" class="switch__input" type="checkbox" on-change="changeHandler" checked="checked"&gt;
+</span><span class='line'>      &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+</span><span class='line'>      &lt;label class="switch__label" for="switcher"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>    &lt;/div&gt;
+</span><span class='line'>  &lt;/div&gt;
+</span><span class='line'>&lt;/div&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/template>
+</span><span class='line'>  &lt;script>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>Polymer( 'sj-checkbox', {
+</span><span class='line'>  size: 'medium',
+</span><span class='line'>  changeHandler: function( event ) {
+</span><span class='line'>    this.fire(
+</span><span class='line'>      'change',
+</span><span class='line'>      {
+</span><span class='line'>        id: event.target.id
+</span><span class='line'>      }
+</span><span class='line'>    );
+</span><span class='line'>  }
+</span><span class='line'>} );
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/script>
+</span><span class='line'>&lt;/polymer-element></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Afterwards you can easily listen to this event and react to it.</p>
+
+<p>```</p>
+
+<ul id="switchesComponents">
+    <li><sj-checkbox size="big"></sj-checkbox>
+    <li><sj-checkbox size="medium"></sj-checkbox>
+    <li><sj-checkbox size="small"></sj-checkbox>
+</ul>
+
+
+<div id="switchesComponentsNotifications" class="notification"></div>
+
+
+<script>
+    ( function( document ) {
+        var switchList    = document.getElementById( 'switchesComponents' );
+
+        switchList.addEventListener( 'change', changeHandler, false );
+
+        function changeHandler( event ) {
+            var notification = document.getElementById( 'switchesComponentsNotifications' );
+
+            notification.innerHTML = '!!! ' + event.detail.id +' switched !!!';
+        }
+    } )( document );
+</script>
+
+
+<p>```</p>
+
+<p>About that is to say, that when you fire events this way inside of your component you can pass as second argument an object which will be accessable inside of the event handler under the <code>detail</code> key. In my case I am just handing over the id of the input element.</p>
+
+<h3>Stuff to be careful with</h3>
+
+<p>The two following issues with polymer are already reported bug tickets. Before continue reading you can check out the state of both here:</p>
+
+<ul>
+<li><a href="https://github.com/Polymer/polymer/issues/296">prevent event bubbling in fallback</a></li>
+<li><a href="https://github.com/Polymer/polymer/issues/295">prevent dublicate ID&rsquo;s in fallback</a></li>
+</ul>
+
+
+<p>When checking browser compability of this I noticed that using id&rsquo;s inside of your web components can be really tricky. There is no problem in case the browser supports web components (id&rsquo;s are inside of the shadow DOM and totally encapsulated), but if not polymer does some magic and your component will appear in the form of normal html. Then you&rsquo;ve got the same id multiple times in your application, which leads to invalid markup and maybe unexpected behaviour. My solution for that was adding kind of <code>fallbackId</code> to the component.</p>
+
+<p>```</p>
+
+<p><ul id="switchesComponents"></p>
+
+<pre><code>&lt;li&gt;&lt;sj-checkbox size="big" fallbackId="checkboxBigComponent"&gt;&lt;/sj-checkbox&gt;
+</code></pre>
+
+<p>```</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;div class="switch {{size}}">
+</span><span class='line'>  &lt;div class="switch__circle">&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>  &lt;input id="{{fallbackId}}" class="switch__input" type="checkbox" on-change="changeHandler"checked="checked"&gt;
+</span><span class='line'>  &lt;div class="switch__innerCircles"&gt;&lt;/div&gt;
+</span><span class='line'>  &lt;label class="switch__label" for="{{fallbackId}}"&gt;Switch me!!!&lt;/label&gt;
+</span><span class='line'>&lt;/div&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  &lt;/div>
+</span><span class='line'>&lt;/div></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Another thing I noticed is, that you should always namespace your events triggered by your components. In my first implementation (which you see a few lines above) I defined the component to trigger a <code>change</code> event. That worked fine in Canary, but unfortunately in other browsers there are two events fired. One by the web component itself and on by the input field that is not hidden inside of the shadow DOM. I ended up with triggering an event called <code>componentChange</code> and that worked fine.</p>
+
+<p>Jap and that is it. You can check out the result <a href="http://stefanjudis.github.io/webComponents-tutorial/">here</a> &ndash; check it out in Canaray, it&rsquo;s just awesome.</p>
+
+<p>I will continue playing around with this. My next goal is to achieve a new input element type like <code>&lt;input type="myFancyCheckbox"&gt;</code> that I actually can use inside of my forms, but I have got no idea how this works yet. Addiontally implementing custom pseudo elements to make the components accessible and styleable from the outside seams to be a reasonable next step.</p>
+
+<p>So, thanks for reading. Feedback is as always really welcome. ;)</p>
+
+<p>A follow up post about making the checkbox customizable can be found <a href="http://4waisenkinder.de/blog/2013/10/05/getting-started-with-web-components-and-polymer-dot-js-ii/">here</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

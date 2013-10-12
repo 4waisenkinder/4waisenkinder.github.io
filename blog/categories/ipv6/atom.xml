@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ipv6 | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/ipv6/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Dynamic he.net IPV6 Tunnel Updates With Fritzbox]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/06/dynamic-ipv6-tunnel-updates-between-hurricane-electric-and-your-fritzbox/"/>
+    <updated>2013-06-06T11:03:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/06/dynamic-ipv6-tunnel-updates-between-hurricane-electric-and-your-fritzbox</id>
+    <content type="html"><![CDATA[<h2>TL;DR:</h2>
+
+<p>Associate your tunnel with a dynamically updated hostname from a subomain at
+dns.he.net, use that host for fritzbox'es user-defined dynamic dns feature and
+hardcode your tunnelid into the &ldquo;Dynamic DNS provider&rdquo; url.</p>
+
+<h1>The Problem:</h1>
+
+<!-- more -->
+
+
+<p><a href="https://he.net">Hurricane Electric (he.net)</a> provides excellent free IPv6
+tunnels at <a href="https://tunnelbroker.net">tunnelbroker.net</a> together with free dns
+hosting.  If you don&rsquo;t have an account yet, head over there now and open one up.
+Do it now, you won&rsquo;t regret it. I&rsquo;ll wait.</p>
+
+<p>Users of the popular <a href="http://www.avm.de/de/Produkte/FRITZBox/">FRITZ!Box</a> home
+router enjoy some ipv6 support out of the box, i.e.
+<a href="http://www.sixxs.net">SixXs.net</a>-tunnels can be configured via the gui:</p>
+
+<p><img class="center" src="/images/blog/bkw/fritzbox-sixx.png" width="665" height="177" title="&lsquo;fritzbox sixxs tunnel config gui&rsquo; &lsquo;fritzbox gui screenshot&rsquo;" ></p>
+
+<p>SixXs.net supports a protocol to remotely manage your tunnel endpoint.
+However, he.net tunnels use the plain <a href="http://en.wikipedia.org/wiki/6in4">6in4</a>
+mechanism, which is designed for static endpoints.</p>
+
+<p><img class="center" src="/images/blog/bkw/fritzbox-6in4.png" width="553" height="177" title="&lsquo;fritzbox 6in4 tunnel config gui&rsquo; &lsquo;fritzbox gui screenshot&rsquo;" ></p>
+
+<p>This implies your remote tunnel endpoint is configured to point to one specific
+ip address at your end, presumably the one you had when you created the tunnel.</p>
+
+<p><strong>This means that whenever your ISP gives you a new ip, your tunnel stops working.</strong></p>
+
+<p>To remedy this, he.net provides a
+<a href="http://www.tunnelbroker.net/forums/index.php?topic=1994.0">dyndns compatible update mechanism</a>
+to update your tunnel endpoint remotely. Fritzbox also supports adding
+user-defined dyndns providers. So the naïve approach is to add he.net&rsquo;s url
+into the gui and use the tunnel id as a hostname, like
+<a href="http://www.tunnelbroker.net/forums/index.php?topic=1994.0">the documentation</a>
+suggests.</p>
+
+<p>Unfortunately (but very sensibly) fritzbox checks the dns record of the host to
+be updated before it actually calls the service. This makes perfect sense:
+Updates are only performed when neccessary. But in our case, the value of the
+hostname field is not an existing host, it&rsquo;s the tunnel id. The alternative
+hostnames (tunnel#.tunnelbroker.net, user-#.tunnel.tserv#.loc#.ipv6.he.net)
+also do not resolve. This results in the following log message on your fritzbox:</p>
+
+<pre><code>    Dynamic DNS error: Dynamic DNS update is disabled until the dynamic DNS registration data are changed.
+    Dynamic DNS error: The specified domain name cannot be resolved.
+</code></pre>
+
+<h1>The Solution</h1>
+
+<p>he.net offers another cool feature: If you host a domain or subdomain on their
+free dns service at <a href="https://dns.he.net/">dns.he.net</a>, you can enable dynamic
+updates for a hostname and have your tunnel endpoint updates set the dns record
+for that hostname, too! Let&rsquo;s walk through this:</p>
+
+<p>You can either:</p>
+
+<ul>
+<li><p>move the dns of the whole domain to dns.he.net by updating the NS-records at your current provider/registrar, or:</p></li>
+<li><p>use a subdomain and delegate it to dns.he.net. Just create NS records for
+something like <code>home.example.com</code> pointing to ns2.he.net, ns3.he.net, ns4.he.net and ns5.he.net.</p></li>
+</ul>
+
+
+<p>Either way, you should now have a (sub-)domain that you can control via
+dns.he.net. Create a host in that zone with any ip address and select <strong>enable
+entry for dynamic dns</strong>.</p>
+
+<p><img class="left" src="/images/blog/bkw/dns-henet-dynamic.png" width="605" height="325" title="&lsquo;dns.he.net dynamic host update gui&rsquo; &lsquo;dns.he.net gui screenshot&rsquo;" ></p>
+
+<p>Next, in the listing of your domain&rsquo;s records, click the refresh symbol in this host&rsquo;s DDNS column:</p>
+
+<p><img class="left" src="/images/blog/bkw/dns-henet-dynamic-key.png" width="843" height="333" title="&lsquo;dns.he.net dynamic host update gui&rsquo; &lsquo;dns.he.net gui screenshot&rsquo;" ></p>
+
+<p>Generate a key to use for updates to this host:</p>
+
+<p><img class="left" src="/images/blog/bkw/dns-henet-dynamic-key2.png" width="606" height="288" title="&lsquo;dns.he.net dynamic host update gui&rsquo; &lsquo;dns.he.net gui screenshot&rsquo;" ></p>
+
+<p>Save that key, you&rsquo;ll need it in a minute.</p>
+
+<p>Now head over to <a href="https://tunnelbroker.net">tunnelbroker.net</a>, open up your
+tunnel&rsquo;s details and select the <strong>Advanced</strong> tab. Enter the dynamic hostname you configured in the last step and the key you generated.</p>
+
+<p><img class="left" src="/images/blog/bkw/tunnelbroker-dynamic-host.png" width="606" height="288" title="&lsquo;tunnelbroker dynamic host update gui&rsquo; &lsquo;tunnelbroker.net gui screenshot&rsquo;" ></p>
+
+<p>Now, whenever the tunnel endpoint is updated, the hostname <em>gw.home.example.com</em> will be updated to your router&rsquo;s ipv4 address as well.</p>
+
+<p><strong>This allows us to use a valid and up-to-date host in the dynamic dns updater
+of the fritzbox.</strong></p>
+
+<p>Head over to your fritzbox GUI.</p>
+
+<p>Open Internet/Account Information/IPv6, check <em>IPv6 support enabled</em> and
+<em>Always use a tunnel protocol for the IPv6 connection</em>. Select tunnel protocol
+<em>6in4</em> in <em>Connection Settings</em>, fill in the values from your tunnel details
+page at tunnelbroker.net and hit <em>Apply</em>.</p>
+
+<h2>Now for the hack:</h2>
+
+<p>Open Internet/Permit Access/Dynamic DNS, check <em>Use dynamic DNS</em> and select
+<em>User-defined</em> for <em>Dynamic DNS provider</em>.</p>
+
+<p><img class="left" src="/images/blog/bkw/fritzbox-dyndns.png" width="606" height="288" title="&lsquo;fritzbox dyndns gui&rsquo; &lsquo;fritzbox gui screenshot&rsquo;" ></p>
+
+<p>Enter the following URL for <em>Update URL</em>, replacing <em>123456</em> with the id of
+your he.net tunnel:</p>
+
+<pre><code>http://ipv4.tunnelbroker.net/nic/update?hostname=123456&amp;myip=&lt;ipaddr&gt;&amp;username=&lt;username&gt;&amp;password=&lt;pass&gt;
+</code></pre>
+
+<p>Do not replace the placeholders in angle brackets, your fritzbox will do that.</p>
+
+<p>Enter the dynamic host you configured earlier in the <em>Domain name</em> field.
+This will be used by the fritzbox to check whether the update needs to be
+performed.</p>
+
+<p>Enter your he.net username and password in the respective fields.</p>
+
+<p>Hit <em>Apply</em> and enjoy an auto updating IPv6 tunnel to hurricane electric.</p>
+
+<h2>How does this work?</h2>
+
+<p>The dynamic hostname (which is kept in sync by hurricane electric) is used for
+checking for changes, but the actual update is performed on the tunnel id hardcoded in the <em>Update URL</em>.</p>
+
+<h2>Bonus</h2>
+
+<p>As a useful side effect, from now on you can always reach your router and any
+port-forwared services under you own hostname <em>(gw.home.example.com)</em> in your
+very own domain!  How cool is that?</p>
+
+<p>Actually, now that you have IPv6, you don&rsquo;t really need those
+pesky port forwards any more: just assign any v6 address you like and use
+plain internet routing the way it was supposed to work in the first place.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: open source | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/open-source/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[See how your project performs at Travis CI]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/"/>
+    <updated>2013-07-07T14:50:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/07/07/see-how-your-project-performs-at-travis-ci</id>
+    <content type="html"><![CDATA[<p>Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming languages and different versions of these ( e.g. node 0.8 / 0.9 / … ). Figuring out if there will be any problems or exceptions before switching to a new language version are easily done this way ( always assuming you are following the principles of test driven development ). <strong>Test your stuff at Travis first, then switch your server to the new version of language XY</strong>.</p>
+
+<!-- more -->
+
+
+<p>Tests that run in different languages are called &lsquo;jobs&rsquo; in travis context. You can define them in your .travis.yml.</p>
+
+<p>```
+language: node_js
+  node_js:</p>
+
+<pre><code>- "0.8"
+- "0.9"
+- "0.10"
+</code></pre>
+
+<p>```</p>
+
+<p>Later on you can see this configuration inside of the so called build-matrix at <a href="http://travis-ci.org">Travis</a>.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/buildMatrix.png" width="1225" height="184" title="&lsquo;build matrix cushion-cli&rsquo; &lsquo;build matrix for my project cushion-cli&rsquo;" ></p>
+
+<p>Via Travalizit ( <a href="http://4waisenkinder.de/blog/2013/06/21/help-me-analyze-travis-build-data/">further explanation and introduction</a> ) you got the possibility to analyse your Travis build data. It is still in early stage, but I think you can already get some information, you did not know before. To have always the latest Travis information at Travalizit you only have to define a wekhook that sends the build data to Travalizit each time you finished a build ( checkout out explanation and introduction ).</p>
+
+<p>Yesterday night I implemented a new chart to compare different builds with including jobs in term of state and duration. With the help of this chart you can easily check if a new language version will increase performance or not.</p>
+
+<p>To check your project just go to <a href="http://travalizit.org">Travalizit</a>, add a new chart and choose type &ldquo;Travis job details&rdquo;.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/jobDetails.png" width="603" height="377" title="&lsquo;add job details chart action&rsquo; &lsquo;push the button ;)&rsquo;" ></p>
+
+<p>After that you will probably get a message, that your build data is not included in the Travalizit database ( there is the small chance that it is, because I tested a lot ). Right now you got the possibility to fetch the latest builds from Travis.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/fetchData.png" width="867" height="655" title="&lsquo;fetch data action&rsquo; &lsquo;fetch data dialog if no build data is available&rsquo;" ></p>
+
+<p>Press the &lsquo;fetch&rsquo; &ndash; button and you are done. This works only <strong>once</strong>, because the architecture is actual set up to receive recent build data via webhook. That means, if you want to come back and to see the latest builds, you have implement the hook. ;)</p>
+
+<p>And that is the result:</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/jobDetailsChart.png" width="882" height="670" title="&lsquo;job details for cushion-cli&rsquo; &lsquo;Travis job details chart for cushion-cli&rsquo;" ></p>
+
+<p>Right now you can check the duration and state ( passed / errored / failed ) of the different jobs. If you want to see more, let me know.</p>
+
+<p>I would love to hear wishes, improvements and feedback. So, if it is not working for you and your project or you have something to say about that ping me on <a href="https://twitter.com/stefanjudis">Twitter</a>, write me an <a href="mailto:stefanjudis@gmail.com">email</a> or leave a comment.</p>
+
+<p>THX.</p>
+
+<p>PS. I started developing a <a href="https://npmjs.org/package/travalizit">Nodes.js Travis-Api</a> for this project. If someone is interested in that, give a sign. That keeps motivation high. ;)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Help me analyze travis build data]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/21/help-me-analyze-travis-build-data/"/>
+    <updated>2013-06-21T14:30:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/21/help-me-analyze-travis-build-data</id>
+    <content type="html"><![CDATA[<p>Hey, I study Media and Computer Science in Berlin and I need your help.
+The last goal of my studies is to write my bachelor thesis and I want to show you what it is about.</p>
+
+<p>I am in colaboration with <a href="http://travis-ci.org">Travis CI</a> (you may have heard about it) and my goal is to analyse the data Travis produces everyday. Data about every build that is triggered by any open source project over the world doing continuous integration.</p>
+
+<!-- more -->
+
+
+<p>Travis provides the possibility to implement webhooks. Webhooks are part of the <a href="http://about.travis-ci.org/docs/user/notifications/">travis notifications</a> and are simple HTTP post requests to a given end point you define in your .travis.yml file (the general travis configuration file) triggered whenever a build at travis-ci end (no matter if successful or not). These requests include general data of the last build.</p>
+
+<p>I already built up a <a href="http://travalizit.org">web app</a> to play around with the data. Right now there are three charts included. One is showing the success/fail ratio of all builds in a particular time interval. Another one shows the distribution of different projects included in a given time.</p>
+
+<p>And the last one at the moment is one chart including data fetched from github.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/repochart.png" width="788" height="532" title="&lsquo;repo chart travalizit&rsquo; &lsquo;repo chart for my repo cushion-cli&rsquo;" ></p>
+
+<p>I&rsquo;m really excited about this one. What you see in there are the last 20 builds (left side) of <a href="https://github.com/stefanjudis/cushion-cli">one of my private projects</a>. The nice thing about that is, that all the commits (right side) related to a given build are fetched from the github api. That means you can quickly figure out, which files are often causing a failed build (marked black and not red &ndash; like build with number 180).</p>
+
+<p>With the information provided by github I could build up a tool to answer a lot of questions.</p>
+
+<ul>
+<li>which files are touched more often and cause broken builds?</li>
+<li>how many commits are needed to fix a broken build?</li>
+<li>how long does it generally take to fix a broken build?</li>
+<li>how many commits included in one build cause a broken build?</li>
+<li>how many different contributors cause a broken build?</li>
+</ul>
+
+
+<p>I don&rsquo;t know If it is possible and/or valid to answer these questions with given data, but I would like to try to answer a few of them. And the point is:</p>
+
+<h4>If only one person really hears something new about his/her project it would be already a win.</h4>
+
+<p><strong>And hear is where you come into the game.</strong> When you use Travis CI please share your build data with me by implementing the webhook pointing to my webapp in your .travis.yml (just put it at the bottom of the file).</p>
+
+<p><code>
+notifications:
+  webhooks: http://travalizit.org/builds
+</code>
+Your data will be written into my database and will then be included into the charts.</p>
+
+<p>And after that please share your ideas about what you would like to see and what would be useful for you and your project with me. Drop me a line on <a href="https://twitter.com/stefanjudis">Twitter</a> or send me an <a href="mailto:stefanjudis@gmail.com">email</a>. That would be just great.</p>
+
+<p>The app is at a quite early stage right now, so if something is not working as expected or you see improvements get in touch as well.</p>
+
+<h4>Let us build something useful. ;)</h4>
+]]></content>
+  </entry>
+  
+</feed>

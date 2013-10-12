@@ -356,124 +356,6 @@ $(document).ready(
     <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/2013/08/03/5-podcasts-to-listen-to/">
-		
-			5 Podcasts You Should Listen to When You&#8217;re a Frontend Dev</a>
-	</h2>
-	<div class="entry-content">
-		
-<div class='octopress-authorbox'>
-	<div class="author-pic">
-		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
-	</div>
-	
-	<div class="author-about">
-		<h3>Stefan Judis</h3>
-		<p>Frontend lover</p>
-		<ul class="author-links">
-			
-			<li>
-			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
-			</li>
-			
-			
-		</ul>
-	</div>
-</div>
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-03T12:46:00+02:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/frontend/'>frontend</a>, <a class='category' href='/blog/categories/podcast/'>podcast</a>
-
-
-</div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/07/28/visualize-a-n-to-n-relation-with-d3/">
-		
-			Visualize a N to N Relation With D3</a>
-	</h2>
-	<div class="entry-content">
-		<pre class="codepen" data-height="705" data-type="result" data-href="LxurD" data-user="stefanjudis"><code> </code></pre>
-
-
-<script async src="http://codepen.io:/assets/embed/ei.js"></script>
-
-<div class='octopress-authorbox'>
-	<div class="author-pic">
-		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
-	</div>
-	
-	<div class="author-about">
-		<h3>Stefan Judis</h3>
-		<p>Frontend lover</p>
-		<ul class="author-links">
-			
-			<li>
-			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
-			</li>
-			
-			
-		</ul>
-	</div>
-</div>
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-28T23:32:00+02:00" pubdate data-updated="true">Jul 28<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/d3/'>d3</a>
-
-
-</div>
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
 		<a href="/blog/2013/07/26/grunt-photobox-secure-yourself-against-broken-layout/">
 		
 			Grunt-photobox - Secure Yourself Against Broken Layout</a>
@@ -546,6 +428,92 @@ $(document).ready(
 
 
 	<a class='category' href='/blog/categories/deployment/'>deployment</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+
+
+</div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/">
+		
+			See How Your Project Performs at Travis CI</a>
+	</h2>
+	<div class="entry-content">
+		<p>Many people run their test suite at Travis CI these days. At Travis you got the possibility to run your test suite against different programming languages and different versions of these ( e.g. node 0.8 / 0.9 / … ). Figuring out if there will be any problems or exceptions before switching to a new language version are easily done this way ( always assuming you are following the principles of test driven development ). <strong>Test your stuff at Travis first, then switch your server to the new version of language XY</strong>.</p>
+
+
+		
+		<a href="/blog/2013/07/07/see-how-your-project-performs-at-travis-ci/" class="more-link">Read on &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-07T14:50:00+02:00" pubdate data-updated="true">Jul 7<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/data-analysis/'>data analysis</a>, <a class='category' href='/blog/categories/open-source/'>open source</a>, <a class='category' href='/blog/categories/performance/'>performance</a>, <a class='category' href='/blog/categories/travis/'>travis</a>
+
+
+</div>
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/06/24/show-npm-statistics-terminal-start/">
+		
+			Show Npm Statistics at Terminal Start</a>
+	</h2>
+	<div class="entry-content">
+		<p>Two month ago I released my <a href="https://npmjs.org/package/cushion-cli">first npm module</a>. I got really excited (and I am still) about releasing something and showing it to the world. Since then the statistics written on top of the module page at NPM are checked by me on a daily basis. Unfortunately these statistics do not seem to be really precise. They are jumping from day to day and should not be taken to serious in my mind (No offense meant. I really like NPM and I think it is a great service).</p>
+
+<p>That is the reason why a friend of mine wrote a <a href="https://raw.github.com/Zoddy/geektool-desk/master/os_downloads.js">tiny script</a> to read the statistics directly from where the data is stored &ndash; a <a href="http://isaacs.iriscouch.com/">CouchDB</a> available for everyone. The script will be part of a <a href="https://github.com/Zoddy/geektool-desk">library for geeky stuff</a> and tools later on, but that is another story.</p>
+
+<p>Today I had the idea about showing this kind of information whenever I open a new terminal window to save some time and &ldquo;pimp my terminal&rdquo;.</p>
+
+
+		
+		<a href="/blog/2013/06/24/show-npm-statistics-terminal-start/" class="more-link">Read on &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-24T22:21:00+02:00" pubdate data-updated="true">Jun 24<span>th</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cli/'>cli</a>, <a class='category' href='/blog/categories/npm/'>npm</a>, <a class='category' href='/blog/categories/terminal/'>terminal</a>
 
 
 </div>

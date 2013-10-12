@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: video | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/video/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Why work doesn't happen at work]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/06/09/why-work-doesnt-happen-at-work/"/>
+    <updated>2013-06-09T14:00:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/06/09/why-work-doesnt-happen-at-work</id>
+    <content type="html"><![CDATA[<p>I believe our working models and how we collaborate have to change. They
+haven&rsquo;t for years. In fact, they haven&rsquo;t changed much since the beginning of
+the 20th century: most of us sit in offices, at dedicated desks, participate
+in meetings now and then and hope to achive set goals within a reasonable time
+span.</p>
+
+<!-- more -->
+
+
+<p>Altough there is not solution yet, we&rsquo;re at the verge of dicovering it. Jason
+Fried has a radical theory of working: that the office isn&rsquo;t a good place to
+do it. He helt an inspiring talk at TEDxMidwest in October 2010.</p>
+
+<p><blockquote><p>[Facebook and Twitter] aren’t the real problems in the office. The real<br/>problems are what I like to call the M&amp;Ms, the Managers and the Meetings.</p></blockquote></p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/5XD2kNopsUs "></iframe></div></p>
+
+<h3>About Jason</h3>
+
+<p>He thinks deeply about collaboration, productivity and the nature of work. At
+TEDxMidwest he lays out the main problems (call them the M&amp;Ms) and offers
+three suggestions to make work work.</p>
+
+<p>Fried is the co-author of the book Rework, about new ways to conceptualize
+working and creating. He is the co-founder and president of
+<a href="http://37signals.com/">37signals</a>, a Chicago-based company that builds
+webbased productivity tools that, in their words, &ldquo;do less than the
+competition &ndash; intentionally.&rdquo; 37signals' simple but powerful collaboration
+tools include Basecamp, Highrise, Backpack, Campfire, Ta-da List, and
+Writeboard. 37signals also developed and open-sourced the Ruby on Rails
+programming framework.</p>
+
+<h5>Sources:</h5>
+
+<p><a href="http://www.ted.com/speakers/jason_fried.html">Jason&rsquo;s Speaker Profile on TED.com</a>,
+<a href="http://www.ted.com/talks/jason_fried_why_work_doesn_t_happen_at_work.html">Jason&rsquo;s Talk on TED.com</a></p>
+]]></content>
+  </entry>
+  
+</feed>

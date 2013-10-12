@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: deployment | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/deployment/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA["shrinkwrap" and how to deal with a dependency fu** up]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/07/10/why-you-should-use-npm-shrinkwrap-and-how-to-deal-with-a-dependency-fu-star-star-up/"/>
+    <updated>2013-07-10T19:13:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/07/10/why-you-should-use-npm-shrinkwrap-and-how-to-deal-with-a-dependency-fu-star-star-up</id>
+    <content type="html"><![CDATA[<p>A few people may have noticed, that <code>npm install grunt</code> was failing today. According to the pull requests made, it was failing for 10 ( ! ) hours. When you think right know, that this is not a big deal, you probably do not use it in production. Because then it becomes a big problem very quickly.</p>
+
+<!-- more -->
+
+
+<p>The reason for failing was a first renamed and later removed dependency of grunt itself. Grunt defines its dependencies ( defined inside of the <code>package.json</code>, if you are not familiar with npm ) with  a <code>~</code> in front of each version number. That is quite common and there is nothing special about it. The <a href="https://npmjs.org/doc/json.html#Tilde-Version-Ranges">tilde</a> defines, that every version greater than the specifed one and less than the next major release is fine to install.</p>
+
+<p>What happened exactly, was that npm was not able to find a version of a particular dependency that fits this conditions ( because of renaming and removing ). And that is it. Nothing special about it, but an important insight.</p>
+
+<p><strong>Whenever we publish something on npm, we have to let it there &ndash; no renaming or removing. There can always be people using it and it can screw up their build!</strong></p>
+
+<p>However, we had to figure out a workaround today quickly, and that is what we did until it was fixed.</p>
+
+<p>We forked grunt at Github. Fixed the dependency problem and set the &ldquo;new&rdquo; grunt as our project dependency. Npm allows you to set dependencies that are not published at npm easily. That can be quiet handy from time to time. ;)</p>
+
+<p><code>
+"devDependencies": {
+  "grunt": "git://github.com/you/your-grunt-fork.git"
+}
+</code></p>
+
+<p>Later on there were a few discussions about npm dependency handling on Twitter and <a href="https://twitter.com/asciidisco">@asciidisco</a> pointed me into the direction of <code>npm shrinkwrap</code>.</p>
+
+<p>This command locks all your installed dependencies and writes a new file called <strong>npm-shrinkwrap.json</strong>.</p>
+
+<p>This file is similar to php&rsquo;s <strong>composer.lock</strong> or ruby&rsquo;s <strong>Gemfile.lock</strong>. When you call <code>npm install</code> later on it installs the locked versions written in this file. The version numbers are locked recursively, so that you are safe on production level without any bad surprises.</p>
+
+<p>There can always be a version jump in a dependency, which is quite welcome, but I don&rsquo;t want check out if it works on production side first&hellip;</p>
+
+<p>So the solution is:</p>
+
+<p><strong>Stay with your package.json and define dependencies with &lsquo;>=&rsquo; or &lsquo;~&rsquo; to receive the newest stuff locally, but lock all dependencies for production.</strong></p>
+
+<p>As always opinions and solutions are very welcome about this topic. ;)</p>
+]]></content>
+  </entry>
+  
+</feed>

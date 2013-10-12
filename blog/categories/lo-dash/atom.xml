@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: lo-dash | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/lo-dash/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-10-12T17:48:46+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Underscore/Lo-Dash and stopping reinvent the wheel]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash/"/>
+    <updated>2013-10-12T12:00:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash</id>
+    <content type="html"><![CDATA[<p>Many projects include utility libraries like underscore/lo-dash these days. The reasons for that can be different. Either a MV* framework like Backbone.js is on bord and has it as dependency or the developers just discovered how much value these utility libraries provide. They are able to improve your daily workflow heavily by giving you a bunch of useful functions and helpers that will work across all the common browsers. I am using underscore for quite a long time now and last week I had to discover, that I am still not using all the features and that I reinvent the wheel in some cases for stuff that could (and should) be done by these libraries. <!-- more -->It is not a big deal, if it works at the end, but if you load underscore/lo-dash you should get out all of it. Additionally there is to say, that these libraries are built to give you the best solution performance wise. So the chance is quite high, that your solution will not perform as well (and as quick) as the underscore/lo-dash implementation does. Performance is important, so let us go the &ldquo;quicker way&rdquo;!</p>
+
+<p>I see this blog as a kind of ressource for myself to store and discover stuff, that I want to remember and not to forget. To get a bit better at using these libraries I decided to have a more detailed look at the functions I do not use and to figure out use cases to make my code better and my workflow quicker in the future.</p>
+
+<p>So let us dive into that and imagine my friend and colleague Bob comes to my table and wants to solve a problem he has. ;)</p>
+
+<h3>_.map</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>make them all</strong> 5cm <strong>smaller</strong>?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>persons = _.map( persons, function( person ) {
+  person.height = person.height &ndash; 5;</p>
+
+<p>  return person;
+} );</p>
+
+<p>// => [ { height: 190, name: &ldquo;Bob&rdquo; }, { height: 178, name: &ldquo;Stefan&rdquo; } ]  <br/>
+```</p>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>all their heights</strong>?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>personsHeights = _.map( persons, function( person ) {
+  return person.height;
+} );</p>
+
+<p>// => [ 190, 183 ]
+```</p>
+
+<h3>_.reduce</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get the <strong>sum of their heights</strong>?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>var heightSum = _.reduce( persons, function( memo, person ) {
+  return memo + person.height;
+}, 0 );</p>
+
+<p>// => 378
+```</p>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>the biggest height</strong>?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>var biggestHeight = _.reduce( persons, function( memo, person ) {
+  if ( memo > person.height ) {</p>
+
+<pre><code>return memo;
+</code></pre>
+
+<p>  } else {</p>
+
+<pre><code>return person.height;
+</code></pre>
+
+<p>  }
+}, 0 );</p>
+
+<p>// => 195
+```</p>
+
+<h3>_.where</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get all entries <strong>where the name is &ldquo;Bob&rdquo;</strong>?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>var personsNamedBob = _.where( persons, { name : &lsquo;Bob&rsquo; } );</p>
+
+<p>// => [ { name : &ldquo;Bob&rdquo;, height : 195 } ]
+```</p>
+
+<h3>_.every</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get to know if they are <strong>all taller than 1.90m</strong>?</p></blockquote>
+
+<p>```javascript</p>
+
+<p>var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>var allPersonsTallerThan190 = _.every( persons, function( person ) {
+  return ( person.height > 190 );
+} );</p>
+
+<p>// => false
+```</p>
+
+<h3>_.countBy</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>group and count</strong> them <strong>depending on their height</strong>?</p></blockquote>
+
+<p>```javascript</p>
+
+<p>var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+height : 195
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+height : 183
+</code></pre>
+
+<p>  }
+]</p>
+
+<p>var groupedAndCountedPersons = _.countBy( persons, function( person ) {
+  if ( person.height >= 180 &amp;&amp; person.height &lt; 190 ) {</p>
+
+<pre><code>return '180-189';
+</code></pre>
+
+<p>  }</p>
+
+<p>  if ( person.height >= 190 &amp;&amp; person.height &lt; 200 ) {</p>
+
+<pre><code>return '190-199';
+</code></pre>
+
+<p>  }</p>
+
+<p>  return &lsquo;outOfRange&rsquo;;
+} );</p>
+
+<p>// => { 190-199: 1, 180-189: 1 }
+```</p>
+
+<h3>_.size</h3>
+
+<blockquote><p>Hey Stefan, how can I check <strong>how many attributes</strong> I <strong>set</strong> for a person?</p></blockquote>
+
+<p>```javascript
+var personA = {};</p>
+
+<p>_.size( personA ); // => 0</p>
+
+<p>var personB = {
+  height : 200
+}</p>
+
+<p>_.size( personB ); // => 1</p>
+
+<p>```</p>
+
+<h3>More complex use case</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons including their incomes. How can I get the sum of all freelance incomes?</p></blockquote>
+
+<p>```javascript
+var persons = [
+  {</p>
+
+<pre><code>name   : 'Bob',
+incomes : [ {
+    type  : 'Daily work',
+    value : 2000
+  },
+  {
+    type  : 'Freelance',
+    value : 1000
+  },
+  {
+    type  : 'Freelance',
+    value : 500
+  }      
+]
+</code></pre>
+
+<p>  },
+  {</p>
+
+<pre><code>name   : 'Stefan',
+incomes : [
+  {
+    type  : 'Daily Work',
+    value : 750
+  },
+  {
+    type  : 'Freelance',
+    value : 2000
+  }
+]
+</code></pre>
+
+<p>  }
+];</p>
+
+<p>var freelanceIncomes = <em>.reduce( persons, function( memo, person ) {
+  return memo + </em>.reduce( _.where( person.incomes, { type : &lsquo;Freelance&rsquo; } ), function( memo, income ) {</p>
+
+<pre><code>return memo + income.value;
+</code></pre>
+
+<p>  }, 0 )
+}, 0 );</p>
+
+<p>// => 3500
+```</p>
+
+<h3>Conclusion</h3>
+
+<p>Especially the last example shows the power of utility libraries. There are no foreach loops and no if-statements needed &ndash; no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.</p>
+
+<p>For me that means, especially when I have to deal with Arrays, I will always have a first look inside of the documentation of my utility library and check if the author provides me a way to solve my problem. Solving problems that are already solved should not be my job and <strong>I really should not reinvent the wheel</strong>. ;)</p>
+
+<p>And that is it for today. Thx for reading and ideas/improvement on that are really welcome.</p>
+]]></content>
+  </entry>
+  
+</feed>
