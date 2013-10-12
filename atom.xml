@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-07T22:16:22+02:00</updated>
+  <updated>2013-10-12T17:42:02+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,447 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using Underscore/Lo-Dash and stopping reinvent the wheel]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash/"/>
+    <updated>2013-10-12T12:00:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/10/12/you-use-underscore-slash-lo-dash</id>
+    <content type="html"><![CDATA[<p>Many projects include utility libraries like underscore/lo-dash these days. The reasons for that can be different. Either a MV* framework like Backbone.js is on bord and has it as dependency or the developers just discovered how much value these utility libraries provide. They are able to improve your daily workflow heavily by giving you a bunch of useful functions and helpers that will work across all the common browsers. I am using underscore for quite a long time now and last week I had to discover, that I am still not using all the features and that I reinvent the wheel in some cases for stuff that could (and should) be done by these libraries. <!-- more -->It is not a big deal, if it works at the end, but if you load underscore/lo-dash you should get out all of it. Additionally there is to say, that these libraries are built to give you the best solution performance wise. So the chance is quite high, that your solution will not perform as well (and as quick) as the underscore/lo-dash implementation does. Performance is important, so let us go the &ldquo;quicker way&rdquo;!</p>
+
+<p>I see this blog as a kind of ressource for myself to store and discover stuff, that I want to remember and not to forget. To get a bit better at using these libraries I decided to have a more detailed look at the functions I do not use and to figure out use cases to make my code better and my workflow quicker in the future.</p>
+
+<p>So let us dive into that and imagine my friend and colleague Bob comes to my table and wants to solve a problem he has. ;)</p>
+
+<h3>_.map</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>make them all</strong> 5cm <strong>smaller</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">persons</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; [ { height: 190, name: &quot;Bob&quot; }, { height: 178, name: &quot;Stefan&quot; } ]    </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>all their heights</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">personsHeights</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; [ 190, 183 ]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>_.reduce</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get the <strong>sum of their heights</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">heightSum</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+</span><span class='line'><span class="p">},</span> <span class="mi">0</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; 378</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get <strong>the biggest height</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">biggestHeight</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="nx">memo</span> <span class="o">&gt;</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">memo</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">},</span> <span class="mi">0</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; 195</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>_.where</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get all entries <strong>where the name is &ldquo;Bob&rdquo;</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">personsNamedBob</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="p">{</span> <span class="nx">name</span> <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span> <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; [ { name : &quot;Bob&quot;, height : 195 } ]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>_.every</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I get to know if they are <strong>all taller than 1.90m</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">allPersonsTallerThan190</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">(</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">&gt;</span> <span class="mi">190</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>_.countBy</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>group and count</strong> them <strong>depending on their height</strong>?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">195</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">height</span> <span class="o">:</span> <span class="mi">183</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">groupedAndCountedPersons</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">countBy</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">&gt;=</span> <span class="mi">180</span> <span class="o">&amp;&amp;</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">&lt;</span> <span class="mi">190</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s1">&#39;180-189&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">&gt;=</span> <span class="mi">190</span> <span class="o">&amp;&amp;</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="s1">&#39;190-199&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="s1">&#39;outOfRange&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; { 190-199: 1, 180-189: 1 }</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>_.size</h3>
+
+<blockquote><p>Hey Stefan, how can I check <strong>how many attributes</strong> I <strong>set</strong> for a person?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">personA</span> <span class="o">=</span> <span class="p">{};</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span> <span class="nx">personA</span> <span class="p">);</span> <span class="c1">// =&gt; 0</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">personB</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">height</span> <span class="o">:</span> <span class="mi">200</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span> <span class="nx">personB</span> <span class="p">);</span> <span class="c1">// =&gt; 1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>More complex use case</h3>
+
+<blockquote><p>Hey Stefan, I have got a list of persons including their incomes. How can I get the sum of all freelance incomes?</p></blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">incomes</span> <span class="o">:</span> <span class="p">[</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">type</span>  <span class="o">:</span> <span class="s1">&#39;Daily work&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">value</span> <span class="o">:</span> <span class="mi">2000</span>
+</span><span class='line'>      <span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">type</span>  <span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">value</span> <span class="o">:</span> <span class="mi">1000</span>
+</span><span class='line'>      <span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">type</span>  <span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">value</span> <span class="o">:</span> <span class="mi">500</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Stefan&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">incomes</span> <span class="o">:</span> <span class="p">[</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">type</span>  <span class="o">:</span> <span class="s1">&#39;Daily Work&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">value</span> <span class="o">:</span> <span class="mi">750</span>
+</span><span class='line'>      <span class="p">},</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>        <span class="nx">type</span>  <span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="nx">value</span> <span class="o">:</span> <span class="mi">2000</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">]</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">freelanceIncomes</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span> <span class="nx">person</span><span class="p">.</span><span class="nx">incomes</span><span class="p">,</span> <span class="p">{</span> <span class="nx">type</span> <span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span> <span class="p">}</span> <span class="p">),</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">income</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">income</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">},</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'><span class="p">},</span> <span class="mi">0</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// =&gt; 3500</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Conclusion</h3>
+
+<p>Especially the last example shows the power of utility libraries. There are no foreach loops and no if-statements needed &ndash; no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.</p>
+
+<p>For me that means, especially when I have to deal with Arrays, I will always have a first look inside of the documentation of my utility library and check if the author provides me a way to solve my problem. Solving problems that are already solved should not be my job and <strong>I really should not reinvent the wheel</strong>. ;)</p>
+
+<p>And that is it for today. Thx for reading and ideas/improvement on that are really welcome.</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting started with web components and polymer.js - II]]></title>
