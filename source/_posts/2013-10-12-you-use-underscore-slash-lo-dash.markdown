@@ -207,7 +207,7 @@ _.size( personB ); // => 1
 
 ### More complex use case
 
-> Hey Stefan, I have got a list of persons including their incomes. How can I get the sum of all freelance incomes?
+> Hey Stefan, I have got a list of persons including their incomes. How can I get **the sum of all freelance incomes**?
 
 ```javascript
 var persons = [
