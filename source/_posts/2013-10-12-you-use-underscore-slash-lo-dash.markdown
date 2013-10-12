@@ -42,6 +42,7 @@ persons = _.map( persons, function( person ) {
 // => [ { height: 190, name: "Bob" }, { height: 178, name: "Stefan" } ]    
 ```
 
+### _.pluck
 
 > Hey Stefan, I have got a list of persons. How can I get **all their heights**?
 
@@ -57,11 +58,9 @@ var persons = [
   }
 ]
 
-personsHeights = _.map( persons, function( person ) {
-  return person.height;
-} );
+personsHeights = _.pluck( persons, 'height' );
 
-// => [ 190, 183 ]
+// => [ 195, 183 ]
 ```
 
 ### _.reduce
