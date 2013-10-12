@@ -15,6 +15,8 @@ I see this blog as a kind of ressource for myself to store and discover stuff, t
 
 So let us dive into that and imagine my friend and colleague Bob comes to my table and wants to solve a problem he has. ;)
 
+*Note: If you only have to support modern browsers, you are able to use native Array functions like `map`, `filter` and `reduce`. Then there is probably no need to use underscore/lo-dash for these. They are supported in IE9 and higher.* 
+
 ### _.map
 
 > Hey Stefan, I have got a list of persons. How can I **make them all** 5cm **smaller**?
@@ -253,7 +255,7 @@ var freelanceIncomes = _.reduce( persons, function( memo, person ) {
 
 ### Conclusion
 
-Especially the last example shows the power of utility libraries. There are no foreach loops and no if-statements needed - no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.
+Especially the last example shows the power of utility libraries (or Array functions). There are no foreach loops and no if-statements needed - no needed extra code to write. A kind of complex operation is done by 4 lines of underscore/lo-dash code. There are always multiple ways to solve a given problem, but doing it with the help of underscore/lo-dash (when it is available) is never a bad choice.
 
 For me that means, especially when I have to deal with Arrays, I will always have a first look inside of the documentation of my utility library and check if the author provides me a way to solve my problem. Solving problems that are already solved should not be my job and **I really should not reinvent the wheel**. ;)
 
