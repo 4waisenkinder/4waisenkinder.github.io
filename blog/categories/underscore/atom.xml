@@ -4,7 +4,7 @@
   <title><![CDATA[Category: underscore | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/underscore/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-13T04:06:52+02:00</updated>
+  <updated>2013-10-13T04:09:14+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -322,7 +322,7 @@ var freelanceIncomes = _.chain( persons )</p>
 <p>// => 3500
 ```</p>
 
-<p><a href="https://twitter.com/eskimobloood">Andreas Köberle</a> commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he absolutely right.</p>
+<p><a href="https://twitter.com/eskimobloood">Andreas Köberle</a> commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he was absolutely right.</p>
 
 <p>Underscore/lo-dash gives you the possibility to <code>chain</code> the collection functions and that really rocks! You can just stick multiple operation after each other and have to call <code>value</code> at the end. No magic, but much more readability. Thanks for the tip. :)</p>
 
