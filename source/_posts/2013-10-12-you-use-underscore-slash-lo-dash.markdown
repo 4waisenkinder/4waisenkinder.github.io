@@ -206,7 +206,7 @@ _.size( personB ); // => 1
 
 ```
 
-### More complex use case
+### More complex use case - the power of chaining
 
 > Hey Stefan, I have got a list of persons including their incomes. How can I get **the sum of all freelance incomes**?
 
@@ -243,14 +243,20 @@ var persons = [
   }
 ];
 
-var freelanceIncomes = _.reduce( persons, function( memo, person ) {
-  return memo + _.reduce( _.where( person.incomes, { type : 'Freelance' } ), function( memo, income ) {
-    return memo + income.value;
-  }, 0 )
-}, 0 );
+// use the power of chaining :)
+var freelanceIncomes = _.chain( persons )
+                        .pluck( 'incomes' )
+                        .flatten()
+                        .where( { type: 'Freelance' } )
+                        .reduce( function( memo, income ){ return memo + income.value }, 0 )
+                        .value();
 
 // => 3500
 ```
+
+[Andreas Köberle](https://twitter.com/eskimobloood) commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he absolutely right.
+
+Underscore/lo-dash gives you the possibility to `chain` the collection functions and that really rocks! You can just stick multiple operation after each other and have to call `value` at the end. No magic, but much more readability. Thanks for the tip. :)
 
 ### Conclusion
 
