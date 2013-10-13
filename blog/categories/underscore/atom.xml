@@ -4,7 +4,7 @@
   <title><![CDATA[Category: underscore | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/underscore/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-13T04:01:45+02:00</updated>
+  <updated>2013-10-13T04:06:52+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -26,7 +26,7 @@
 
 <p><em>Note: If you only have to support modern browsers, you are able to use native Array functions like <code>map</code>, <code>filter</code> and <code>reduce</code>. Then there is probably no need to use underscore/lo-dash for these. They are supported in IE9 and higher.</em></p>
 
-<h3>_.map</h3>
+<h3>_.each</h3>
 
 <blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>make them all</strong> 5cm <strong>smaller</strong>?</p></blockquote>
 
@@ -48,10 +48,8 @@ height : 183
 <p>  }
 ]</p>
 
-<p>persons = _.map( persons, function( person ) {
-  person.height = person.height &ndash; 5;</p>
-
-<p>  return person;
+<p>_.each( persons, function( person ) {
+  person.height = person.height &ndash; 5;
 } );</p>
 
 <p>// => [ { height: 190, name: &ldquo;Bob&rdquo; }, { height: 178, name: &ldquo;Stefan&rdquo; } ]  <br/>

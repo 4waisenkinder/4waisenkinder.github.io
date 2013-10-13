@@ -100,7 +100,7 @@ $(document).ready(
 
 <p><em>Note: If you only have to support modern browsers, you are able to use native Array functions like <code>map</code>, <code>filter</code> and <code>reduce</code>. Then there is probably no need to use underscore/lo-dash for these. They are supported in IE9 and higher.</em></p>
 
-<h3>_.map</h3>
+<h3>_.each</h3>
 
 <blockquote><p>Hey Stefan, I have got a list of persons. How can I <strong>make them all</strong> 5cm <strong>smaller</strong>?</p></blockquote>
 
@@ -120,8 +120,6 @@ $(document).ready(
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
 </span><span class='line'>  <span class="p">{</span>
 </span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
@@ -133,10 +131,8 @@ $(document).ready(
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">]</span>
 </span><span class='line'>
-</span><span class='line'><span class="nx">persons</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">person</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="mi">5</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">person</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span> <span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">// =&gt; [ { height: 190, name: &quot;Bob&quot; }, { height: 178, name: &quot;Stefan&quot; } ]    </span>
