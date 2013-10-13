@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-13T04:09:14+02:00</updated>
+  <updated>2013-10-13T10:12:52+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -383,6 +383,7 @@
 <span class='line-number'>39</span>
 <span class='line-number'>40</span>
 <span class='line-number'>41</span>
+<span class='line-number'>42</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
 </span><span class='line'>  <span class="p">{</span>
 </span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
@@ -415,7 +416,8 @@
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// use the power of chaining :)</span>
+</span><span class='line'><span class="c1">// use the power of chaining - underscore version :)</span>
+</span><span class='line'><span class="c1">// underscore &amp; lo-dash behave slightly different in chaining case</span>
 </span><span class='line'><span class="kd">var</span> <span class="nx">freelanceIncomes</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span> <span class="nx">persons</span> <span class="p">)</span>
 </span><span class='line'>                        <span class="p">.</span><span class="nx">pluck</span><span class="p">(</span> <span class="s1">&#39;incomes&#39;</span> <span class="p">)</span>
 </span><span class='line'>                        <span class="p">.</span><span class="nx">flatten</span><span class="p">()</span>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: lo-dash | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/lo-dash/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-10-13T04:09:14+02:00</updated>
+  <updated>2013-10-13T10:12:52+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -309,7 +309,8 @@ incomes : [
 <p>  }
 ];</p>
 
-<p>// use the power of chaining :)
+<p>// use the power of chaining &ndash; underscore version :)
+// underscore &amp; lo-dash behave slightly different in chaining case
 var freelanceIncomes = _.chain( persons )</p>
 
 <pre><code>                    .pluck( 'incomes' )
