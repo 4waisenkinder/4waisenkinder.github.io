@@ -416,7 +416,7 @@ $(document).ready(
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>More complex use case</h3>
+<h3>More complex use case &ndash; the power of chaining</h3>
 
 <blockquote><p>Hey Stefan, I have got a list of persons including their incomes. How can I get <strong>the sum of all freelance incomes</strong>?</p></blockquote>
 
@@ -459,6 +459,8 @@ $(document).ready(
 <span class='line-number'>37</span>
 <span class='line-number'>38</span>
 <span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">persons</span> <span class="o">=</span> <span class="p">[</span>
 </span><span class='line'>  <span class="p">{</span>
 </span><span class='line'>    <span class="nx">name</span>   <span class="o">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
@@ -491,15 +493,21 @@ $(document).ready(
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">];</span>
 </span><span class='line'>
-</span><span class='line'><span class="kd">var</span> <span class="nx">freelanceIncomes</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">persons</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">person</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="nx">_</span><span class="p">.</span><span class="nx">where</span><span class="p">(</span> <span class="nx">person</span><span class="p">.</span><span class="nx">incomes</span><span class="p">,</span> <span class="p">{</span> <span class="nx">type</span> <span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span> <span class="p">}</span> <span class="p">),</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">income</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">income</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">},</span> <span class="mi">0</span> <span class="p">)</span>
-</span><span class='line'><span class="p">},</span> <span class="mi">0</span> <span class="p">);</span>
+</span><span class='line'><span class="c1">// use the power of chaining :)</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">freelanceIncomes</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span> <span class="nx">persons</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">pluck</span><span class="p">(</span> <span class="s1">&#39;incomes&#39;</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">flatten</span><span class="p">()</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">where</span><span class="p">(</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;Freelance&#39;</span> <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">reduce</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">income</span> <span class="p">){</span> <span class="k">return</span> <span class="nx">memo</span> <span class="o">+</span> <span class="nx">income</span><span class="p">.</span><span class="nx">value</span> <span class="p">},</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'>                        <span class="p">.</span><span class="nx">value</span><span class="p">();</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">// =&gt; 3500</span>
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p><a href="https://twitter.com/eskimobloood">Andreas Köberle</a> commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he absolutely right.</p>
+
+<p>Underscore/lo-dash gives you the possibility to <code>chain</code> the collection functions and that really rocks! You can just stick multiple operation after each other and have to call <code>value</code> at the end. No magic, but much more readability. Thanks for the tip. :)</p>
 
 <h3>Conclusion</h3>
 
