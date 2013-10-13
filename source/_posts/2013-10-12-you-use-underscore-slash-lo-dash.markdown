@@ -252,7 +252,7 @@ var freelanceIncomes = _.chain( persons )
 // => 3500
 ```
 
-[Andreas Köberle](https://twitter.com/eskimobloood) commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he absolutely right.
+[Andreas Köberle](https://twitter.com/eskimobloood) commented this article saying that the my first approach for the last example can be done much more readable using chaining. And well, he was absolutely right.
 
 Underscore/lo-dash gives you the possibility to `chain` the collection functions and that really rocks! You can just stick multiple operation after each other and have to call `value` at the end. No magic, but much more readability. Thanks for the tip. :)
 
