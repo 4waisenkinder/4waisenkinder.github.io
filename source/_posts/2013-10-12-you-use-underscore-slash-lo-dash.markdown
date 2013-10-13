@@ -241,7 +241,8 @@ var persons = [
   }
 ];
 
-// use the power of chaining :)
+// use the power of chaining - underscore version :)
+// underscore & lo-dash behave slightly different in chaining case
 var freelanceIncomes = _.chain( persons )
                         .pluck( 'incomes' )
                         .flatten()
