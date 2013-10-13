@@ -17,7 +17,7 @@ So let us dive into that and imagine my friend and colleague Bob comes to my tab
 
 *Note: If you only have to support modern browsers, you are able to use native Array functions like `map`, `filter` and `reduce`. Then there is probably no need to use underscore/lo-dash for these. They are supported in IE9 and higher.* 
 
-### _.map
+### _.each
 
 > Hey Stefan, I have got a list of persons. How can I **make them all** 5cm **smaller**?
 
@@ -33,10 +33,8 @@ var persons = [
   }
 ]
 
-persons = _.map( persons, function( person ) {
+_.each( persons, function( person ) {
   person.height = person.height - 5;
-  
-  return person;
 } );
 
 // => [ { height: 190, name: "Bob" }, { height: 178, name: "Stefan" } ]    
