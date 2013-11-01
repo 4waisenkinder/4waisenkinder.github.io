@@ -427,12 +427,16 @@ $(document).ready(
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
 </span><span class='line'>  <span class="c1">// get new deffered object</span>
 </span><span class='line'>  <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
 </span><span class='line'>  <span class="kd">var</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="s1">&#39;gruntplugin&#39;</span><span class="p">;</span>
 </span><span class='line'>  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/_design/app/_view/byKeyword?startkey=[%22&#39;</span> <span class="o">+</span>
 </span><span class='line'>    <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22]&amp;endkey=[%22&#39;</span> <span class="o">+</span> <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22,{}]&amp;group_level=3&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// fetch all plugins</span>
 </span><span class='line'>  <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>    <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>    <span class="kd">function</span> <span class="nx">handlePluginList</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
@@ -497,6 +501,7 @@ $(document).ready(
 <span class='line-number'>24</span>
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
+<span class='line-number'>27</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">list</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="c1">// create array full of promises</span>
 </span><span class='line'>  <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">)</span> <span class="p">{</span>
@@ -504,6 +509,7 @@ $(document).ready(
 </span><span class='line'>    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">key</span><span class="p">[</span> <span class="mi">1</span> <span class="p">];</span>
 </span><span class='line'>    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/&#39;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">;</span>
 </span><span class='line'>
+</span><span class='line'>    <span class="c1">// fetch plugin information</span>
 </span><span class='line'>    <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>      <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>      <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>

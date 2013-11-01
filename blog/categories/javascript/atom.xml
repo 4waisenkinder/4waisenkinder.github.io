@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-11-01T16:15:30+01:00</updated>
+  <updated>2013-11-01T16:24:19+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -260,7 +260,8 @@ function fetchPluginList() {
 <pre><code>keyword + '%22]&amp;endkey=[%22' + keyword + '%22,{}]&amp;group_level=3';
 </code></pre>
 
-<p>  request(</p>
+<p>  // fetch all plugins
+  request(</p>
 
 <pre><code>{ url : url, json : true },
 function handlePluginList( error, response, body ) {
@@ -304,6 +305,7 @@ function getPlugin( list ) {
 var name = item.key[ 1 ];
 var url = 'http://isaacs.iriscouch.com/registry/' + name;
 
+// fetch plugin information
 request(
   { url : url, json: true },
   function handlePlugin( error, response, body ) {
