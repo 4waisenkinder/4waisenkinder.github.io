@@ -1,0 +1,889 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>How to handle a bunch of requests using JS promises  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Yesterday I procrastinated the stuff I wanted (and should) do and spent a lot of time browsing Github and checking what is going on in the JS world. &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">How to Handle a Bunch of Requests Using JS Promises</h2>
+	<div class="entry-content"><p>Yesterday I procrastinated the stuff I wanted (and should) do and spent a lot of time browsing Github and checking what is going on in the JS world. I discoverd a <a href="https://github.com/gruntjs/grunt/issues/926">discussion</a> held by the grunt guys about how Grunt can be promoted better. That was quite a good read and it was really nice to see, that these people try to push Grunt forward to make tooling much better for everyone.</p>
+
+<p>A lot of new issues were created at Github to push the project to the next level. It turns out that the <a href="http://gruntjs.com">Gruntjs.com</a> website is a <a href="https://github.com/gruntjs/gruntjs.com">seperate repository</a> whose code is available on Github (man, I really love that Open Source approach).</p>
+
+<p>What else can I do than checking out the source? I mean the website of Grunt itself must include a lot of best practices and stuff to discover. I forked it and opened in my editor and there they were &ndash; a lot of JS promises&hellip;<!-- more --></p>
+
+<p>Basically I know how promises work, but I have to admit that they still irritate me a bit. It is just another way of thinking and sometimes it takes me a while to understand what is going on when the code in front of me is promises based.</p>
+
+<p>The Grunt website makes usage of the framework <a href="https://npmjs.org/package/q">Q</a>. There are a lot of promises frameworks out there, but Q is with over 10000 downloads a day according to NPM stats not a bad choice. ;)</p>
+
+<p><strong>Handling of requests at <em>/plugins</em> </strong></p>
+
+<p>There is not much functionality in the site (most of it is static content), so the most interessting part of it is probably the <code>plugins</code> site. It fetches all available Grunt plugins from &ldquo;somewhere&rdquo; &ndash; I will explain where it comes from, so keep reading ;) &ndash; and displays them. Let us check, what is going on there.</p>
+
+<p>The fun part starts inside of a file called <code>server.js</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// plugin list route</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/plugin-list&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// get the plugin list</span>
+</span><span class='line'>  <span class="nx">pluginListEntity</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">entity</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// Allow Cross-origin resource sharing</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/json&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;ETag&#39;</span><span class="p">,</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">etag</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="nx">entity</span><span class="p">.</span><span class="nx">json</span><span class="p">));</span>
+</span><span class='line'>  <span class="p">}).</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">next</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What we see here is a route definition for the <a href="http://expressjs.com/">Express Framework</a>. If you are not familiar with Express it describes itself as follows:</p>
+
+<blockquote><p>Express is a minimal and flexible node.js web application framework, providing a robust set of features for building single and multi-page, and hybrid web applications.</p></blockquote>
+
+<p>It is a quite handy framework and when you are into node.js it is definitely worth a try.</p>
+
+<p>But anyway&hellip; The shown function will be called when a user enters the url <code>/plugin-list</code>. And there it is &ndash; the first promise <code>pluginListEntity</code>. You see that it is a promise, because an included function <code>then</code> gets called with an anonymous callback function. This is the basic pattern when dealing with promises.</p>
+
+<p><strong>Comparing <em>callback</em> and <em>promise</em> way </strong></p>
+
+<p>Particular functions return a promise object instead of the wished data. This becomes quite handy when you have to deal with asynchronous operations, because the &ldquo;normal&rdquo; way would be to implement a callback function that deals with wished data, when the operation succeeded.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">result</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// callback way</span>
+</span><span class='line'><span class="nx">asyncOperation</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">data</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">result</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// promise way</span>
+</span><span class='line'><span class="nx">result</span> <span class="o">=</span> <span class="nx">asyncOperation</span><span class="p">();</span>
+</span><span class='line'><span class="nx">result</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">data</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">result</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Creating <em>pluginListEntity</em> </strong></p>
+
+<p>So far so good &ndash; let us check where this variable <code>pluginListEntity</code> seen in the first code block comes from. It is basically the result of a function called <code>getPluginListEntity</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">getPluginListEntity</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// create new promise</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// oh, another promise...</span>
+</span><span class='line'>  <span class="nx">gruntPlugins</span><span class="p">.</span><span class="nx">fetchPluginList</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span>
+</span><span class='line'>    <span class="kd">function</span> <span class="p">(</span> <span class="nx">pluginList</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">entity</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nx">json</span><span class="o">:</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span> <span class="nx">pluginList</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">shasum</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span> <span class="s1">&#39;sha1&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nx">shasum</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span> <span class="nx">entity</span><span class="p">.</span><span class="nx">json</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nx">entity</span><span class="p">.</span><span class="nx">etag</span> <span class="o">=</span> <span class="nx">shasum</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span> <span class="s1">&#39;hex&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">entity</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// update the entity</span>
+</span><span class='line'>      <span class="nx">pluginListEntity</span> <span class="o">=</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="p">).</span><span class="nx">fail</span><span class="p">(</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="nx">e</span> <span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// return no values but rather a promise</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// set pluginListEntitry at initial start</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">pluginListEntity</span> <span class="o">=</span> <span class="nx">getPluginListEntity</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Update function to keep everything fresh</span>
+</span><span class='line'><span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">getPluginListEntity</span><span class="p">();</span>
+</span><span class='line'><span class="p">},</span> <span class="nx">UPDATE_INTERVAL_IN_SECONDS</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What we see here is the actual &ldquo;kick off&rdquo; functionality for the plugin fetch process. It gets called at the initial start of the Express application. The most important thing is, that the variable <code>pluginListEntity</code> is set with a promise at initial start by calling <code>getPluginListEntity</code>.</p>
+
+<p><code>getPluginListEntity</code> does two things when called. First of all it creates a new promise and returns it. Additionally it refreshes <code>pluginListEntity</code> with the created promise. That is actually really smart, because this way it is possible to update it automatically using <code>setInterval</code> constantly which is absolutely necessary, because <a href="http://gruntjs.com">gruntjs.com</a> should be up to date all the time.</p>
+
+<p>But wait&hellip; you may have noticed that there is more promises stuff going on inside of <code>getPluginListEntity</code>. This line <code>gruntPlugins.fetchPluginList.then( ... )</code> hints to another object, that does the actual fetching job for the application and obviously return another promise.</p>
+
+<p>Let us check it out.</p>
+
+<p><strong>Fetching data from NPM</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// return a promise to use it in &#39;getPluginListEntitry&#39;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">fcall</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// fetch all grunt plugins</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">).</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">list</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// fetch plugin information for each plugin</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">results</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">).</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">getDownloads</span><span class="p">(</span> <span class="nx">results</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">resultsWithDownloads</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">results</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">result</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// fetch download statistics for each plugin</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">resultsWithDownloads</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>BAM!!! That is it &ndash; much more promises &ndash;, but let us break it into little pieces. :)</p>
+
+<p>The needed functionality consists of really a lot of requests made to a <a href="http://couchdb.apache.org/">CouchDB</a>. NPM stores all its plugin inside of a CouchDB available at <a href="http://isaacs.iriscouch.com">http://isaacs.iriscouch.com</a>.</p>
+
+<p>To wrap up what is needed to do:</p>
+
+<ul>
+<li>Fetch all plugins from database &lsquo;reqistry&rsquo; that include keyword &lsquo;gruntplugin&rsquo; &ndash; <strong> one call </strong></li>
+<li>Fetch plugin details of all fetched grunt plugins from database &lsquo;registry&rsquo; &ndash; <strong> * calls </strong></li>
+<li>Fetch download statistics of all fetched plugin &ndash; <strong> * calls </strong></li>
+</ul>
+
+
+<p>Just to make sure you understand to advantage of that, here is the callback way of doing it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">fetchPluginList</span><span class="p">(</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">plugins</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">plugins</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">pluginsWithDetails</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">getDownloads</span><span class="p">(</span> <span class="nx">pluginsWithDetails</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">pluginsWithDownloadStats</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// do something with &#39;pluginsWithDownladStats&#39;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Doing it like that is less readable and it is a perfect example of the so called &lsquo;callback hell&rsquo;. Additionally dealing with a lot asynchronous requests can be really tricky and keeping it in sync to call the next callback is not so easy like it sounds.</p>
+
+<p>So what is really going on? The function <code>fetchPluginList</code> makes usage of <code>Q.fcall</code>. This gives us the possibility to return a new promise by this function. Following is a simplified version of this approach to make it clearer.</p>
+
+<p><strong>Example for <em>Q.fcall</em> </strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">Q</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s1">&#39;q&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">getPromise</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">fcall</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">).</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">).</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">value</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">getPromise</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">a</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">returnValue</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span> <span class="nx">returnValue</span> <span class="p">);</span> <span class="c1">// will log &#39;60&#39;</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This way we are able to stick a lot of functions together and avoid creating callback trees. The end result of a deep nested callback is then easily accessible using the <code>then</code> function of the particular promise.</p>
+
+<p><strong>Example of <em>Q.defer</em> with one request</strong></p>
+
+<p>Now starts the tricky part &ndash; in each step ( remember <code>fetchAll</code>, <code>fetchDetails</code>, <code>fetchDownloads</code>? ;) ) will be made an asynchronous request and this request is handled by &hellip;? Yeah, you are right &ndash; another promise.</p>
+
+<p>Here is the complete first step to fetch all grunt plugins including one call to the CouchDB:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// get new deffered object</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="s1">&#39;gruntplugin&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/_design/app/_view/byKeyword?startkey=[%22&#39;</span> <span class="o">+</span>
+</span><span class='line'>    <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22]&amp;endkey=[%22&#39;</span> <span class="o">+</span> <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22,{}]&amp;group_level=3&#39;</span><span class="p">;</span>
+</span><span class='line'>  <span class="nx">request</span><span class="p">(</span>
+</span><span class='line'>    <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+</span><span class='line'>    <span class="kd">function</span> <span class="nx">handlePluginList</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// yeah - resolve it successfully</span>
+</span><span class='line'>        <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// reject it in case of error</span>
+</span><span class='line'>        <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span> <span class="nx">error</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// return no value but rather the deffered</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A new promise is created by using <code>Q.defer</code>. <code>Q.defer</code> acts as an interface when you have to deal with callback based functions ( like <code>request</code> in this case ) and you want to do it the promise way. All you have to do is getting a new defer object by calling <code>Q.defer()</code> and then resolving/rejecting it inside of the asynchronous callback function. The response of the request is then easily accessible be calling <code>then</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">allPlugins</span> <span class="o">=</span> <span class="nx">fetchPluginList</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">allPlugins</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">plugins</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">doSomething</span><span class="p">(</span> <span class="nx">plugins</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Example of <em>Q.defer</em> with multiple request</strong></p>
+
+<p>If the first step is clear to you ( if not feel free to comment of ping me on <a href="twitter.com/stefanjudis">Twitter</a> ) let us check the second and third, because there is a bit more magic going on in it.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">list</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// create array full of promises</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">key</span><span class="p">[</span> <span class="mi">1</span> <span class="p">];</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/&#39;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">request</span><span class="p">(</span>
+</span><span class='line'>      <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+</span><span class='line'>      <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// yeah - resolve promise for this plugin</span>
+</span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">condensePlugin</span><span class="p">(</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// reject promise for this plugin</span>
+</span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span> <span class="nx">error</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>  <span class="c1">// &#39;results&#39; is an Array containing a lot of promises</span>
+</span><span class='line'>  <span class="c1">// -&gt; returns a new promise that will be resolved</span>
+</span><span class='line'>  <span class="c1">// -&gt; when all promises inside of results succeeded</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">results</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This step does basically the same as the first step, but makes a lot of more requests. For each plugin a seperate request has to be made to fetch the plugin details. The function will be executed with an Array containing all information that was fetched in first call to get all grunt plugins.</p>
+
+<p>This Array ( <code>list</code> ) will be transformed using the <code>map</code> function of <a href="http://lodash.com/">lo-dash</a>. Each item is replaced by a new deffered object which will be resolved, when the request for plugin information succeeded. Q provides the really nice function <code>Q.all</code> which gives us a lot of power to handle multiple requests.</p>
+
+<p><code>Q.all</code> will return a new promise which will be resolved when all promises inside of the handed in Array will be resolved and enriched with detail information.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// response of first call to CouchDB</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">list</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">key</span> <span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;something&#39;</span><span class="p">,</span> <span class="s1">&#39;pluginName1&#39;</span> <span class="p">]</span>
+</span><span class='line'><span class="p">},</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">key</span> <span class="o">:</span> <span class="p">[</span> <span class="s1">&#39;something&#39;</span><span class="p">,</span> <span class="s1">&#39;pluginName2&#39;</span> <span class="p">]</span>
+</span><span class='line'><span class="p">}</span> <span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">allPluginsWithDetails</span> <span class="o">=</span> <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">list</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// do something with plugins when they were</span>
+</span><span class='line'><span class="c1">// enriched with detail information</span>
+</span><span class='line'><span class="nx">allPluginsWithDetails</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">plugins</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">doSomething</span><span class="p">(</span> <span class="nx">plugins</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Sticking promises together</strong></p>
+
+<p>Now, we have created a lot of promises, so let us have another look where we started with a more detailed look and lots of comments. ;)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// return a promise</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">fcall</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">fetchPluginList</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// fetch all grunt plugins with help of a deferred object</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="s1">&#39;gruntplugin&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/_design/app/_view/byKeyword?startkey=[%22&#39;</span> <span class="o">+</span>
+</span><span class='line'>      <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22]&amp;endkey=[%22&#39;</span> <span class="o">+</span> <span class="nx">keyword</span> <span class="o">+</span> <span class="s1">&#39;%22,{}]&amp;group_level=3&#39;</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">// fetch all plugins</span>
+</span><span class='line'>    <span class="nx">request</span><span class="p">(</span>
+</span><span class='line'>      <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+</span><span class='line'>      <span class="kd">function</span> <span class="nx">handlePluginList</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// resolve deferred with response</span>
+</span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span> <span class="nx">error</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>  <span class="c1">// executed when the promise returned by &#39;fetchPluginList&#39; was resolved</span>
+</span><span class='line'>  <span class="c1">// argument &#39;list&#39; === &#39;body.rows&#39; in line 15</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">getPlugin</span><span class="p">(</span> <span class="nx">list</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// transform Array with data to Array with promises</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">key</span><span class="p">[</span> <span class="mi">1</span> <span class="p">];</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/registry/&#39;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">;</span>
+</span><span class='line'>      <span class="c1">// fetch plugin information</span>
+</span><span class='line'>      <span class="nx">request</span><span class="p">(</span>
+</span><span class='line'>        <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+</span><span class='line'>        <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// resolve deferred with response</span>
+</span><span class='line'>            <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">condensePlugin</span><span class="p">(</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span> <span class="nx">error</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>    <span class="c1">// return a promise the will be resolved</span>
+</span><span class='line'>    <span class="c1">// when all promises inside of &#39;results&#39; are resolved</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">results</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">})</span>
+</span><span class='line'>  <span class="c1">// executed when the promise returned by &#39;getPlugin was resolved&#39;</span>
+</span><span class='line'>  <span class="c1">// argument &#39;results&#39; is an Array which now consists of plugin data</span>
+</span><span class='line'>  <span class="c1">// with enriched plugin information</span>
+</span><span class='line'>  <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span> <span class="nx">getDownloads</span><span class="p">(</span> <span class="nx">results</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// transform Array with data to Array with promises</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">resultsWithDownloads</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">results</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">result</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">today</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">today</span><span class="p">();</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">oneMonthAgo</span> <span class="o">=</span> <span class="nx">today</span><span class="p">.</span><span class="nx">clone</span><span class="p">().</span><span class="nx">add</span><span class="p">(</span> <span class="p">{</span> <span class="nx">months</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span> <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">startKey</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span> <span class="p">[</span> <span class="nx">result</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">oneMonthAgo</span><span class="p">.</span><span class="nx">toYMD</span><span class="p">()</span> <span class="p">]</span> <span class="p">);</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">endKey</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span> <span class="p">[</span> <span class="nx">result</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">today</span><span class="p">.</span><span class="nx">toYMD</span><span class="p">()</span> <span class="p">]</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://isaacs.iriscouch.com/downloads/_design/app/_view/pkg?startkey=&#39;</span> <span class="o">+</span> <span class="nx">startKey</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span> <span class="o">+</span> <span class="s1">&#39;endkey=&#39;</span> <span class="o">+</span> <span class="nx">endKey</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// fetch download information</span>
+</span><span class='line'>      <span class="nx">request</span><span class="p">(</span>
+</span><span class='line'>        <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+</span><span class='line'>        <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="o">&amp;&amp;</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nx">result</span><span class="p">.</span><span class="nx">downloads</span> <span class="o">=</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span> <span class="mi">0</span> <span class="p">].</span><span class="nx">value</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>              <span class="nx">result</span><span class="p">.</span><span class="nx">downloads</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// resolve deffered with enriched result</span>
+</span><span class='line'>            <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">result</span> <span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span> <span class="nx">error</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// return a promise the will be resolved</span>
+</span><span class='line'>    <span class="c1">// when all promises inside of &#39;results&#39; are resolved</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">resultsWithDownloads</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">plugins</span> <span class="o">=</span> <span class="nx">fetchPluginList</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// working with result when all requests are down</span>
+</span><span class='line'><span class="c1">// argument &#39;resultsWithDownloads&#39; is result of &#39;Q.all&#39; at line 89</span>
+</span><span class='line'><span class="nx">plugins</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">resultsWithDownloads</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">doSomething</span><span class="p">(</span> <span class="nx">resultsWithDownloads</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Conclusion</strong></p>
+
+<p>The <code>fetchPluginList</code> function looks first really heavy, but when you understood the principle ( looking at you <a href="https://twitter.com/TeixeiraPedro">@TeixeiraPedro</a> ;) ) the code has much more structure and is much easier to read. Especially lots of asynchronous operations that has to be in sync at some point loose complexity by using <code>Q.all</code>, which absolutely blew my mind.</p>
+
+<p>For me it is clear, that I will structure next projects with lots of requests definitely promises based like the Grunt guys do to make my life easier.</p>
+
+<p>And that is it. I hope you enjoyed it and thanks. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T14:00:00+01:00" pubdate data-updated="true">Nov 1<span>st</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/grunt/'>grunt</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/q/'>q</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/11/01/how-promises-work-using-the-example-of-gruntjs-dot-com/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/11/01/how-promises-work-using-the-example-of-gruntjs-dot-com/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
