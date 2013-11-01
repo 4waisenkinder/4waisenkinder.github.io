@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-11-01T16:24:19+01:00</updated>
+  <updated>2013-11-01T16:30:59+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -265,7 +265,7 @@ function fetchPluginList() {
 
 <pre><code>{ url : url, json : true },
 function handlePluginList( error, response, body ) {
-  if( !error &amp;&amp; response.statusCode == 200 ) {
+  if( !error &amp;&amp; response.statusCode === 200 ) {
     // yeah - resolve it successfully
     deferred.resolve( body.rows );
   } else {
@@ -309,7 +309,7 @@ var url = 'http://isaacs.iriscouch.com/registry/' + name;
 request(
   { url : url, json: true },
   function handlePlugin( error, response, body ) {
-    if( !error &amp;&amp; response.statusCode == 200 ) {
+    if( !error &amp;&amp; response.statusCode === 200 ) {
       // yeah - resolve promise for this plugin
       deferred.resolve( condensePlugin( body ) );
     } else {
@@ -370,7 +370,7 @@ var url = 'http://isaacs.iriscouch.com/registry/_design/app/_view/byKeyword?star
 request(
   { url : url, json : true },
   function handlePluginList( error, response, body ) {
-    if( !error &amp;&amp; response.statusCode == 200 ) {
+    if( !error &amp;&amp; response.statusCode === 200 ) {
       // resolve deferred with response
       deferred.resolve( body.rows );
     } else {
@@ -395,7 +395,7 @@ var results = _.map( list, function( item ) {
   request(
     { url : url, json : true },
     function handlePlugin( error, response, body ) {
-      if( !error &amp;&amp; response.statusCode == 200 ) {
+      if( !error &amp;&amp; response.statusCode === 200 ) {
         // resolve deferred with response
         deferred.resolve( condensePlugin( body ) );
       } else {
@@ -432,7 +432,7 @@ var resultsWithDownloads = _.map( results, function( result ) {
   request(
     { url : url, json : true },
     function handlePlugin( error, response, body ) {
-      if (!error &amp;&amp; response.statusCode == 200) {
+      if (!error &amp;&amp; response.statusCode === 200) {
         if ( body.rows &amp;&amp; body.rows.length ) {
           result.downloads = body.rows[ 0 ].value;
         } else {

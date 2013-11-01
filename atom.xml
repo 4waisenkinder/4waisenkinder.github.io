@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-11-01T16:24:19+01:00</updated>
+  <updated>2013-11-01T16:30:59+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -366,7 +366,7 @@
 </span><span class='line'>  <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>    <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>    <span class="kd">function</span> <span class="nx">handlePluginList</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>        <span class="c1">// yeah - resolve it successfully</span>
 </span><span class='line'>        <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="p">);</span>
 </span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -439,7 +439,7 @@
 </span><span class='line'>    <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>      <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>      <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>          <span class="c1">// yeah - resolve promise for this plugin</span>
 </span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">condensePlugin</span><span class="p">(</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">);</span>
 </span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -609,7 +609,7 @@
 </span><span class='line'>    <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>      <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>      <span class="kd">function</span> <span class="nx">handlePluginList</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>          <span class="c1">// resolve deferred with response</span>
 </span><span class='line'>          <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="p">);</span>
 </span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -631,7 +631,7 @@
 </span><span class='line'>      <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>        <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>        <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">200</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>            <span class="c1">// resolve deferred with response</span>
 </span><span class='line'>            <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span> <span class="nx">condensePlugin</span><span class="p">(</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">);</span>
 </span><span class='line'>          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -665,7 +665,7 @@
 </span><span class='line'>      <span class="nx">request</span><span class="p">(</span>
 </span><span class='line'>        <span class="p">{</span> <span class="nx">url</span> <span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">json</span> <span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
 </span><span class='line'>        <span class="kd">function</span> <span class="nx">handlePlugin</span><span class="p">(</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>            <span class="k">if</span> <span class="p">(</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span> <span class="o">&amp;&amp;</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>              <span class="nx">result</span><span class="p">.</span><span class="nx">downloads</span> <span class="o">=</span> <span class="nx">body</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span> <span class="mi">0</span> <span class="p">].</span><span class="nx">value</span><span class="p">;</span>
 </span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
