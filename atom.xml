@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-11-01T16:30:59+01:00</updated>
+  <updated>2013-11-01T16:39:42+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -641,7 +641,7 @@
 </span><span class='line'>      <span class="p">);</span>
 </span><span class='line'>      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
 </span><span class='line'>    <span class="p">}</span> <span class="p">);</span>
-</span><span class='line'>    <span class="c1">// return a promise the will be resolved</span>
+</span><span class='line'>    <span class="c1">// return a promise that will be resolved</span>
 </span><span class='line'>    <span class="c1">// when all promises inside of &#39;results&#39; are resolved</span>
 </span><span class='line'>    <span class="k">return</span> <span class="nx">Q</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">results</span> <span class="p">);</span>
 </span><span class='line'>  <span class="p">})</span>
