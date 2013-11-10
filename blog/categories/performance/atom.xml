@@ -4,7 +4,7 @@
   <title><![CDATA[Category: performance | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/performance/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-11-01T16:39:42+01:00</updated>
+  <updated>2013-11-11T00:51:32+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,198 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Journey of discovery - the global 'window.performance' object]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/11/10/discovery-of-window-dot-performance-dot-timing/"/>
+    <updated>2013-11-10T13:37:00+01:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/11/10/discovery-of-window-dot-performance-dot-timing</id>
+    <content type="html"><![CDATA[<p>A few days ago I was at the <a href="http://www.developer-conference.eu/">Developer Conference Hamburg</a>. Topics of the talks were nearly everything you could think of ( from Java to PHP to JavaScript and much more ). For me only frontend related talks were important and that was why I attended the talk of <a href="https://twitter.com/AloisReitbauer">Alois Reitbauer</a> with the title &ldquo;W3C Web Performance &ndash; A detailed overview&rdquo; ( slides of his talk can be found <a href="http://de.slideshare.net/AloisReitbauer/w3c-web-performance-a-detailed-overview">here</a> ).</p>
+
+<p>And well, what should I say? He introduced the <code>window.performance</code> object to the audience and that absolutely blew my mind, <!-- more -->because there is really a lot of useful stuff in there and I did not know, that there was such an object available in the global window scope.</p>
+
+<p>The performance object includes three additional objects, which provide information for different use cases:</p>
+
+<ul>
+<li>timing // instanceof PerformanceTiming &ndash;> true</li>
+<li>navigation // instanceof PerformanceNavigation &ndash;> true</li>
+<li>memory // instanceof MemoryInfo &ndash;> true</li>
+</ul>
+
+
+<p>I tend to check out the particular specification for something I discovered, so let us have a first look inside of <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html">the spec</a> for the Navigation Timing API, which is the base for the <code>window.performance.timing</code> and <code>window.performance.navigation</code> object.</p>
+
+<p>It turned out, that the spec for <em>Navigation Timing</em> is work in progress. So please be careful, when dealing with stuff described in it. It may change in the future without a warning.</p>
+
+<p>According to <a href="http://caniuse.com/#search=performance">caniuse.com</a> the Navigation Timing API is unfortunately not completely supported ( Safari is missing ), but it is definitely something to play around with. ;)</p>
+
+<p>So let us check it out&hellip;</p>
+
+<h3>Specification for <em>window.performance.timing</em> &ndash; &ldquo;<a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html#sec-navigation-timing-interface">interface PerformanceTiming</a>&rdquo;</h3>
+
+<h4>&ndash;> getting general performance information of current document</h4>
+
+<p>Quote from the <em>Navigation Timing</em> specification:</p>
+
+<blockquote><p>To address the need for complete information on user experience, this document introduces the PerformanceTiming interfaces. This interface allows JavaScript mechanisms to provide complete client-side latency measurements within applications. [&hellip;] This specification introduces an interface that provides Web applications with timing-related information.</p></blockquote>
+
+<p>For me that sounds really awesome. Accessing timing information of the current document via JavaScript can be become really useful for any optimization of your site. Especially when you are dealing with the goal of presenting your site / your web application to your customers in less than 1000ms every metric you can get, can help you succeed and compare current and improved versions.</p>
+
+<p>Got curious? Let us check it out! :)</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/window-performance-timing.png" width="604" height="375" title="&lsquo;window.performance.timing object&rsquo; &lsquo;window.performance.timing object&rsquo;" ></p>
+
+<p>As you can see <code>window.performance.timing</code> includes a bunch of data that is predefined by the <code>interface PerformanceTiming</code>. The W3C provides inside of the spec itself a nice graphic to figure out, what these values stand for.</p>
+
+<p><img class="center <a" src="href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/timing-overview.png">https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/timing-overview.png</a>" width="911" height="555" title="&lsquo;window.performance.timing metrics&rsquo; &lsquo;window.performance.timing metrics&rsquo;" ></p>
+
+<h4>Example usage of data included in <em>window.performance.timing</em></h4>
+
+<p>Let us start simple and try to figure out how long a document needs to load.</p>
+
+<p>```javascript
+// cache it for shorter lines
+var timing = window.performance.timing;</p>
+
+<p>// actual calculation
+var loadingTime = timing.loadEventEnd &ndash; timing.navigationStart;
+```</p>
+
+<p>No magic in there. You may say now &ldquo;<em>Well I can get this information inside of the DevTools</em>&rdquo; and well&hellip; that is true. But the nice thing of that is, that you are able to access this information easily and you could ( or rather should? ) log it to get a better idea of the actual performance and user experience of your visitors in their browsers.</p>
+
+<p>To show a bit more interesting information than <code>loadingTime</code> and to make the usage of this a bit clearer I created a little snippet ( can be found <a href="https://gist.github.com/stefanjudis/7399022">here</a> ), which you can <a href="https://developers.google.com/chrome-developer-tools/docs/authoring-development-workflow#snippets">save inside of your Chrome DevTools</a>. With the usage of that we can easily display the main document metrics, when dealing with performance, without even touching the Network panel inside of the DevTools.</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/consoleMetrics.png" width="533" height="204" title="&lsquo;document performance metrics shown in console&rsquo; &lsquo;document performance metrics shown in console&rsquo;" ></p>
+
+<h3>Specification for <em>window.performance.navigation</em> &ndash; &ldquo;<a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html#sec-navigation-info-interface">interface PerformanceNavigation</a>&rdquo;</h3>
+
+<h4>&ndash;> getting information of navigation context</h4>
+
+<p>According to the <a href="https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html#performancenavigation">specification</a> the object <code>window.performance.navigation</code> only has to include two values, which give you information about the &ldquo;<em>last non-redirect navigation in the current browsing context</em>&rdquo;. Maybe you are thinking &ldquo;<em>I do not get it</em>&rdquo; like I did one hour ago, but it is not really complicated as well.</p>
+
+<p>Let us have a look at an example:</p>
+
+<p>```javascript
+// enter a site directly by entering
+// the particular URL
+console.log( window.performance.navigation.type ) // &lsquo;0&rsquo;</p>
+
+<p>// reload the page
+console.log( window.performance.navigation.type ) // &lsquo;1&rsquo;</p>
+
+<p>// go back in the history and come
+// back by going &lsquo;forward&rsquo; in history
+console.log( window.performance.navigation.type ) // &lsquo;2&rsquo;
+```</p>
+
+<p>To sum up the possibilities of the <code>type</code> attribute, it can have the following values:</p>
+
+<ul>
+<li>0 &ndash; site was directly entered</li>
+<li>1 &ndash; site was reloaded</li>
+<li>2 &ndash; site was entered via history</li>
+<li>255 &ndash; none of the first three options matches</li>
+</ul>
+
+
+<p>Additionally the object includes <code>redirectCount</code>, which will give you unfortunatelly only &ldquo;nearly&rdquo; the information you would expect. It will only count redirects from the same origin. That means if you want to check if there was a redirect via a URL shortener for example, <code>redirectCount</code> will still return <code>0</code>. I can not say, what is the exact reason for that decision, but it is defined in the spec this way. For redirects on your site it just works fine. ;)</p>
+
+<h3><em>window.performance.navigation</em> &ndash; unfortunately no spec found</h3>
+
+<h4>&ndash;> getting general information of JavsScript memory usage</h4>
+
+<p>Unfortunately I was not able to find any specification for this included object ( maybe you can ping <a href="https://twitter.com/stefanjudis">me</a> and point me into the correct direction &ndash; I really would like to read it ). Googling for &lsquo;interface MemoryInfo&rsquo; or &lsquo;jsHeapSizeLimit spec&rsquo; unfortunately did not give me any useful information.</p>
+
+<p>But anyway&hellip; I have not played around with memory profiling of JavaScript yet, but information about the current document can be found there &ndash; only wanted to mention it because it is included. ;)</p>
+
+<p>Example of the <code>window.performance.memory</code> object:</p>
+
+<p><code>javascript
+console.log( window.performance.memory );
+// will log :
+// {
+//   jsHeapSizeLimit : 793000000,
+//   usedJSHeapSize  : 60300000,
+//   totalJSHeapSize : 97400000
+// }
+</code></p>
+
+<h3>Specification for <em>window.performance</em> &ndash; &ldquo;<a href="http://www.w3.org/TR/performance-timeline/#sec-window.performance-attribute">interface Performance</a>&rdquo;</h3>
+
+<h4>&ndash;> getting detailed information of in document included ressources</h4>
+
+<p>By using the in <code>window.performance</code> included objects ( timing, navigation, memory ) it is easily possible to receive information of the current document. That can be really helpful to figure out if the particular document has any performance problems. If you want to dive into that in more detail, you probably need a bit more information:</p>
+
+<ul>
+<li>why needs the document so much time to finish loading?</li>
+<li>which ressource takes the most of the loading time?</li>
+<li>can I avoid loading problematic ressource at initial load?</li>
+</ul>
+
+
+<p>The <a href="http://www.w3.org/TR/performance-timeline/">spec</a> for the <em>Performance Timeline</em> describes the <code>interface Performance</code> to have the following functions, which help to figure out exactly, where performance problems can have their origin:</p>
+
+<ul>
+<li>getEntries()</li>
+<li>getEntriesByType( DOMString entryType )</li>
+<li>getEntriesByName( DOMString name, optional DOMString entryType )</li>
+</ul>
+
+
+<p>So let us check it out.</p>
+
+<p><code>getEntries</code> is defined to return a <code>PerformanceEntryList</code>. A <code>PerformanceEntry</code> has to have the following values:</p>
+
+<ul>
+<li>name</li>
+<li>entryType</li>
+<li>startTime</li>
+<li>duration</li>
+</ul>
+
+
+<p>That looks pretty handy for me. I created another JavaScript snippet ( can be found <a href="https://gist.github.com/stefanjudis/7399022">here</a> ) to make usage of that. The script fetches all entries by calling <code>getEntries</code> and sorts all the entries by the amount of duration beginning by the entry with the highest duration. The output for example for <a href="http://google.com">google.com</a> looks like that:</p>
+
+<p><img class="center" src="/images/blog/stefanjudis/detailedMetrics.png" width="1091" height="305" title="&lsquo;Sorted PerformanceEntries of google.com&rsquo; &lsquo;Sorted PerformanceEntries of google.com&rsquo;" ></p>
+
+<p>Especially this data can be extremely useful, when dealing with performance bottlenecks. Additionally there is to say, that all the entries have much more included information than the particular interface describes. It is definitely worth a look, if you want to dive deeper into this topic.</p>
+
+<p>Data included in one <code>PerformanceEntry</code>:</p>
+
+<p><code>javascript
+console.log( window.performance.getEntries() );
+// will log :
+// [
+//   {
+//     connectEnd: 0
+//     connectStart: 0
+//     domainLookupEnd: 0
+//     domainLookupStart: 0
+//     duration: 501.9820000161417
+//     entryType: "resource"
+//     fetchStart: 437.753000005614
+//     initiatorType: "script"
+//     name: "http://use.typekit.net/axj3cfp.js"
+//     redirectEnd: 0
+//     redirectStart: 0
+//     requestStart: 0
+//     responseEnd: 939.7350000217557
+//     responseStart: 0
+//     secureConnectionStart: 0
+//     startTime: 437.753000005614
+//   },
+//   // much more items
+// ]
+</code>
+I did not check the other to functions, because <code>getEntries</code> totally fits my needs right now, but if you have any good use cases for them, I would really like to know them.</p>
+
+<h3>Sum up &ndash; <em>window.performance</em> FTW</h3>
+
+<p><code>window.performance</code> includes a lot of useful information for creating a good user experience by focussing on performance ( remember &ldquo;Performance is a feature?&rdquo; ). Especially the information about the document in general and particular ressources can become really handy. For me it is clear, that I will use it a lot in the future to get a nice overview of what is really going on the sites I am responsible for.</p>
+
+<p>I hope you will start playing around with it as well and that is it for today. Thx for reading and I hope you enjoyed it. ;)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Why you shouldn't use Backbone's built-in Array functions]]></title>
