@@ -93,7 +93,7 @@ To sum up the possibilities of the ```type``` attribute, it can have the followi
 
 Additionally the object includes ```redirectCount```, which will give you unfortunatelly only "nearly" the information you would expect. It will only count redirects from the same origin. That means if you want to check if there was a redirect via a URL shortener for example, ```redirectCount``` will still return ```0```. I can not say, what is the exact reason for that decision, but it is defined in the spec this way. For redirects on your site it just works fine. ;)
 
-###*window.performance.navigation* - unfortunately no spec found
+###*window.performance.memory* - unfortunately no spec found
 
 ####-> getting general information of JavsScript memory usage
 
