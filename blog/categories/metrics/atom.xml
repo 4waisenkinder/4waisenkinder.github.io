@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: metrics | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/metrics/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2013-12-23T00:46:19+01:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to measure frontend performance with Grunt]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2013/12/22/how-to-measure-frontend-performance-with-phantomas-and-grunt/"/>
+    <updated>2013-12-22T23:28:00+01:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2013/12/22/how-to-measure-frontend-performance-with-phantomas-and-grunt</id>
+    <content type="html"><![CDATA[<p>When you are a frontend developer, you are on the constant journey to find the right tool to measure the performance of your site. Sure, there are the Developer Tools of your choice, <a href="https://developers.google.com/speed/pagespeed/">Google Pagespeed</a> or <a href="http://webpagetest.org">webpagespeed.org</a> available. And those tools are great (if you do not know them, you should definitely check them out), but for me it was always &ldquo;just&rdquo; nice to use these tools. They provide lots of useful information and I check them on a regular basis, but as far as I know, these tools do not provide a kind of timeline view of my daily work. They only give useful information to a given time &ndash; that is it. What I want to know, is how the site evolved after my latest deploy to production &hellip; <!-- more --></p>
+
+<p>Did the size of CSS / JavaScript decrease or increase? How many Ajax requests are made on page load? How many DOM queries are executed? And how did my latest changes effect the overall performance of the site?</p>
+
+<p>Sure, I could answer all these questions manually and could keep track of them in some way, but that is not in the nature of a developer, right? ;)</p>
+
+<p>That is definitely a task that belongs to an automated process and should be done right after the deployment to production, so that I can check right away, what happened and how the production site changed.</p>
+
+<p>Well, ( <strong>attention shameless self promotion</strong> ) &ndash; I wrote a <a href="http://gruntjs.com">Grunt</a> plugin called <a href="https://npmjs.org/package/grunt-phantomas">grunt-phantomas</a> to solve exactly that problem (preview of generated example results <a href="http://stefanjudis.github.io/grunt-phantomas/gruntjs/">here</a>).</p>
+
+<p>Two weeks ago I discovered a NPM module called <a href="https://github.com/macbre/phantomas">Phantomas</a> and it absolutely blew my mind. It is a command line tool, which scans any site you like via <a href="http://phantomjs.org/">PhantomJS</a>. You can easily install it via <code>npm install -g phantomas</code> and after that, you are ready to go. To show how powerful this tool is, let us have a look at the by Phantomas given statistics of the <a href="http://gruntjs.com">Grunt site</a> as an example.</p>
+
+<p>```
+$ phantomas &mdash;url <a href="http://gruntjs.com">http://gruntjs.com</a></p>
+
+<p>phantomas v0.9.0 metrics for <a href="http://gruntjs.com">http://gruntjs.com</a>:</p>
+
+<ul>
+<li>requests: 29</li>
+<li>gzipRequests: 3</li>
+<li>postRequests: 0</li>
+<li>httpsRequests: 0</li>
+<li>redirects: 0</li>
+<li>notFound: 0</li>
+<li>timeToFirstByte: 807</li>
+<li>timeToLastByte: 833</li>
+<li>bodySize: 179021</li>
+<li>contentLength: 311187</li>
+<li>ajaxRequests: 0</li>
+<li>htmlCount: 1</li>
+<li>htmlSize: 1151</li>
+<li>cssCount: 2</li>
+<li>cssSize: 1630</li>
+<li>jsCount: 5</li>
+<li>jsSize: 41272</li>
+<li>jsonCount: 0</li>
+<li>jsonSize: 0</li>
+<li>imageCount: 21</li>
+<li>imageSize: 134968</li>
+<li>webfontCount: 0</li>
+<li>webfontSize: 0</li>
+<li>base64Count: 0</li>
+<li>base64Size: 0</li>
+<li>otherCount: 0</li>
+<li>otherSize: 0</li>
+<li>cacheHits: 3</li>
+<li>cacheMisses: 0</li>
+<li>cachingNotSpecified: 4</li>
+<li>cachingTooShort: 2</li>
+<li>cachingDisabled: 20</li>
+<li>domains: 6</li>
+<li>maxRequestsPerDomain: 21</li>
+<li>medianRequestsPerDomain: 2</li>
+<li>DOMqueries: 7</li>
+<li>DOMqueriesById: 4</li>
+<li>DOMqueriesByClassName: 0</li>
+<li>DOMqueriesByTagName: 3</li>
+<li>DOMqueriesByQuerySelectorAll: 0</li>
+<li>DOMinserts: 4</li>
+<li>DOMqueriesDuplicated: 2</li>
+<li>eventsBound: 0</li>
+<li>headersCount: 368</li>
+<li>headersSentCount: 86</li>
+<li>headersRecvCount: 282</li>
+<li>headersSize: 12025</li>
+<li>headersSentSize: 2989</li>
+<li>headersRecvSize: 9036</li>
+<li>documentWriteCalls: 1</li>
+<li>evalCalls: 0</li>
+<li>jQueryVersion:</li>
+<li>jQueryOnDOMReadyFunctions: 0</li>
+<li>jQuerySizzleCalls: 0</li>
+<li>jsErrors: 0</li>
+<li>assetsNotGzipped: 5</li>
+<li>assetsWithQueryString: 4</li>
+<li>smallImages: 3</li>
+<li>multipleRequests: 0</li>
+<li>timeToFirstCss: 878</li>
+<li>timeToFirstJs: 1054</li>
+<li>timeToFirstImage: 1860</li>
+<li>onDOMReadyTime: 1339</li>
+<li>onDOMReadyTimeEnd: 1340</li>
+<li>windowOnLoadTime: 2386</li>
+<li>windowOnLoadTimeEnd: 2387</li>
+<li>httpTrafficCompleted: 3285</li>
+<li>windowAlerts: 0</li>
+<li>windowConfirms: 0</li>
+<li>windowPrompts: 0</li>
+<li>consoleMessages: 0</li>
+<li>cookiesSent: 0</li>
+<li>cookiesRecv: 354</li>
+<li>domainsWithCookies: 1</li>
+<li>documentCookiesLength: 193</li>
+<li>documentCookiesCount: 4</li>
+<li>bodyHTMLSize: 10809</li>
+<li>iframesCount: 0</li>
+<li>imagesWithoutDimensions: 16</li>
+<li>commentsSize: 53</li>
+<li>hiddenContentSize: 61</li>
+<li>whiteSpacesSize: 4</li>
+<li>DOMelementsCount: 197</li>
+<li>DOMelementMaxDepth: 10</li>
+<li>nodesWithInlineCSS: 0</li>
+<li>globalVariables: 57</li>
+<li>localStorageEntries: 0</li>
+<li>smallestResponse: 35</li>
+<li>biggestResponse: 29652</li>
+<li>fastestResponse: 27</li>
+<li>slowestResponse: 1057</li>
+<li>medianResponse: 517</li>
+</ul>
+
+
+<p>First css received in 878 ms: <a href="http://fonts.googleapis.com/css?family=Lato:400,700">http://fonts.googleapis.com/css?family=Lato:400,700</a>
+First js received in 1054 ms: <a href="http://gruntjs.com/js/vendor/lib/modernizr.min.js">http://gruntjs.com/js/vendor/lib/modernizr.min.js</a>
+First image received in 1860 ms: <a href="http://gruntjs.com/img/grunt-logo.svg">http://gruntjs.com/img/grunt-logo.svg</a>
+Requests per domain:
+ gruntjs.com: 21 request(s)
+ www.google-analytics.com: 2 request(s)
+ static.adzerk.net: 2 request(s)
+ engine.adzerk.net: 2 request(s)
+ fonts.googleapis.com: 1 request(s)
+ c.jslogger.com: 1 request(s)</p>
+
+<p>Duplicated DOM queries (2):
+ id &ldquo;#azk48893&rdquo;: 4 queries
+ tag name &ldquo;script&rdquo;: 3 queries</p>
+
+<p>JavaScript globals (57): JSLogger, Modernizr, <em>gaq, </em>gat, ados, adosResults, adosRun, ados_addInlinePlacement, ados_addPlacement, ados_addPlacementObject, ados_add_placement, ados_async_load, ados_execPassback, ados_findPassback, ados_frameLoaded, ados_load, ados_loadDiv, ados_loadFIframe, ados_loadInline, ados_loadPassback, ados_loadResults, ados_log, ados_passback, ados_passbackFilled, ados_passbackWritePixel, ados_passback_next, ados_passback_receiveMessage, ados_refresh, ados_setDomain, ados_setKeywordCookie, ados_setKeywords, ados_setNoTrack, ados_setWriteResults, ados_timeoutExpired, ados_writePixel, azHtmlLoad, azInitExtension, azLoad, azRegisterExtension, azScriptExtensionLoad, azScriptInlineLoad, azScriptSRCLoad, azk48893_html_98280, azk48893_html_command_17656, azk48893_pixel_64108, azk48893_pixel_command_60057, cssLinkLoad, cssLoad, d, gaGlobal, html5, jslogger, p, s, z, zItems, zshow</p>
+
+<p>The smallest response (0.03 kB): <a href="http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&amp;utms=1&amp;utmn=265814781&amp;utmhn=gruntjs.com&amp;utmcs=UTF-8&amp;utmsr=1920x1080&amp;utmvp=1024x1280&amp;utmsc=32-bit&amp;utmul=de-de&amp;utmje=0&amp;utmfl=-&amp;utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&amp;utmhid=319494337&amp;utmr=-&amp;utmp=%2F&amp;utmht=1387753136010&amp;utmac=UA-34623937-1&amp;utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&amp;utmu=q~">http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&amp;utms=1&amp;utmn=265814781&amp;utmhn=gruntjs.com&amp;utmcs=UTF-8&amp;utmsr=1920x1080&amp;utmvp=1024x1280&amp;utmsc=32-bit&amp;utmul=de-de&amp;utmje=0&amp;utmfl=-&amp;utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&amp;utmhid=319494337&amp;utmr=-&amp;utmp=%2F&amp;utmht=1387753136010&amp;utmac=UA-34623937-1&amp;utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&amp;utmu=q~</a>
+The biggest response (28.96 kB): <a href="http://gruntjs.com/img/grunt-logo.svg">http://gruntjs.com/img/grunt-logo.svg</a></p>
+
+<p>The fastest response (27 ms): <a href="http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&amp;utms=1&amp;utmn=265814781&amp;utmhn=gruntjs.com&amp;utmcs=UTF-8&amp;utmsr=1920x1080&amp;utmvp=1024x1280&amp;utmsc=32-bit&amp;utmul=de-de&amp;utmje=0&amp;utmfl=-&amp;utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&amp;utmhid=319494337&amp;utmr=-&amp;utmp=%2F&amp;utmht=1387753136010&amp;utmac=UA-34623937-1&amp;utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&amp;utmu=q~">http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&amp;utms=1&amp;utmn=265814781&amp;utmhn=gruntjs.com&amp;utmcs=UTF-8&amp;utmsr=1920x1080&amp;utmvp=1024x1280&amp;utmsc=32-bit&amp;utmul=de-de&amp;utmje=0&amp;utmfl=-&amp;utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&amp;utmhid=319494337&amp;utmr=-&amp;utmp=%2F&amp;utmht=1387753136010&amp;utmac=UA-34623937-1&amp;utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&amp;utmu=q~</a>
+The slowest response (1057 ms): <a href="http://gruntjs.com/img/logo-bitovi.jpg">http://gruntjs.com/img/logo-bitovi.jpg</a></p>
+
+<p>Time spent on backend / frontend: 25% / 75%
+```</p>
+
+<p>When I saw these metrics for the first time I really had to dance for joy. They are by far the most powerful metrics I have seen. I thought about these metrics a bit more and descided that Phantomas is perfect for an automated process to keep track of all that after every deployment. Grunt is included in most of the projects I do, so it was not a big question how to create an automated task. That was the moment when <a href="https://npmjs.org/package/grunt-phantomas">grunt-phantomas</a> was born and that is what it looks like today:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/grunt-phantomas.png" width="1892" height="676" title="&lsquo;Example stats of grunt-phantomas&rsquo; &lsquo;Example stats of grunt-phantomas&rsquo;" ></p>
+
+<p>All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated <code>index.html</code> and needed files will take place, as well as the wished url to get metrics for. Any more needed information can be found in the <a href="https://npmjs.org/package/grunt-phantomas">official documentation</a>.</p>
+
+<p>Additional possible options are by now the following:</p>
+
+<ul>
+<li>number of runs &ndash;> Phantomas will be executed multiple times to make the data more reliable</li>
+<li>raw phantomas arguments &ndash;> Phantomas has lots of options &ndash; it is for example possible to block external scripts, what can become extremely handy when you have to deal with lots of marketing stuff (check <a href="https://github.com/macbre/phantomas">Phantomas Docs</a> for more a complete list of options)</li>
+</ul>
+
+
+<p>We integrated it into our CI system in my company already, so that I can really check all that data right after deployment and I&rsquo;m really excited about that. In my opinion this can be an extremely valuable tool and any feedback on it is more than welcome.</p>
+
+<p>And that is it. Thanks for reading and merry Christmas. :)</p>
+]]></content>
+  </entry>
+  
+</feed>

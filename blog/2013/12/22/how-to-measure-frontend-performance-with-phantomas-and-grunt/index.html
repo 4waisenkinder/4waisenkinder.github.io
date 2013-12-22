@@ -1,0 +1,481 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>How to measure frontend performance with Grunt  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="When you are a frontend developer, you are on the constant journey to find the right tool to measure the performance of your site. Sure, there are &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">How to Measure Frontend Performance With Grunt</h2>
+	<div class="entry-content"><p>When you are a frontend developer, you are on the constant journey to find the right tool to measure the performance of your site. Sure, there are the Developer Tools of your choice, <a href="https://developers.google.com/speed/pagespeed/">Google Pagespeed</a> or <a href="http://webpagetest.org">webpagespeed.org</a> available. And those tools are great (if you do not know them, you should definitely check them out), but for me it was always &ldquo;just&rdquo; nice to use these tools. They provide lots of useful information and I check them on a regular basis, but as far as I know, these tools do not provide a kind of timeline view of my daily work. They only give useful information to a given time &ndash; that is it. What I want to know, is how the site evolved after my latest deploy to production &hellip; <!-- more --></p>
+
+<p>Did the size of CSS / JavaScript decrease or increase? How many Ajax requests are made on page load? How many DOM queries are executed? And how did my latest changes effect the overall performance of the site?</p>
+
+<p>Sure, I could answer all these questions manually and could keep track of them in some way, but that is not in the nature of a developer, right? ;)</p>
+
+<p>That is definitely a task that belongs to an automated process and should be done right after the deployment to production, so that I can check right away, what happened and how the production site changed.</p>
+
+<p>Well, ( <strong>attention shameless self promotion</strong> ) &ndash; I wrote a <a href="http://gruntjs.com">Grunt</a> plugin called <a href="https://npmjs.org/package/grunt-phantomas">grunt-phantomas</a> to solve exactly that problem (preview of generated example results <a href="http://stefanjudis.github.io/grunt-phantomas/gruntjs/">here</a>).</p>
+
+<p>Two weeks ago I discovered a NPM module called <a href="https://github.com/macbre/phantomas">Phantomas</a> and it absolutely blew my mind. It is a command line tool, which scans any site you like via <a href="http://phantomjs.org/">PhantomJS</a>. You can easily install it via <code>npm install -g phantomas</code> and after that, you are ready to go. To show how powerful this tool is, let us have a look at the by Phantomas given statistics of the <a href="http://gruntjs.com">Grunt site</a> as an example.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ phantomas --url http://gruntjs.com
+</span><span class='line'>
+</span><span class='line'>phantomas v0.9.0 metrics for &lt;http://gruntjs.com&gt;:
+</span><span class='line'>
+</span><span class='line'>* requests: 29
+</span><span class='line'>* gzipRequests: 3
+</span><span class='line'>* postRequests: 0
+</span><span class='line'>* httpsRequests: 0
+</span><span class='line'>* redirects: 0
+</span><span class='line'>* notFound: 0
+</span><span class='line'>* timeToFirstByte: 807
+</span><span class='line'>* timeToLastByte: 833
+</span><span class='line'>* bodySize: 179021
+</span><span class='line'>* contentLength: 311187
+</span><span class='line'>* ajaxRequests: 0
+</span><span class='line'>* htmlCount: 1
+</span><span class='line'>* htmlSize: 1151
+</span><span class='line'>* cssCount: 2
+</span><span class='line'>* cssSize: 1630
+</span><span class='line'>* jsCount: 5
+</span><span class='line'>* jsSize: 41272
+</span><span class='line'>* jsonCount: 0
+</span><span class='line'>* jsonSize: 0
+</span><span class='line'>* imageCount: 21
+</span><span class='line'>* imageSize: 134968
+</span><span class='line'>* webfontCount: 0
+</span><span class='line'>* webfontSize: 0
+</span><span class='line'>* base64Count: 0
+</span><span class='line'>* base64Size: 0
+</span><span class='line'>* otherCount: 0
+</span><span class='line'>* otherSize: 0
+</span><span class='line'>* cacheHits: 3
+</span><span class='line'>* cacheMisses: 0
+</span><span class='line'>* cachingNotSpecified: 4
+</span><span class='line'>* cachingTooShort: 2
+</span><span class='line'>* cachingDisabled: 20
+</span><span class='line'>* domains: 6
+</span><span class='line'>* maxRequestsPerDomain: 21
+</span><span class='line'>* medianRequestsPerDomain: 2
+</span><span class='line'>* DOMqueries: 7
+</span><span class='line'>* DOMqueriesById: 4
+</span><span class='line'>* DOMqueriesByClassName: 0
+</span><span class='line'>* DOMqueriesByTagName: 3
+</span><span class='line'>* DOMqueriesByQuerySelectorAll: 0
+</span><span class='line'>* DOMinserts: 4
+</span><span class='line'>* DOMqueriesDuplicated: 2
+</span><span class='line'>* eventsBound: 0
+</span><span class='line'>* headersCount: 368
+</span><span class='line'>* headersSentCount: 86
+</span><span class='line'>* headersRecvCount: 282
+</span><span class='line'>* headersSize: 12025
+</span><span class='line'>* headersSentSize: 2989
+</span><span class='line'>* headersRecvSize: 9036
+</span><span class='line'>* documentWriteCalls: 1
+</span><span class='line'>* evalCalls: 0
+</span><span class='line'>* jQueryVersion:
+</span><span class='line'>* jQueryOnDOMReadyFunctions: 0
+</span><span class='line'>* jQuerySizzleCalls: 0
+</span><span class='line'>* jsErrors: 0
+</span><span class='line'>* assetsNotGzipped: 5
+</span><span class='line'>* assetsWithQueryString: 4
+</span><span class='line'>* smallImages: 3
+</span><span class='line'>* multipleRequests: 0
+</span><span class='line'>* timeToFirstCss: 878
+</span><span class='line'>* timeToFirstJs: 1054
+</span><span class='line'>* timeToFirstImage: 1860
+</span><span class='line'>* onDOMReadyTime: 1339
+</span><span class='line'>* onDOMReadyTimeEnd: 1340
+</span><span class='line'>* windowOnLoadTime: 2386
+</span><span class='line'>* windowOnLoadTimeEnd: 2387
+</span><span class='line'>* httpTrafficCompleted: 3285
+</span><span class='line'>* windowAlerts: 0
+</span><span class='line'>* windowConfirms: 0
+</span><span class='line'>* windowPrompts: 0
+</span><span class='line'>* consoleMessages: 0
+</span><span class='line'>* cookiesSent: 0
+</span><span class='line'>* cookiesRecv: 354
+</span><span class='line'>* domainsWithCookies: 1
+</span><span class='line'>* documentCookiesLength: 193
+</span><span class='line'>* documentCookiesCount: 4
+</span><span class='line'>* bodyHTMLSize: 10809
+</span><span class='line'>* iframesCount: 0
+</span><span class='line'>* imagesWithoutDimensions: 16
+</span><span class='line'>* commentsSize: 53
+</span><span class='line'>* hiddenContentSize: 61
+</span><span class='line'>* whiteSpacesSize: 4
+</span><span class='line'>* DOMelementsCount: 197
+</span><span class='line'>* DOMelementMaxDepth: 10
+</span><span class='line'>* nodesWithInlineCSS: 0
+</span><span class='line'>* globalVariables: 57
+</span><span class='line'>* localStorageEntries: 0
+</span><span class='line'>* smallestResponse: 35
+</span><span class='line'>* biggestResponse: 29652
+</span><span class='line'>* fastestResponse: 27
+</span><span class='line'>* slowestResponse: 1057
+</span><span class='line'>* medianResponse: 517
+</span><span class='line'>
+</span><span class='line'>First css received in 878 ms: &lt;http://fonts.googleapis.com/css?family=Lato:400,700&gt;
+</span><span class='line'>First js received in 1054 ms: &lt;http://gruntjs.com/js/vendor/lib/modernizr.min.js&gt;
+</span><span class='line'>First image received in 1860 ms: &lt;http://gruntjs.com/img/grunt-logo.svg&gt;
+</span><span class='line'>Requests per domain:
+</span><span class='line'> gruntjs.com: 21 request(s)
+</span><span class='line'> www.google-analytics.com: 2 request(s)
+</span><span class='line'> static.adzerk.net: 2 request(s)
+</span><span class='line'> engine.adzerk.net: 2 request(s)
+</span><span class='line'> fonts.googleapis.com: 1 request(s)
+</span><span class='line'> c.jslogger.com: 1 request(s)
+</span><span class='line'>
+</span><span class='line'>Duplicated DOM queries (2):
+</span><span class='line'> id "#azk48893": 4 queries
+</span><span class='line'> tag name "script": 3 queries
+</span><span class='line'>
+</span><span class='line'>JavaScript globals (57): JSLogger, Modernizr, _gaq, _gat, ados, adosResults, adosRun, ados_addInlinePlacement, ados_addPlacement, ados_addPlacementObject, ados_add_placement, ados_async_load, ados_execPassback, ados_findPassback, ados_frameLoaded, ados_load, ados_loadDiv, ados_loadFIframe, ados_loadInline, ados_loadPassback, ados_loadResults, ados_log, ados_passback, ados_passbackFilled, ados_passbackWritePixel, ados_passback_next, ados_passback_receiveMessage, ados_refresh, ados_setDomain, ados_setKeywordCookie, ados_setKeywords, ados_setNoTrack, ados_setWriteResults, ados_timeoutExpired, ados_writePixel, azHtmlLoad, azInitExtension, azLoad, azRegisterExtension, azScriptExtensionLoad, azScriptInlineLoad, azScriptSRCLoad, azk48893_html_98280, azk48893_html_command_17656, azk48893_pixel_64108, azk48893_pixel_command_60057, cssLinkLoad, cssLoad, d, gaGlobal, html5, jslogger, p, s, z, zItems, zshow
+</span><span class='line'>
+</span><span class='line'>The smallest response (0.03 kB): &lt;http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&utms=1&utmn=265814781&utmhn=gruntjs.com&utmcs=UTF-8&utmsr=1920x1080&utmvp=1024x1280&utmsc=32-bit&utmul=de-de&utmje=0&utmfl=-&utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&utmhid=319494337&utmr=-&utmp=%2F&utmht=1387753136010&utmac=UA-34623937-1&utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&utmu=q~&gt;
+</span><span class='line'>The biggest response (28.96 kB): &lt;http://gruntjs.com/img/grunt-logo.svg&gt;
+</span><span class='line'>
+</span><span class='line'>The fastest response (27 ms): &lt;http://www.google-analytics.com/__utm.gif?utmwv=5.4.6&utms=1&utmn=265814781&utmhn=gruntjs.com&utmcs=UTF-8&utmsr=1920x1080&utmvp=1024x1280&utmsc=32-bit&utmul=de-de&utmje=0&utmfl=-&utmdt=Grunt%3A%20The%20JavaScript%20Task%20Runner&utmhid=319494337&utmr=-&utmp=%2F&utmht=1387753136010&utmac=UA-34623937-1&utmcc=__utma%3D221136078.1297690710.1387753136.1387753136.1387753136.1%3B%2B__utmz%3D221136078.1387753136.1.1.utmcsr%3D(direct)%7Cutmccn%3D(direct)%7Cutmcmd%3D(none)%3B&utmu=q~&gt;
+</span><span class='line'>The slowest response (1057 ms): &lt;http://gruntjs.com/img/logo-bitovi.jpg&gt;
+</span><span class='line'>
+</span><span class='line'>Time spent on backend / frontend: 25% / 75%</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When I saw these metrics for the first time I really had to dance for joy. They are by far the most powerful metrics I have seen. I thought about these metrics a bit more and descided that Phantomas is perfect for an automated process to keep track of all that after every deployment. Grunt is included in most of the projects I do, so it was not a big question how to create an automated task. That was the moment when <a href="https://npmjs.org/package/grunt-phantomas">grunt-phantomas</a> was born and that is what it looks like today:</p>
+
+<p><img class="left" src="/images/blog/stefanjudis/grunt-phantomas.png" width="1892" height="676" title="Example stats of grunt-phantomas" alt="Example stats of grunt-phantomas"></p>
+
+<p>All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated <code>index.html</code> and needed files will take place, as well as the wished url to get metrics for. Any more needed information can be found in the <a href="https://npmjs.org/package/grunt-phantomas">official documentation</a>.</p>
+
+<p>Additional possible options are by now the following:</p>
+
+<ul>
+<li>number of runs &ndash;> Phantomas will be executed multiple times to make the data more reliable</li>
+<li>raw phantomas arguments &ndash;> Phantomas has lots of options &ndash; it is for example possible to block external scripts, what can become extremely handy when you have to deal with lots of marketing stuff (check <a href="https://github.com/macbre/phantomas">Phantomas Docs</a> for more a complete list of options)</li>
+</ul>
+
+
+<p>We integrated it into our CI system in my company already, so that I can really check all that data right after deployment and I&rsquo;m really excited about that. In my opinion this can be an extremely valuable tool and any feedback on it is more than welcome.</p>
+
+<p>And that is it. Thanks for reading and merry Christmas. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-22T23:28:00+01:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2013</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/metrics/'>metrics</a>, <a class='category' href='/blog/categories/performance/'>performance</a>, <a class='category' href='/blog/categories/phantomas/'>phantomas</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2013
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2013/12/22/how-to-measure-frontend-performance-with-phantomas-and-grunt/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2013/12/22/how-to-measure-frontend-performance-with-phantomas-and-grunt/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
