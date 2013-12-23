@@ -149,7 +149,7 @@ When I saw these metrics for the first time I really had to dance for joy. They 
 
 {% img left /images/blog/stefanjudis/grunt-phantomas.png 1892 676 'Example stats of grunt-phantomas' 'Example stats of grunt-phantomas' %}
 
-All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated `index.html` and needed files will take place, as well as the wished url to get metrics for. Any more needed information can be found in the [official documentation](https://npmjs.org/package/grunt-phantomas).
+All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated `index.html` and needed files will take place, as well as the wished url to get metrics for. And then run it with `grunt phantomas`. Any more needed information can be found in the [official documentation](https://npmjs.org/package/grunt-phantomas).
 
 Additional possible options are by now the following:
 
