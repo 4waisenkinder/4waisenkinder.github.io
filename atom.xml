@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2013-12-23T00:46:19+01:00</updated>
+  <updated>2013-12-23T01:28:29+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -278,7 +278,7 @@
 
 <p><img class="left" src="http://4waisenkinder.github.io/images/blog/stefanjudis/grunt-phantomas.png" width="1892" height="676" title="Example stats of grunt-phantomas" alt="Example stats of grunt-phantomas"></p>
 
-<p>All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated <code>index.html</code> and needed files will take place, as well as the wished url to get metrics for. Any more needed information can be found in the <a href="https://npmjs.org/package/grunt-phantomas">official documentation</a>.</p>
+<p>All you have to do is to integrate the plugin in your Grunt process and then you are ready to go. You just have to define a folder, where the generated <code>index.html</code> and needed files will take place, as well as the wished url to get metrics for. And then run it with <code>grunt phantomas</code>. Any more needed information can be found in the <a href="https://npmjs.org/package/grunt-phantomas">official documentation</a>.</p>
 
 <p>Additional possible options are by now the following:</p>
 
