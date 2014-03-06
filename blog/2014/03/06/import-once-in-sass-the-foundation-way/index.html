@@ -1,0 +1,405 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Import once in Sass the foundation way  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big ecommerce plattform responsive. But it is not only about &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Import Once in Sass the Foundation Way</h2>
+	<div class="entry-content"><p>Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big ecommerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and nice to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more --></p>
+
+<p>I decided to include the <a href="http://foundation.zurb.com/">Foundation front-end framework</a> into our stack and started playing around with. No matter, if you want to use all their styles or just a few components (the <code>block-grid</code> is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate with your own components.</p>
+
+<p>Any complex system consists of tons of little components. When starting to model them in a CSS architecture multiple dependencies come up rather quickly. <a href="https://twitter.com/brad_frost">Brad Frost</a> describes this principle really good in his article <a href="http://bradfrostweb.com/blog/post/atomic-web-design/">Atomic Design</a>. Basically it&rsquo;s really simple.</p>
+
+<p>Let us say you build up a button, which is an in itself closed unit. Nice! After that you start building up widgets, that need the styles of that particular button. No problem &ndash; you can easily <code>import</code> it via the already included Sass function. But unfortunately it now becomes tricky, when you start developing your next wigdet, that also depends on your shiny button.</p>
+
+<p>Here is some example code.</p>
+
+<p>File : <em>components/buttons/_fancyButton.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.fancyButton</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span> <span class="o">:</span> <span class="nb">blue</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>components/_widgetA.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;components/buttons/fancyButton&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>components/_widgetB.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;components/buttons/fancyButton&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>styles.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;components/widgetA&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s2">&quot;components/widgetB&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Generated file : <em>styles.css</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.fancyButton</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span> <span class="nb">blue</span><span class="p">;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nc">.fancyButton</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span> <span class="nb">blue</span><span class="p">;</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sass will now include the same file twice and you end up with a doubled set of CSS rules in your generated Stylesheet. The more components you have, the worse it gets. Talking about this problem my friend <a href="https://twitter.com/stryju">Tomasz</a> pointed me to the direction of a <a href="https://github.com/zurb/foundation/blob/master/scss/foundation/_functions.scss#L8">Foundation mixin</a> solving exactly this use case.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">//</span> <span class="nt">IMPORT</span> <span class="nt">ONCE</span>
+</span><span class='line'><span class="o">//</span> <span class="nt">We</span> <span class="nt">use</span> <span class="nt">this</span> <span class="nt">to</span> <span class="nt">prevent</span> <span class="nt">styles</span> <span class="nt">from</span> <span class="nt">being</span> <span class="nt">loaded</span> <span class="nt">multiple</span> <span class="nt">times</span> <span class="nt">for</span> <span class="nt">compenents</span> <span class="nt">that</span> <span class="nt">rely</span> <span class="nt">on</span> <span class="nt">other</span> <span class="nt">components</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span><span class="nt">modules</span><span class="o">:</span> <span class="o">()</span> <span class="o">!</span><span class="nt">default</span><span class="o">;</span>
+</span><span class='line'><span class="k">@mixin</span> <span class="nt">exports</span><span class="o">(</span><span class="err">$</span><span class="nt">name</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">//</span> <span class="nt">check</span> <span class="nt">if</span> <span class="nt">code</span> <span class="nt">with</span> <span class="nt">name</span> <span class="nt">is</span> <span class="nt">already</span> <span class="nt">stored</span> <span class="nt">inside</span> <span class="nt">of</span> <span class="err">$</span><span class="nt">modules</span>
+</span><span class='line'>  <span class="k">@if</span> <span class="o">(</span><span class="nt">index</span><span class="o">(</span><span class="err">$</span><span class="nt">modules</span><span class="o">,</span> <span class="err">$</span><span class="nt">name</span><span class="o">)</span> <span class="o">==</span> <span class="nt">false</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="o">//</span> <span class="nt">if</span> <span class="nt">not</span> <span class="nt">push</span> <span class="nt">it</span> <span class="nt">into</span> <span class="nt">the</span> <span class="nt">list</span>
+</span><span class='line'>    <span class="err">$</span><span class="nt">modules</span><span class="o">:</span> <span class="nt">append</span><span class="o">(</span><span class="err">$</span><span class="nt">modules</span><span class="o">,</span> <span class="err">$</span><span class="nt">name</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">//</span> <span class="nt">include</span> <span class="nt">code</span> <span class="nt">that</span> <span class="nt">particular</span> <span class="nt">code</span>
+</span><span class='line'>    <span class="k">@content</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The logic included here is not magically, but it shows a few really nice features of Sass, which I for example do not use on a daily basis. The first thing to notice is the assignment of a so called <code>List</code> with the variable named <code>$modules</code>. <a href="http://sass-lang.com/documentation/file.SASS_REFERENCE.html#lists">Lists in Sass</a> behave kind of like an Array with String values and are defined as follows:</p>
+
+<blockquote><p>Lists are just a series of other values, separated by either spaces or commas.</p></blockquote>
+
+<p>It is assigned with the <code>!default</code> flag to not overwrite an already existing <code>$modules</code> variable, which could easily happen, by importing the particular file twice.</p>
+
+<p><strong>Side note</strong> : <em>Variables with null values are treated as unassigned by !default</em> and will be overwritten.</p>
+
+<p>After that a <a href="http://sass-lang.com/documentation/file.SASS_REFERENCE.html#defining_a_mixin">mixin</a> with the name <code>exports</code> is defined. If you do not know mixins, they are according to Sass documentation defined as follows:</p>
+
+<blockquote><p>Mixins allow you to define styles that can be re-used throughout the stylesheet without needing to resort to non-semantic classes like .float-left. Mixins can also contain full CSS rules, and anything else allowed elsewhere in a Sass document. They can even take arguments which allows you to produce a wide variety of styles with very few mixins.</p></blockquote>
+
+<p>This mixin now accepts one argument which represents the actual name of the component. It is used to &ldquo;register&rdquo; new code.
+First of all it checks if there was already a component (or whatever valid Sass code you like) with the same name included in <code>$modules</code>using the <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#index-instance_method">index</a> function provided by Sass lists.</p>
+
+<p><strong>Side node</strong> : <code>index</code> either returns the index of the value or <code>false</code>.</p>
+
+<p>If the name of the snippet is not included inside of the list it includes the particalar code and <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#append-instance_method">appends</a> a new value to <code>$modules</code>.
+If the name is already inside of the <code>$modules</code> list it just ignores it and prevents including the same code multiple times by just doing nothing and going on.</p>
+
+<p>The rebuilt version using this mixin looks then as follows.</p>
+
+<p>File : <em>helpers/_functions.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="err">$</span><span class="nt">modules</span><span class="o">:</span> <span class="o">()</span> <span class="o">!</span><span class="nt">default</span><span class="o">;</span>
+</span><span class='line'><span class="k">@mixin</span> <span class="nt">exports</span><span class="o">(</span><span class="err">$</span><span class="nt">name</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">@if</span> <span class="o">(</span><span class="nt">index</span><span class="o">(</span><span class="err">$</span><span class="nt">modules</span><span class="o">,</span> <span class="err">$</span><span class="nt">name</span><span class="o">)</span> <span class="o">==</span> <span class="nt">false</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="err">$</span><span class="nt">modules</span><span class="o">:</span> <span class="nt">append</span><span class="o">(</span><span class="err">$</span><span class="nt">modules</span><span class="o">,</span> <span class="err">$</span><span class="nt">name</span><span class="o">)</span> <span class="o">!</span><span class="nt">global</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">@content</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>components/buttons/_fancyButton.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@include</span> <span class="nt">exports</span><span class="o">(</span><span class="s2">&quot;fancyButton&quot;</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nc">.fancyButton</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">color</span> <span class="o">:</span> <span class="nb">blue</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>components/_widgetA.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;./buttons/fancyButton&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>components/_widgetB.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;./buttons/fancyButton&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>File : <em>styles.scss</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span>
+</span><span class='line'>  <span class="s2">&quot;helpers/functions&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s2">&quot;components/widgetA&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s2">&quot;components/widgetB&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Generated file : <em>styles.css</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nc">.fancyButton</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">color</span><span class="o">:</span> <span class="nb">blue</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And problem solved. I generally do not use Sass for logical mixins or similar, but this shows perfectly how much power to do fancy stuff is included. I definetely have to dig deeper into that. ;)</p>
+
+<p>In my case of the &ldquo;redesign&rdquo; I wrapped all my components using this mixin and it works pretty well with ~30 components included in different stylesheets. Maybe that will help someone dealing with a lot of components. ;)</p>
+
+<p>So that is it and thanks for reading.</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-06T22:52:00+01:00" pubdate data-updated="true">Mar 6<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/foundation/'>foundation</a>, <a class='category' href='/blog/categories/sass/'>sass</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
