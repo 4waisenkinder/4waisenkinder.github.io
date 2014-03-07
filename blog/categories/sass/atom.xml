@@ -4,7 +4,7 @@
   <title><![CDATA[Category: sass | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/sass/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T01:00:38+01:00</updated>
+  <updated>2014-03-07T01:05:17+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,9 +18,9 @@
     <link href="http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way/"/>
     <updated>2014-03-06T22:52:00+01:00</updated>
     <id>http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way</id>
-    <content type="html"><![CDATA[<p>Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big e-commerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and nice to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more --></p>
+    <content type="html"><![CDATA[<p>Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big e-commerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice and modular CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and easy to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more --></p>
 
-<p>I decided to include the <a href="http://foundation.zurb.com/">Foundation front-end framework</a> into our stack and started playing around with. No matter, if you want to use all their styles or just a few components (the <code>block-grid</code> is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate with your own components.</p>
+<p>I decided to include the <a href="http://foundation.zurb.com/">Foundation front-end framework</a> into our stack and started playing around with. No matter, if you want to use all their styles or just a few components (the <code>block-grid</code> is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate next to your own components.</p>
 
 <p>Any complex system consists of tons of little components. When starting to model them in a CSS architecture multiple dependencies come up rather quickly. <a href="https://twitter.com/brad_frost">Brad Frost</a> describes this principle really good in his article <a href="http://bradfrostweb.com/blog/post/atomic-web-design/">Atomic Design</a>. Basically it&rsquo;s really simple.</p>
 
@@ -155,7 +155,8 @@ Generated file : *styles.css*
 }
 ```</p>
 
-<p>And problem solved. I generally do not use Sass for logical mixins or similar, but this shows perfectly how much power to do fancy stuff is included. I definetely have to dig deeper into that. ;)</p>
+<p>Problem solved. :)
+I generally do not use Sass for logical mixins or similar, but this shows perfectly was is possible. I definetely have to dig deeper into that. ;)</p>
 
 <p>In my case of the &ldquo;redesign&rdquo; I wrapped all my components using this mixin and it works pretty well with ~30 components included in different stylesheets. Maybe that will help someone dealing with a lot of components. ;)</p>
 
