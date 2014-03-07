@@ -4,7 +4,7 @@
   <title><![CDATA[Category: sass | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/sass/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T13:08:44+01:00</updated>
+  <updated>2014-03-07T13:12:08+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -156,7 +156,7 @@ Generated file : *styles.css*
 ```</p>
 
 <p>Problem solved. :)
-I generally do not use Sass for logical mixins or similar, but this shows perfectly was is possible. I definetely have to dig deeper into that. ;)</p>
+I generally do not use Sass for logical mixins or similar, but this shows perfectly what is possible. I definitely have to dig deeper into that. ;)</p>
 
 <p>In my case of the &ldquo;redesign&rdquo; I wrapped all my components using this mixin and it works pretty well with ~30 components included in different stylesheets. Maybe that will help someone dealing with a lot of components. ;)</p>
 
