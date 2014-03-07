@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T00:52:02+01:00</updated>
+  <updated>2014-03-07T01:00:38+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,7 +18,7 @@
     <link href="http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way/"/>
     <updated>2014-03-06T22:52:00+01:00</updated>
     <id>http://4waisenkinder.github.io/blog/2014/03/06/import-once-in-sass-the-foundation-way</id>
-    <content type="html"><![CDATA[<p>Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big ecommerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and nice to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more --></p>
+    <content type="html"><![CDATA[<p>Currently I am working on a huge so called &ldquo;redesign&rdquo;, which means to make a big e-commerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and nice to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more --></p>
 
 <p>I decided to include the <a href="http://foundation.zurb.com/">Foundation front-end framework</a> into our stack and started playing around with. No matter, if you want to use all their styles or just a few components (the <code>block-grid</code> is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate with your own components.</p>
 
