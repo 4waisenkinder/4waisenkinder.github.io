@@ -4,7 +4,7 @@
   <title><![CDATA[Category: foundation | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/foundation/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T01:07:14+01:00</updated>
+  <updated>2014-03-07T13:08:44+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -65,7 +65,7 @@
 
 <p>```</p>
 
-<p>Sass will now include the same file twice and you end up with a doubled set of CSS rules in your generated Stylesheet. The more components you have, the worse it gets. Talking about this problem my friend <a href="https://twitter.com/stryju">Tomasz</a> pointed me to the direction of a <a href="https://github.com/zurb/foundation/blob/master/scss/foundation/_functions.scss#L8">Foundation mixin</a> solving exactly this use case.</p>
+<p>Sass will now include the same file twice and you end up with a doubled set of CSS rules in your generated Stylesheet. The more components you have, the worse it gets. Talking about this problem my friend <a href="https://google.com/+TomaszStryjewski">Tomasz</a> pointed me to the direction of a <a href="https://github.com/zurb/foundation/blob/master/scss/foundation/_functions.scss#L8">Foundation mixin</a> solving exactly this use case.</p>
 
 <p>```css
 // IMPORT ONCE
