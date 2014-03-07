@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T13:54:23+01:00</updated>
+  <updated>2014-03-07T13:55:16+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -127,7 +127,7 @@
 <p>This mixin now accepts one argument which represents the actual name of the component. It is used to &ldquo;register&rdquo; new code.
 First of all it checks if there was already a component (or whatever valid Sass code you like) with the same name included in <code>$modules</code>using the <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#index-instance_method">index</a> function provided by Sass lists.</p>
 
-<p><strong>Side node</strong> : <code>index</code> either returns the index of the value or <code>false</code>.</p>
+<p><strong>Side note</strong> : <code>index</code> either returns the index of the value or <code>false</code>.</p>
 
 <p>If the name of the snippet is not included inside of the list it includes the particalar code and <a href="http://sass-lang.com/documentation/Sass/Script/Functions.html#append-instance_method">appends</a> a new value to <code>$modules</code>.
 If the name is already inside of the <code>$modules</code> list it just ignores it and prevents including the same code multiple times by just doing nothing and going on.</p>
