@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-06-05T00:51:54+02:00</updated>
+  <updated>2014-06-05T01:00:00+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -116,7 +116,7 @@ dots.append( 'circle' )
 <p><pre class="codepen" data-height="400" data-type="result" data-href="xrGLy" data-user="stefanjudis"><code> </code></pre>
 <script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
 
-<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in d3. The general documentation for <code>tweens</code> can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
+<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in <code>d3. The general documentation for</code>tweens` can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
 
 <p>The important facts about <code>transition.tween( name, factory )</code> are described as follows:</p>
 
@@ -353,7 +353,7 @@ To stick everything together <code>d3</code> will execute the <code>factory</cod
 
 <p>In case of the example code you see <code>startData</code>, which represents the animation start and <code>data</code> which represents the animation end.</p>
 
-<p>The important point is to set <code>startData</code> as the data for the area you want to draw first(see line 35). Afterwards we define the transition and set a duration of 500ms. That is all to be ready to go and add our <code>tween</code>.</p>
+<p>You have to define the transition and set a duration of 500ms. That is all to be ready to go and add our <code>tween</code>.</p>
 
 <p>To animate everythings the <code>d3</code> method <code>attrTween</code> is used. <code>attrTween</code> works mostly the same as <code>tween</code> with one difference. The wished animated attribute is modified directly when using <code>attrTween</code>.</p>
 
