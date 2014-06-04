@@ -4,7 +4,7 @@
   <title><![CDATA[Category: d3 | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/d3/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-03-07T13:55:16+01:00</updated>
+  <updated>2014-06-05T00:50:03+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,387 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using basic and tween transitions in d3.js]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2014/05/11/d3-dot-js-tween-in-detail/"/>
+    <updated>2014-05-11T13:25:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2014/05/11/d3-dot-js-tween-in-detail</id>
+    <content type="html"><![CDATA[<p>Playing around at <a href="http://codepen.io">CodePen</a> is one of my favourite activities, when doing &lsquo;nothing&rsquo; lately. Especially the combination of <a href="http://dribbble.com">dribbble</a> and CodePen is super nice. Browsing for beautiful designs and ideas on dribbble and putting them into code became a nice activity for me. There are a lot of great people hanging around at dribbble and you can get a lot of inspiration over there.</p>
+
+<p>Over the last few month I started being interested in dashboards and how to analyze/visualize data. Unfortunately I am not a designer and this is why I really enjoy to just build dashboards according to a dribbble design.</p>
+
+<!-- more -->
+
+
+<h3>Dashboard examples</h3>
+
+<p>Two example of these tryouts are the following. They include some basic <a href="d3js.org">d3.js</a> charting and make usage of a few different kinds of animation to make them look pretty and have some fun on my side.</p>
+
+<h4>Example 1 &ndash; referenced as &ldquo;bright dashboard&rdquo; later on</h4>
+
+<p><img class="center" src="/images/blog/stefanjudis/d3TweenExample1.jpg" width="350" height="401" title="&lsquo;Example 1 of d3 dashboard tryout at CodePen&rsquo; &lsquo;Example 1 of d3 dashboard tryout at CodePen&rsquo;" ></p>
+
+<p>You can check the coded result <a href="http://codepen.io/stefanjudis/pen/gkHwJ">here</a> and the used design <a href="http://dribbble.com/shots/1252153-Charts-Inforgraphic-Templates/attachments/170613">here</a>.</p>
+
+<h4>Example 2 &ndash; referenced as &ldquo;dark dashboard&rdquo; later on</h4>
+
+<p><img class="center" src="/images/blog/stefanjudis/d3TweenExample2.jpg" width="500" height="341" title="&lsquo;Example 2 of d3 dashboard tryout at CodePen&rsquo; &lsquo;Example 2 of d3 dashboard tryout at CodePen&rsquo;" ></p>
+
+<p>You can check the coded result <a href="http://codepen.io/stefanjudis/pen/jawGn">here</a> and the used design <a href="http://dribbble.com/shots/1244676-Cloud-Storage/attachments/168917">here</a>.</p>
+
+<p>Last week I got a Tweet by <a href="https://twitter.com/jessicard">@jessicard</a> asking, if I may want to explain how the <code>tween</code> function in d3.js works, because it is used several times.</p>
+
+<p>And here we are &ndash; let us dive into basic and <code>tween</code> transitions in d3. <em>I&rsquo;m really sorry for the delay by the way</em>&hellip;</p>
+
+<h3>Basic animations in d3.js</h3>
+
+<p>To achieve basic transition there is no big effort in d3.</p>
+
+<p>```javascript
+;( function( d3 ) {
+  // grab svg container
+  var d3container = d3.select( &lsquo;.container&rsquo; );
+  // append svg
+  var svg = d3container.append( &lsquo;svg&rsquo; );
+  // append group element to include some circles
+  var dots = svg.append( &lsquo;g&rsquo; );</p>
+
+<p>  // create loop to append some circle
+  for ( var i = 1; i &lt;= 5; ++i ) {</p>
+
+<pre><code>// append circle
+dots.append( 'circle' )
+    // set radius to '0' because we want
+    // animate it later on
+    .attr( 'r', 0 )
+    // kind of center it horizontally - I know it is not exactly in the middle ;)
+    .attr( 'cx',  150 )
+    // give different y position
+    .attr( 'cy', i * 25 )
+    // add event handler
+    .on( 'mouseenter', function() {
+      // select element in current context
+      d3.select( this )
+        // add transition
+        .transition()
+        // change attribute
+        .attr( 'r', 10 );
+    } )
+    // add event handler
+    .on( 'mouseleave', function() {
+      // select element in current context
+      d3.select( this )
+        // add transition
+        .transition()
+        // change attribute
+        .attr( 'r', 6 );
+    } )
+    // add transition for kick off
+    .transition()
+    // add delay so that it looks nice
+    .delay( 200 * i )
+    // set radius to wished size
+    .attr( 'r', 6 );
+</code></pre>
+
+<p>  }
+} )( d3 );
+```</p>
+
+<p>There is not much magic going on there. <code>d3</code> does pretty much all the work for us. For more information you can visit the <a href="https://github.com/mbostock/d3/wiki/Transitions">transition page</a> of the `d3 <a href="https://github.com/mbostock/d3/wiki">wiki</a>. It is basically just setting an attribute to an element, creating a transition and changing the given attribute later on. It will be transitioned <em>magically</em>.</p>
+
+<p>You can check the result of these lines of code below (you may have to press <em>replay</em> to see the initial animation in action).</p>
+
+<p><pre class="codepen" data-height="400" data-type="result" data-href="dafDm" data-user="stefanjudis"><code> </code></pre>
+<script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
+
+<p>That is already pretty nice, but let us dig a bit deeper. ;)</p>
+
+<h3>Tween animations in d3.js</h3>
+
+<p>There are some cases, where basic transitions will just not work. For example you can have a quick look at the following code, where I tried to animate <code>text</code> elements showing numbers from zero to 10.</p>
+
+<p><pre class="codepen" data-height="400" data-type="result" data-href="xrGLy" data-user="stefanjudis"><code> </code></pre>
+<script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
+
+<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in d3. The general documentation for <code>tweens</code> can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
+
+<p>The important facts about <code>transition.tween( name, factory )</code> are described as follows:</p>
+
+<blockquote><p>Registers a custom tween for the specified name. When the transition starts, the specified factory function will be invoked for each selected element in the transition, being passed that element&rsquo;s data (d) and index (i) as arguments, with the element as the context (this). The factory should return the tween function to be called over the course of the transition. The tween function is then called repeatedly, being passed the current normalized time t in [0, 1]. If the factory returns null, then the tween is not run on the selected element.</p></blockquote>
+
+<p>So, but what does that mean? Let us modifiy the not working text transition example and have a deeper look at the reworked example.</p>
+
+<p>```javascript
+;( function( d3 ) {
+  var d3container = d3.select( &lsquo;.container&rsquo; );
+  var svg = d3container.append( &lsquo;svg&rsquo; );
+  var dots = svg.append( &lsquo;g&rsquo; );</p>
+
+<p>  for ( var i = 1; i &lt;= 5; ++i ) {</p>
+
+<pre><code>dots.append( 'text' )
+    .text( 0 )
+    .attr( 'text-anchor', 'middle' )
+    .attr( 'x',  150 )
+    .attr( 'y', i * 25 )
+    .transition()
+    .delay( 300 * i )
+    .tween( 'text', function() {
+      // get current value as starting point for tween animation
+      var currentValue = +this.textContent;
+      // create interpolator and do not show nasty floating numbers
+      var interpolator = d3.interpolateRound( currentValue, 10 );
+
+      // this returned function will be called a couple
+      // of times to animate anything you want inside
+      // of your custom tween
+      return function( t ) {
+        // set new value to current text element
+        this.textContent = interpolator( t );
+      };
+    } );
+</code></pre>
+
+<p>  }
+} )( d3 );
+```</p>
+
+<p>The first argument of the <code>tween</code> function represents the name of your new custom <code>tween</code>. The second argument is a function that should behave like a factory and return another function. The goal of this factory function is to create (and return) a function that is able to interpolate data and to calculate values depending on the <code>current normalized time</code>. The <code>current normalize time</code> are floating values from zero to one. Zero represents the starting point and one represents the end point of your tween animation.</p>
+
+<p>This means that this return function must be able to do something depending on the <code>current normalized time</code>(see line 23).
+<code>d3</code> already offers a lot of functions to solve exactly this problem &ndash; the so called <code>interpolators</code>. In this example I made usage of <code>interpolatorRound</code>. Let us check what that stands for and see what is actually doing by playing just a bit around in the JavaScript console.</p>
+
+<p>```
+// creating new interpolator
+var i = d3.interpolateRound( 0, 100 );</p>
+
+<blockquote><p>undefined
+// using 0.25 as example for &lsquo;current normalized time&rsquo; &ndash;> animation start
+i( 0 )
+0
+// using 0.25 as example for &lsquo;current normalized time&rsquo;
+i( 0.25 )
+25
+// using 0.5 as example for &lsquo;current normalized time&rsquo;
+i( 0.5 )
+50
+// using 0.75 as example for &lsquo;current normalized time&rsquo;
+i( 0.75 )
+75
+// using 1 as example for &lsquo;current normalized time&rsquo; &ndash;> animation end
+i( 1 )
+100
+```</p></blockquote>
+
+<p><code>d3</code> offers a lot of different interpolators. In our case I used <code>interpolatorRound</code>, because it returns the nearest integer value and I do not want to see crazy floating values in our custom <code>tween</code>.</p>
+
+<p>Available interpolators are:</p>
+
+<ul>
+<li><code>d3.interpolatNumber</code></li>
+<li><code>d3.interpolatRound</code></li>
+<li><code>d3.interpolatString</code></li>
+<li><code>d3.interpolatRgb</code></li>
+<li><code>d3.interpolatHsl</code></li>
+<li><code>d3.interpolatLab</code></li>
+<li><code>d3.interpolatHcl</code></li>
+<li><code>d3.interpolatArray</code></li>
+<li><code>d3.interpolatObject</code></li>
+<li><code>d3.interpolatTransform</code></li>
+<li><code>d3.interpolatZoom</code></li>
+</ul>
+
+
+<p>As you see there are quite a few and they will matched your needs in most of the cases. ;)</p>
+
+<p>This works fine. The next step is to create a interpolator with the current text value as starting point and with our desired value as end point. This is easily achievable, because the factory is executed in the context of the depending element. That means, that we can easily get the current value by using <code>this.textContent</code>(see line 16).</p>
+
+<p>But still the question remains, what is going on to animate this particalur text node.
+To stick everything together <code>d3</code> will execute the <code>factory</code> once and is expecting a function as return value. This function will be executed with a ton of values from zero to one (argument <code>t</code> in the example) later during the <code>tween</code>. These values represent the current progress of the transition. This returned function will additionally be executed in the context of the particalur element(in our case the text node) and exactly this becomes really handy. So we can also set the value easily via <code>this.textContent</code>(see line 25).</p>
+
+<p>To make our circles a bit more fun let us add a transition to the <code>mouseenter</code> and <code>mouseleave</code> events. For that we could duplicate the code which kicks off the transition at the beginning and set a different value to <code>d3.interpolateRound</code>, but code duplication is never a good idea. So let us implement a nice little helper function.</p>
+
+<p>```javascript
+;( function( d3 ) {
+  var d3container = d3.select( &lsquo;.container&rsquo; );
+  var svg = d3container.append( &lsquo;svg&rsquo; );
+  var dots = svg.append( &lsquo;g&rsquo; );</p>
+
+<p>  for ( var i = 1; i &lt;= 5; ++i ) {</p>
+
+<pre><code>dots.append( 'text' )
+    .text( 0 )
+    .attr( 'text-anchor', 'middle' )
+    .attr( 'x',  150 )
+    .attr( 'y', i * 25 )
+    .on( 'mouseenter', function() {
+      d3.select( this )
+        .transition()
+        .tween( 'text', tweenText( 50 ) );
+    } )
+    .on( 'mouseleave', function() {
+      d3.select( this )
+        .transition()
+        .tween( 'text', tweenText( 10 ) );
+    } )
+    .transition()
+    .delay( 300 * i )
+    .tween( 'text', tweenText( 10 ) );
+</code></pre>
+
+<p>  }</p>
+
+<p>  /<em>*
+   * Tween functions
+   </em>/
+  function tweenText( newValue ) {</p>
+
+<pre><code>return function() {
+  // get current value as starting point for tween animation
+  var currentValue = +this.textContent;
+  // create interpolator and do not show nasty floating numbers
+  var i = d3.interpolateRound( currentValue, newValue );
+
+  return function(t) {
+    this.textContent = i(t);
+  };
+}
+</code></pre>
+
+<p>  }
+} )( d3 );
+```</p>
+
+<p>This way it is relatively clean and we have no code duplication in our code. You can check the working result below.</p>
+
+<p><pre class="codepen" data-height="400" data-type="result" data-href="HpFiz" data-user="stefanjudis"><code> </code></pre>
+<script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
+
+<p>So far so good. Let us have a look at a bit more complicated looking <code>tween</code>. In both charts there are animated d3 areas, which I animated using <code>tween</code>, too.</p>
+
+<h3>Animating areas with <code>attrTween</code></h3>
+
+<p><pre class="codepen" data-height="400" data-type="result" data-href="nuagm" data-user="stefanjudis"><code> </code></pre>
+<script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
+
+<p>So let us check the code for that. It basically works the same. ;)</p>
+
+<p>```javascript
+;( function( d3 ) {
+  var data = [</p>
+
+<pre><code>{
+  date  : '2006-02-22',
+  value : 950
+},
+// ...
+// more data
+// ...
+{
+  date  : '2006-08-22',
+  value : 1000
+}
+</code></pre>
+
+<p>  ];</p>
+
+<p>  //
+  // lot of setup code here
+  //</p>
+
+<p>  // set up value to start animation
+  var startData = data.map( function( datum ) {</p>
+
+<pre><code>                return {
+                  date  : datum.date,
+                  value : 0
+                };
+              } );
+</code></pre>
+
+<p>  //
+  // a bit more stuff here :)
+  //</p>
+
+<p>  // Add the area path.
+  svg.append( &lsquo;path&rsquo; )</p>
+
+<pre><code>  // set data
+  .datum( startData )
+  // apply area depending on data
+  .attr( 'd', area )
+  // create transition
+  .transition()
+  // set duration of transition
+  .duration( 500 )
+  // define tween for attribute 'd'
+  .attrTween( 'd', function() {
+    // create interpolator which will
+    // be able to handle `current normalized time`
+    var interpolator = d3.interpolateArray( startData, data );
+
+    // function called several times
+    // with values from 0.0 to 1.0
+    return function( t ) {
+      // calculate needed values to
+      // represent 'area' path with interpolated Array
+      //
+      // return it to set it directly to attribute 'd'
+      return area( interpolator( t ) );
+    }
+  } );
+</code></pre>
+
+<p>  }
+} )( d3 );
+```</p>
+
+<p>Let us assume you already have set up an area and it is already shown in your SVG &ndash; I will not go into detail about this topic here, because it could fill its own blog post. This area is based on an Array representing the data. The solution for animating this I found so far is to duplicate the data via <code>map</code> and set all the values to zero(see line 21). It does not have to be zero though &ndash; these changed values will basically be the starting point of your animation.</p>
+
+<p>In case of the example code you see <code>startData</code>, which represents the animation start and <code>data</code> which represents the animation end.</p>
+
+<p>The important point is to set <code>startData</code> as the data for the area you want to draw first(see line 35). Afterwards we define the transition and set a duration of 500ms. That is all to be ready to go and add our <code>tween</code>.</p>
+
+<p>To animate everythings the <code>d3</code> method <code>attrTween</code> is used. <code>attrTween</code> works mostly the same as <code>tween</code> with one difference. The wished animated attribute is modified directly when using <code>attrTween</code>.</p>
+
+<p><code>attrTween</code> expects the attribute, which should be animated, and a factory as arguments. This factory has to return a function that is able to deal with the <code>current normalized time</code>(values from <code>0.0</code> to <code>1.0</code>).</p>
+
+<p>So how does this work with two Arrays?</p>
+
+<p><code>d3</code> has already an interpolator for that integrated &ndash; <code>d3.interpolateArray</code>.</p>
+
+<p>```
+var i = d3.interpolateArray( [ 0, 0, 0 ], [ 100, 100, 100 ] );</p>
+
+<blockquote><p>undefined
+i ( 0 )
+[0, 0, 0]
+i( 0.25 )
+[25, 25, 25]
+i( 0.33 )
+[33, 33, 33]
+```</p></blockquote>
+
+<p>This returned function then has to return a value that represents the depending attribute(<code>d</code> in this case &ndash; see line 55). The returned value will be set to the attribute directly. This way there is no need to use <code>this</code> or to modify the element by yourself. You return the desired value and that is it. ;)</p>
+
+<h3>Sum up</h3>
+
+<p>Once you understood how the concept of <code>tweening</code> works, it not that hard. But the beginning is tough. I know that, in my case it took several runs to get it. ;)</p>
+
+<p>Important things to remember are:</p>
+
+<ul>
+<li>use <code>tween</code> or <code>attrTween</code> to modify your elements</li>
+<li>set up a <code>factory</code> correcty and pass it to the <code>tween</code> function</li>
+<li>make sure the returned function work properly with passed in <code>current normalized time</code> values</li>
+</ul>
+
+
+<p>And that is it for today. Maybe this helps someone. This concept is really hard describe, so I hope it is kind of understandable. You can play around with every example on CodePen and hopefully you will enjoy <code>tweening</code> as much as I do later on. Thanks for reading. :)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Using SVG gradients and filters with d3.js]]></title>

@@ -1,0 +1,772 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Using basic and tween transitions in d3.js  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Playing around at CodePen is one of my favourite activities, when doing &lsquo;nothing&rsquo; lately. Especially the combination of dribbble and &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Using Basic and Tween Transitions in d3.js</h2>
+	<div class="entry-content"><p>Playing around at <a href="http://codepen.io">CodePen</a> is one of my favourite activities, when doing &lsquo;nothing&rsquo; lately. Especially the combination of <a href="http://dribbble.com">dribbble</a> and CodePen is super nice. Browsing for beautiful designs and ideas on dribbble and putting them into code became a nice activity for me. There are a lot of great people hanging around at dribbble and you can get a lot of inspiration over there.</p>
+
+<p>Over the last few month I started being interested in dashboards and how to analyze/visualize data. Unfortunately I am not a designer and this is why I really enjoy to just build dashboards according to a dribbble design.</p>
+
+<!-- more -->
+
+
+<h3>Dashboard examples</h3>
+
+<p>Two example of these tryouts are the following. They include some basic <a href="d3js.org">d3.js</a> charting and make usage of a few different kinds of animation to make them look pretty and have some fun on my side.</p>
+
+<h4>Example 1 &ndash; referenced as &ldquo;bright dashboard&rdquo; later on</h4>
+
+<p><img class="center" src="/images/blog/stefanjudis/d3TweenExample1.jpg" width="350" height="401" title="Example 1 of d3 dashboard tryout at CodePen" alt="Example 1 of d3 dashboard tryout at CodePen"></p>
+
+<p>You can check the coded result <a href="http://codepen.io/stefanjudis/pen/gkHwJ">here</a> and the used design <a href="http://dribbble.com/shots/1252153-Charts-Inforgraphic-Templates/attachments/170613">here</a>.</p>
+
+<h4>Example 2 &ndash; referenced as &ldquo;dark dashboard&rdquo; later on</h4>
+
+<p><img class="center" src="/images/blog/stefanjudis/d3TweenExample2.jpg" width="500" height="341" title="Example 2 of d3 dashboard tryout at CodePen" alt="Example 2 of d3 dashboard tryout at CodePen"></p>
+
+<p>You can check the coded result <a href="http://codepen.io/stefanjudis/pen/jawGn">here</a> and the used design <a href="http://dribbble.com/shots/1244676-Cloud-Storage/attachments/168917">here</a>.</p>
+
+<p>Last week I got a Tweet by <a href="https://twitter.com/jessicard">@jessicard</a> asking, if I may want to explain how the <code>tween</code> function in d3.js works, because it is used several times.</p>
+
+<p>And here we are &ndash; let us dive into basic and <code>tween</code> transitions in d3. <em>I&rsquo;m really sorry for the delay by the way</em>&hellip;</p>
+
+<h3>Basic animations in d3.js</h3>
+
+<p>To achieve basic transition there is no big effort in d3.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">;(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">d3</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// grab svg container</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">d3container</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="s1">&#39;.container&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="c1">// append svg</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;svg&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="c1">// append group element to include some circles</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">dots</span> <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;g&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// create loop to append some circle</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// append circle</span>
+</span><span class='line'>    <span class="nx">dots</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;circle&#39;</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// set radius to &#39;0&#39; because we want</span>
+</span><span class='line'>        <span class="c1">// animate it later on</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// kind of center it horizontally - I know it is not exactly in the middle ;)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;cx&#39;</span><span class="p">,</span>  <span class="mi">150</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// give different y position</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;cy&#39;</span><span class="p">,</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">25</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// add event handler</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;mouseenter&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// select element in current context</span>
+</span><span class='line'>          <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="k">this</span> <span class="p">)</span>
+</span><span class='line'>            <span class="c1">// add transition</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>            <span class="c1">// change attribute</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// add event handler</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;mouseleave&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// select element in current context</span>
+</span><span class='line'>          <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="k">this</span> <span class="p">)</span>
+</span><span class='line'>            <span class="c1">// add transition</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>            <span class="c1">// change attribute</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">6</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// add transition for kick off</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>        <span class="c1">// add delay so that it looks nice</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">delay</span><span class="p">(</span> <span class="mi">200</span> <span class="o">*</span> <span class="nx">i</span> <span class="p">)</span>
+</span><span class='line'>        <span class="c1">// set radius to wished size</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">6</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span> <span class="p">)(</span> <span class="nx">d3</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There is not much magic going on there. <code>d3</code> does pretty much all the work for us. For more information you can visit the <a href="https://github.com/mbostock/d3/wiki/Transitions">transition page</a> of the `d3 <a href="https://github.com/mbostock/d3/wiki">wiki</a>. It is basically just setting an attribute to an element, creating a transition and changing the given attribute later on. It will be transitioned <em>magically</em>.</p>
+
+<p>You can check the result of these lines of code below (you may have to press <em>replay</em> to see the initial animation in action).</p>
+
+<pre class="codepen" data-height="400" data-type="result" data-href="dafDm" data-user="stefanjudis"><code> </code></pre>
+
+
+<script async src="http://codepen.io:/assets/embed/ei.js"></script>
+
+
+<p>That is already pretty nice, but let us dig a bit deeper. ;)</p>
+
+<h3>Tween animations in d3.js</h3>
+
+<p>There are some cases, where basic transitions will just not work. For example you can have a quick look at the following code, where I tried to animate <code>text</code> elements showing numbers from zero to 10.</p>
+
+<pre class="codepen" data-height="400" data-type="result" data-href="xrGLy" data-user="stefanjudis"><code> </code></pre>
+
+
+<script async src="http://codepen.io:/assets/embed/ei.js"></script>
+
+
+<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in d3. The general documentation for <code>tweens</code> can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
+
+<p>The important facts about <code>transition.tween( name, factory )</code> are described as follows:</p>
+
+<blockquote><p>Registers a custom tween for the specified name. When the transition starts, the specified factory function will be invoked for each selected element in the transition, being passed that element&rsquo;s data (d) and index (i) as arguments, with the element as the context (this). The factory should return the tween function to be called over the course of the transition. The tween function is then called repeatedly, being passed the current normalized time t in [0, 1]. If the factory returns null, then the tween is not run on the selected element.</p></blockquote>
+
+<p>So, but what does that mean? Let us modifiy the not working text transition example and have a deeper look at the reworked example.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">;(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">d3</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">d3container</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="s1">&#39;.container&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;svg&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">dots</span> <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;g&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">dots</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">text</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;text-anchor&#39;</span><span class="p">,</span> <span class="s1">&#39;middle&#39;</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span>  <span class="mi">150</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">25</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">delay</span><span class="p">(</span> <span class="mi">300</span> <span class="o">*</span> <span class="nx">i</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">tween</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// get current value as starting point for tween animation</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">currentValue</span> <span class="o">=</span> <span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">textContent</span><span class="p">;</span>
+</span><span class='line'>          <span class="c1">// create interpolator and do not show nasty floating numbers</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">interpolator</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateRound</span><span class="p">(</span> <span class="nx">currentValue</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="c1">// this returned function will be called a couple</span>
+</span><span class='line'>          <span class="c1">// of times to animate anything you want inside</span>
+</span><span class='line'>          <span class="c1">// of your custom tween</span>
+</span><span class='line'>          <span class="k">return</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">t</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// set new value to current text element</span>
+</span><span class='line'>            <span class="k">this</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">interpolator</span><span class="p">(</span> <span class="nx">t</span> <span class="p">);</span>
+</span><span class='line'>          <span class="p">};</span>
+</span><span class='line'>        <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span> <span class="p">)(</span> <span class="nx">d3</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first argument of the <code>tween</code> function represents the name of your new custom <code>tween</code>. The second argument is a function that should behave like a factory and return another function. The goal of this factory function is to create (and return) a function that is able to interpolate data and to calculate values depending on the <code>current normalized time</code>. The <code>current normalize time</code> are floating values from zero to one. Zero represents the starting point and one represents the end point of your tween animation.</p>
+
+<p>This means that this return function must be able to do something depending on the <code>current normalized time</code>(see line 23).
+<code>d3</code> already offers a lot of functions to solve exactly this problem &ndash; the so called <code>interpolators</code>. In this example I made usage of <code>interpolatorRound</code>. Let us check what that stands for and see what is actually doing by playing just a bit around in the JavaScript console.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// creating new interpolator</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateRound</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span> <span class="p">);</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="kc">undefined</span>
+</span><span class='line'><span class="c1">// using 0.25 as example for &#39;current normalized time&#39; -&gt; animation start</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="mi">0</span>
+</span><span class='line'><span class="c1">// using 0.25 as example for &#39;current normalized time&#39;</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mf">0.25</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="mi">25</span>
+</span><span class='line'><span class="c1">// using 0.5 as example for &#39;current normalized time&#39;</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="mi">50</span>
+</span><span class='line'><span class="c1">// using 0.75 as example for &#39;current normalized time&#39;</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mf">0.75</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="mi">75</span>
+</span><span class='line'><span class="c1">// using 1 as example for &#39;current normalized time&#39; -&gt; animation end</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="mi">100</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>d3</code> offers a lot of different interpolators. In our case I used <code>interpolatorRound</code>, because it returns the nearest integer value and I do not want to see crazy floating values in our custom <code>tween</code>.</p>
+
+<p>Available interpolators are:</p>
+
+<ul>
+<li><code>d3.interpolatNumber</code></li>
+<li><code>d3.interpolatRound</code></li>
+<li><code>d3.interpolatString</code></li>
+<li><code>d3.interpolatRgb</code></li>
+<li><code>d3.interpolatHsl</code></li>
+<li><code>d3.interpolatLab</code></li>
+<li><code>d3.interpolatHcl</code></li>
+<li><code>d3.interpolatArray</code></li>
+<li><code>d3.interpolatObject</code></li>
+<li><code>d3.interpolatTransform</code></li>
+<li><code>d3.interpolatZoom</code></li>
+</ul>
+
+
+<p>As you see there are quite a few and they will matched your needs in most of the cases. ;)</p>
+
+<p>This works fine. The next step is to create a interpolator with the current text value as starting point and with our desired value as end point. This is easily achievable, because the factory is executed in the context of the depending element. That means, that we can easily get the current value by using <code>this.textContent</code>(see line 16).</p>
+
+<p>But still the question remains, what is going on to animate this particalur text node.
+To stick everything together <code>d3</code> will execute the <code>factory</code> once and is expecting a function as return value. This function will be executed with a ton of values from zero to one (argument <code>t</code> in the example) later during the <code>tween</code>. These values represent the current progress of the transition. This returned function will additionally be executed in the context of the particalur element(in our case the text node) and exactly this becomes really handy. So we can also set the value easily via <code>this.textContent</code>(see line 25).</p>
+
+<p>To make our circles a bit more fun let us add a transition to the <code>mouseenter</code> and <code>mouseleave</code> events. For that we could duplicate the code which kicks off the transition at the beginning and set a different value to <code>d3.interpolateRound</code>, but code duplication is never a good idea. So let us implement a nice little helper function.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">;(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">d3</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">d3container</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="s1">&#39;.container&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3container</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;svg&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">dots</span> <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;g&#39;</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">dots</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">text</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;text-anchor&#39;</span><span class="p">,</span> <span class="s1">&#39;middle&#39;</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span>  <span class="mi">150</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">25</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;mouseenter&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="k">this</span> <span class="p">)</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">tween</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="nx">tweenText</span><span class="p">(</span> <span class="mi">50</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;mouseleave&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span> <span class="k">this</span> <span class="p">)</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>            <span class="p">.</span><span class="nx">tween</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="nx">tweenText</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">delay</span><span class="p">(</span> <span class="mi">300</span> <span class="o">*</span> <span class="nx">i</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">.</span><span class="nx">tween</span><span class="p">(</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="nx">tweenText</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">   * Tween functions</span>
+</span><span class='line'><span class="cm">   */</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="nx">tweenText</span><span class="p">(</span> <span class="nx">newValue</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// get current value as starting point for tween animation</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">currentValue</span> <span class="o">=</span> <span class="o">+</span><span class="k">this</span><span class="p">.</span><span class="nx">textContent</span><span class="p">;</span>
+</span><span class='line'>      <span class="c1">// create interpolator and do not show nasty floating numbers</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateRound</span><span class="p">(</span> <span class="nx">currentValue</span><span class="p">,</span> <span class="nx">newValue</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">i</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">};</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span> <span class="p">)(</span> <span class="nx">d3</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This way it is relatively clean and we have no code duplication in our code. You can check the working result below.</p>
+
+<pre class="codepen" data-height="400" data-type="result" data-href="HpFiz" data-user="stefanjudis"><code> </code></pre>
+
+
+<script async src="http://codepen.io:/assets/embed/ei.js"></script>
+
+
+<p>So far so good. Let us have a look at a bit more complicated looking <code>tween</code>. In both charts there are animated d3 areas, which I animated using <code>tween</code>, too.</p>
+
+<h3>Animating areas with <code>attrTween</code></h3>
+
+<pre class="codepen" data-height="400" data-type="result" data-href="nuagm" data-user="stefanjudis"><code> </code></pre>
+
+
+<script async src="http://codepen.io:/assets/embed/ei.js"></script>
+
+
+<p>So let us check the code for that. It basically works the same. ;)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">;(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">d3</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="nx">date</span>  <span class="o">:</span> <span class="s1">&#39;2006-02-22&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">value</span> <span class="o">:</span> <span class="mi">950</span>
+</span><span class='line'>    <span class="p">},</span>
+</span><span class='line'>    <span class="c1">// ...</span>
+</span><span class='line'>    <span class="c1">// more data</span>
+</span><span class='line'>    <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="nx">date</span>  <span class="o">:</span> <span class="s1">&#39;2006-08-22&#39;</span><span class="p">,</span>
+</span><span class='line'>      <span class="nx">value</span> <span class="o">:</span> <span class="mi">1000</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//</span>
+</span><span class='line'>  <span class="c1">// lot of setup code here</span>
+</span><span class='line'>  <span class="c1">//</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// set up value to start animation</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">startData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">datum</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="k">return</span> <span class="p">{</span>
+</span><span class='line'>                      <span class="nx">date</span>  <span class="o">:</span> <span class="nx">datum</span><span class="p">.</span><span class="nx">date</span><span class="p">,</span>
+</span><span class='line'>                      <span class="nx">value</span> <span class="o">:</span> <span class="mi">0</span>
+</span><span class='line'>                    <span class="p">};</span>
+</span><span class='line'>                  <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">//</span>
+</span><span class='line'>  <span class="c1">// a bit more stuff here :)</span>
+</span><span class='line'>  <span class="c1">//</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Add the area path.</span>
+</span><span class='line'>  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="s1">&#39;path&#39;</span> <span class="p">)</span>
+</span><span class='line'>      <span class="c1">// set data</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">datum</span><span class="p">(</span> <span class="nx">startData</span> <span class="p">)</span>
+</span><span class='line'>      <span class="c1">// apply area depending on data</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="nx">area</span> <span class="p">)</span>
+</span><span class='line'>      <span class="c1">// create transition</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+</span><span class='line'>      <span class="c1">// set duration of transition</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">duration</span><span class="p">(</span> <span class="mi">500</span> <span class="p">)</span>
+</span><span class='line'>      <span class="c1">// define tween for attribute &#39;d&#39;</span>
+</span><span class='line'>      <span class="p">.</span><span class="nx">attrTween</span><span class="p">(</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// create interpolator which will</span>
+</span><span class='line'>        <span class="c1">// be able to handle `current normalized time`</span>
+</span><span class='line'>        <span class="kd">var</span> <span class="nx">interpolator</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateArray</span><span class="p">(</span> <span class="nx">startData</span><span class="p">,</span> <span class="nx">data</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// function called several times</span>
+</span><span class='line'>        <span class="c1">// with values from 0.0 to 1.0</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">t</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="c1">// calculate needed values to</span>
+</span><span class='line'>          <span class="c1">// represent &#39;area&#39; path with interpolated Array</span>
+</span><span class='line'>          <span class="c1">//</span>
+</span><span class='line'>          <span class="c1">// return it to set it directly to attribute &#39;d&#39;</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">area</span><span class="p">(</span> <span class="nx">interpolator</span><span class="p">(</span> <span class="nx">t</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span> <span class="p">)(</span> <span class="nx">d3</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let us assume you already have set up an area and it is already shown in your SVG &ndash; I will not go into detail about this topic here, because it could fill its own blog post. This area is based on an Array representing the data. The solution for animating this I found so far is to duplicate the data via <code>map</code> and set all the values to zero(see line 21). It does not have to be zero though &ndash; these changed values will basically be the starting point of your animation.</p>
+
+<p>In case of the example code you see <code>startData</code>, which represents the animation start and <code>data</code> which represents the animation end.</p>
+
+<p>The important point is to set <code>startData</code> as the data for the area you want to draw first(see line 35). Afterwards we define the transition and set a duration of 500ms. That is all to be ready to go and add our <code>tween</code>.</p>
+
+<p>To animate everythings the <code>d3</code> method <code>attrTween</code> is used. <code>attrTween</code> works mostly the same as <code>tween</code> with one difference. The wished animated attribute is modified directly when using <code>attrTween</code>.</p>
+
+<p><code>attrTween</code> expects the attribute, which should be animated, and a factory as arguments. This factory has to return a function that is able to deal with the <code>current normalized time</code>(values from <code>0.0</code> to <code>1.0</code>).</p>
+
+<p>So how does this work with two Arrays?</p>
+
+<p><code>d3</code> has already an interpolator for that integrated &ndash; <code>d3.interpolateArray</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">interpolateArray</span><span class="p">(</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span> <span class="p">]</span> <span class="p">);</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="kc">undefined</span>
+</span><span class='line'><span class="nx">i</span> <span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mf">0.25</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
+</span><span class='line'><span class="nx">i</span><span class="p">(</span> <span class="mf">0.33</span> <span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="p">[</span><span class="mi">33</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">33</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This returned function then has to return a value that represents the depending attribute(<code>d</code> in this case &ndash; see line 55). The returned value will be set to the attribute directly. This way there is no need to use <code>this</code> or to modify the element by yourself. You return the desired value and that is it. ;)</p>
+
+<h3>Sum up</h3>
+
+<p>Once you understood how the concept of <code>tweening</code> works, it not that hard. But the beginning is tough. I know that, in my case it took several runs to get it. ;)</p>
+
+<p>Important things to remember are:</p>
+
+<ul>
+<li>use <code>tween</code> or <code>attrTween</code> to modify your elements</li>
+<li>set up a <code>factory</code> correcty and pass it to the <code>tween</code> function</li>
+<li>make sure the returned function work properly with passed in <code>current normalized time</code> values</li>
+</ul>
+
+
+<p>And that is it for today. Maybe this helps someone. This concept is really hard describe, so I hope it is kind of understandable. You can play around with every example on CodePen and hopefully you will enjoy <code>tweening</code> as much as I do later on. Thanks for reading. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-11T13:25:00+02:00" pubdate data-updated="true">May 11<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/d3/'>d3</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/svg/'>svg</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2014/05/11/d3-dot-js-tween-in-detail/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2014/05/11/d3-dot-js-tween-in-detail/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
