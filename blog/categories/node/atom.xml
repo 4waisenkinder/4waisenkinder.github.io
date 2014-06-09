@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: node | 4waisenkinder]]></title>
+  <link href="http://4waisenkinder.github.io/blog/categories/node/atom.xml" rel="self"/>
+  <link href="http://4waisenkinder.github.io/"/>
+  <updated>2014-06-09T23:54:05+02:00</updated>
+  <id>http://4waisenkinder.github.io/</id>
+  <author>
+    <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Flatten your dependencies with npm dedupe]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe/"/>
+    <updated>2014-06-09T21:52:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe</id>
+    <content type="html"><![CDATA[<p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
+
+<p><code>``
+a
++-- b &lt;-- depends on c@1.0.x
+|  </code>&mdash; <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#58;&#99;&#x40;&#49;&#x2e;&#48;&#46;&#49;&#x30;">&#99;&#x40;&#x31;&#46;&#48;&#x2e;&#49;&#48;</a>
+`&mdash; d &lt;&mdash; depends on c@~1.0.9</p>
+
+<pre><code>`-- c@1.0.10
+</code></pre>
+
+<p>```</p>
+
+<p>As you see above package <code>c</code> will be downloaded two times, although the dependencies <code>b</code> and <code>d</code> could use the same package. You might think now &ldquo;So? Not a big deal&hellip;&rdquo;, but depending on dependencies of your dependencies you end up with a much slower <code>npm install</code> process, because packages got downloaded multiple times. And if you deal with a big project with a lot of dependencies I am not talking about a few seconds. ;)</p>
+
+<p>Additionally the installation process can become less stable. In my case I included the following dependencies in my <code>package.json</code>.</p>
+
+<p>```
+  &ldquo;dependencies&rdquo;: {</p>
+
+<pre><code>"grunt": "~0.4.5",
+"grunt-photobox": "~0.8.0",
+"grunt-phantomas": "~0.7.1"
+</code></pre>
+
+<p>  }
+```</p>
+
+<p>The two grunt plugins either directly or one of their dependencies depend on <code>phantomjs</code>. This leads to the following output during the installation process.</p>
+
+<p>```</p>
+
+<blockquote><p><a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x70;&#104;&#x61;&#110;&#x74;&#x6f;&#x6d;&#x6a;&#115;&#64;&#x31;&#x2e;&#x39;&#x2e;&#x37;&#45;&#x38;">&#112;&#x68;&#x61;&#110;&#116;&#111;&#x6d;&#106;&#x73;&#64;&#49;&#46;&#x39;&#46;&#x37;&#x2d;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+node install.js</p></blockquote>
+
+<p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
+Download already available at /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip
+Extracting zip contents
+Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip-extract-1402344467586/phantomjs-1.9.7-macosx &ndash;> /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom
+Writing location.js file
+Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs</p>
+
+<blockquote><p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#112;&#x68;&#97;&#x6e;&#116;&#111;&#x6d;&#106;&#x73;&#64;&#x31;&#x2e;&#57;&#46;&#x37;&#x2d;&#56;">&#112;&#x68;&#x61;&#110;&#116;&#111;&#x6d;&#x6a;&#115;&#x40;&#49;&#x2e;&#57;&#x2e;&#x37;&#x2d;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+node install.js</p></blockquote>
+
+<p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
+Download already available at /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip
+Extracting zip contents
+Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip-extract-1402344475151/phantomjs-1.9.7-macosx &ndash;> /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom
+Writing location.js file
+Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom/bin/phantomjs
+```</p>
+
+<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time &lsquo;npm install&rsquo; failed. Especially <code>phantomjs</code> is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
+
+<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
+
+<p>To show the difference &ndash; the old structure was:</p>
+
+<p><code>``
+grunt-phantomas
+</code>&mdash; phantomas</p>
+
+<pre><code>`-- phantomjs
+</code></pre>
+
+<p>grunt-photobox
+`&mdash; phantomjs
+```</p>
+
+<p>And after using <code>dedupe</code> I ended up with:</p>
+
+<p>```
+phantomjs</p>
+
+<p>// a lot of other shared
+// dependencies also here :)</p>
+
+<p>grunt-phantomas
+`&mdash; phantomas</p>
+
+<p>grunt-photobox
+```</p>
+
+<p>Super nice!</p>
+
+<p>To make sure all your colleagues receive the same flattened dependency structure use <code>npm shrinkwrap</code> to really lock all packages including versions and hierarchy. In case you have not used <code>shrinkwrap</code> before I also wrote a <a href="http://4waisenkinder.de/blog/2013/07/10/why-you-should-use-npm-shrinkwrap-and-how-to-deal-with-a-dependency-fu-star-star-up/">post</a> about it.</p>
+
+<p>To sum up, my workflow was the following:</p>
+
+<p>```
+$ npm install</p>
+
+<p>$ npm dedupe</p>
+
+<p>$ npm shrinkwrap
+```</p>
+
+<p><code>dedupe</code> is currently marked as experimental and unfortunately I made the experience, that it is not 100% stable at the moment. I filed already an issue <a href="https://github.com/npm/npm/issues/5448">here</a>. But we should really start using it, because it will make the installation of npm packages just quicker and safer. I am really looking forward to this feature and I am sure, that it will become stable soon.</p>
+
+<p>Thanks for reading and all comments on this topic are as usual more than welcome. ;)</p>
+]]></content>
+  </entry>
+  
+</feed>

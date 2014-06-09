@@ -1,0 +1,343 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Flatten your dependencies with npm dedupe  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Flatten Your Dependencies With Npm Dedupe</h2>
+	<div class="entry-content"><p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>a
+</span><span class='line'>+-- b &lt;-- depends on c@1.0.x
+</span><span class='line'>|   `-- c@1.0.10
+</span><span class='line'>`-- d &lt;-- depends on c@~1.0.9
+</span><span class='line'>    `-- c@1.0.10</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you see above package <code>c</code> will be downloaded two times, although the dependencies <code>b</code> and <code>d</code> could use the same package. You might think now &ldquo;So? Not a big deal&hellip;&rdquo;, but depending on dependencies of your dependencies you end up with a much slower <code>npm install</code> process, because packages got downloaded multiple times. And if you deal with a big project with a lot of dependencies I am not talking about a few seconds. ;)</p>
+
+<p>Additionally the installation process can become less stable. In my case I included the following dependencies in my <code>package.json</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  "dependencies": {
+</span><span class='line'>    "grunt": "~0.4.5",
+</span><span class='line'>    "grunt-photobox": "~0.8.0",
+</span><span class='line'>    "grunt-phantomas": "~0.7.1"
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The two grunt plugins either directly or one of their dependencies depend on <code>phantomjs</code>. This leads to the following output during the installation process.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; phantomjs@1.9.7-8 install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+</span><span class='line'>&gt; node install.js
+</span><span class='line'>
+</span><span class='line'>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
+</span><span class='line'>Download already available at /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip
+</span><span class='line'>Extracting zip contents
+</span><span class='line'>Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip-extract-1402344467586/phantomjs-1.9.7-macosx -&gt; /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom
+</span><span class='line'>Writing location.js file
+</span><span class='line'>Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
+</span><span class='line'>
+</span><span class='line'>&gt; phantomjs@1.9.7-8 install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+</span><span class='line'>&gt; node install.js
+</span><span class='line'>
+</span><span class='line'>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
+</span><span class='line'>Download already available at /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip
+</span><span class='line'>Extracting zip contents
+</span><span class='line'>Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phantomjs/phantomjs-1.9.7-macosx.zip-extract-1402344475151/phantomjs-1.9.7-macosx -&gt; /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom
+</span><span class='line'>Writing location.js file
+</span><span class='line'>Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom/bin/phantomjs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time &lsquo;npm install&rsquo; failed. Especially <code>phantomjs</code> is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
+
+<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
+
+<p>To show the difference &ndash; the old structure was:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>grunt-phantomas
+</span><span class='line'>`-- phantomas
+</span><span class='line'>    `-- phantomjs
+</span><span class='line'>
+</span><span class='line'>grunt-photobox
+</span><span class='line'>`-- phantomjs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And after using <code>dedupe</code> I ended up with:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>phantomjs
+</span><span class='line'>
+</span><span class='line'>// a lot of other shared
+</span><span class='line'>// dependencies also here :)
+</span><span class='line'>
+</span><span class='line'>grunt-phantomas
+</span><span class='line'>`-- phantomas
+</span><span class='line'>
+</span><span class='line'>grunt-photobox</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Super nice!</p>
+
+<p>To make sure all your colleagues receive the same flattened dependency structure use <code>npm shrinkwrap</code> to really lock all packages including versions and hierarchy. In case you have not used <code>shrinkwrap</code> before I also wrote a <a href="http://4waisenkinder.de/blog/2013/07/10/why-you-should-use-npm-shrinkwrap-and-how-to-deal-with-a-dependency-fu-star-star-up/">post</a> about it.</p>
+
+<p>To sum up, my workflow was the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ npm install
+</span><span class='line'>
+</span><span class='line'>$ npm dedupe
+</span><span class='line'>
+</span><span class='line'>$ npm shrinkwrap</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>dedupe</code> is currently marked as experimental and unfortunately I made the experience, that it is not 100% stable at the moment. I filed already an issue <a href="https://github.com/npm/npm/issues/5448">here</a>. But we should really start using it, because it will make the installation of npm packages just quicker and safer. I am really looking forward to this feature and I am sure, that it will become stable soon.</p>
+
+<p>Thanks for reading and all comments on this topic are as usual more than welcome. ;)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-09T21:52:00+02:00" pubdate data-updated="true">Jun 9<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/node/'>node</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>
