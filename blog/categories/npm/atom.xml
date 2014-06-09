@@ -4,7 +4,7 @@
   <title><![CDATA[Category: npm | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/npm/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-06-09T23:54:05+02:00</updated>
+  <updated>2014-06-09T23:57:04+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -18,12 +18,12 @@
     <link href="http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe/"/>
     <updated>2014-06-09T21:52:00+02:00</updated>
     <id>http://4waisenkinder.github.io/blog/2014/06/09/flatten-your-dependencies-with-npm-dedupe</id>
-    <content type="html"><![CDATA[<p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
+    <content type="html"><![CDATA[<p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh <code>npm install</code> on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
 
 <p><code>``
 a
 +-- b &lt;-- depends on c@1.0.x
-|  </code>&mdash; <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x63;&#64;&#49;&#x2e;&#x30;&#x2e;&#49;&#48;">&#99;&#x40;&#49;&#46;&#48;&#x2e;&#x31;&#x30;</a>
+|  </code>&mdash; <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x63;&#64;&#49;&#x2e;&#48;&#46;&#x31;&#x30;">&#99;&#x40;&#x31;&#46;&#x30;&#46;&#x31;&#x30;</a>
 `&mdash; d &lt;&mdash; depends on c@~1.0.9</p>
 
 <pre><code>`-- c@1.0.10
@@ -50,7 +50,7 @@ a
 
 <p>```</p>
 
-<blockquote><p><a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x70;&#104;&#97;&#110;&#116;&#x6f;&#x6d;&#106;&#115;&#x40;&#x31;&#46;&#57;&#46;&#55;&#x2d;&#x38;">&#x70;&#x68;&#x61;&#x6e;&#x74;&#x6f;&#109;&#106;&#115;&#64;&#x31;&#x2e;&#57;&#x2e;&#55;&#45;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+<blockquote><p><a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#58;&#x70;&#x68;&#x61;&#x6e;&#116;&#x6f;&#109;&#106;&#115;&#x40;&#49;&#x2e;&#x39;&#x2e;&#x37;&#45;&#x38;">&#112;&#x68;&#97;&#x6e;&#116;&#x6f;&#109;&#106;&#115;&#64;&#x31;&#46;&#x39;&#46;&#x37;&#45;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
@@ -60,7 +60,7 @@ Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phanto
 Writing location.js file
 Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs</p>
 
-<blockquote><p><a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#112;&#104;&#97;&#110;&#116;&#x6f;&#x6d;&#x6a;&#115;&#x40;&#49;&#x2e;&#57;&#46;&#x37;&#45;&#x38;">&#112;&#x68;&#x61;&#110;&#116;&#x6f;&#109;&#106;&#115;&#x40;&#49;&#x2e;&#x39;&#46;&#x37;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+<blockquote><p><a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#x70;&#104;&#x61;&#110;&#x74;&#111;&#x6d;&#x6a;&#x73;&#x40;&#49;&#x2e;&#x39;&#x2e;&#55;&#x2d;&#x38;">&#x70;&#x68;&#97;&#x6e;&#x74;&#111;&#109;&#106;&#x73;&#x40;&#x31;&#x2e;&#57;&#46;&#55;&#45;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
@@ -71,9 +71,9 @@ Writing location.js file
 Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom/bin/phantomjs
 ```</p>
 
-<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time &lsquo;npm install&rsquo; failed. Especially <code>phantomjs</code> is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
+<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time <code>npm install failed. Especially</code>phantomjs` is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
 
-<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
+<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code> &ndash; docs are <a href="https://www.npmjs.org/doc/cli/npm-dedupe.html">here</a>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
 
 <p>To show the difference &ndash; the old structure was:</p>
 

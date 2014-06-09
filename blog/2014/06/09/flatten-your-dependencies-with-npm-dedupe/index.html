@@ -9,7 +9,7 @@
 
 <meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
 
-<meta name="description" content="I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh npm install on your &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -92,7 +92,7 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">Flatten Your Dependencies With Npm Dedupe</h2>
-	<div class="entry-content"><p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh `npm install on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
+	<div class="entry-content"><p>I use npm for a while now and it is heavily integrated in my daily workflow. One thing that always bothers me, is that a fresh <code>npm install</code> on your project will probably download the same packages over and over again. Let us imagine your project has multiple dependencies that all have one package defined as another dependency.<!-- more --></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -164,9 +164,9 @@ $(document).ready(
 </span><span class='line'>Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs/lib/phantom/bin/phantomjs</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time &lsquo;npm install&rsquo; failed. Especially <code>phantomjs</code> is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
+<p>Two times the same package is downloaded and unfortunately the <code>phantomjs</code> package downloads <code>phantomjs</code> via npm script functionality. It downloads and unzipps data itself. In my case I had to fight against an unstable network, which led to a bunch of failing intallation processes. Sometimes the first <code>phantomjs</code> download did not work. Sometimes the second. And all the time <code>npm install failed. Especially</code>phantomjs` is a really popular dependency and I am sure a lot of projects download it much more often than only two times. ;)</p>
 
-<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
+<p>After this experience I started digging around a bit and discovered <code>npm dedupe</code> &ndash; docs are <a href="https://www.npmjs.org/doc/cli/npm-dedupe.html">here</a>. It will check your installed dependencies and finally flatten the dependency structure by moving shared packages higher in the tree. Less duplicated packages &ndash; yay!!!</p>
 
 <p>To show the difference &ndash; the old structure was:</p>
 
