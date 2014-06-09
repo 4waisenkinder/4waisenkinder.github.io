@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-06-05T01:23:14+02:00</updated>
+  <updated>2014-06-09T21:47:58+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -100,7 +100,7 @@ dots.append( 'circle' )
 } )( d3 );
 ```</p>
 
-<p>There is not much magic going on there. <code>d3</code> does pretty much all the work for us. For more information you can visit the <a href="https://github.com/mbostock/d3/wiki/Transitions">transition page</a> of the `d3 <a href="https://github.com/mbostock/d3/wiki">wiki</a>. It is basically just setting an attribute to an element, creating a transition and changing the given attribute later on. It will be transitioned <em>magically</em>.</p>
+<p>There is not much magic going on there. <code>d3</code> does pretty much all the work for us. For more information you can visit the <a href="https://github.com/mbostock/d3/wiki/Transitions">transition page</a> of the <code>d3</code> <a href="https://github.com/mbostock/d3/wiki">wiki</a>. It is basically just setting an attribute to an element, creating a transition and changing the given attribute later on. It will be transitioned <em>magically</em>.</p>
 
 <p>You can check the result of these lines of code below (you may have to press <em>replay</em> to see the initial animation in action).</p>
 
@@ -116,7 +116,7 @@ dots.append( 'circle' )
 <p><pre class="codepen" data-height="400" data-type="result" data-href="xrGLy" data-user="stefanjudis"><code> </code></pre>
 <script async src="http://codepen.io:/assets/embed/ei.js"></script></p>
 
-<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in <code>d3. The general documentation for</code>tweens` can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
+<p>It is unfortunately not working with the usage of a basic transition. This is the use case for so called <code>tweens</code> in <code>d3</code>. The general documentation for <code>tweens</code> can be found <a href="https://github.com/mbostock/d3/wiki/Transitions#tween">here</a>.</p>
 
 <p>The important facts about <code>transition.tween( name, factory )</code> are described as follows:</p>
 
@@ -385,7 +385,7 @@ i( 0.33 )
 
 <ul>
 <li>use <code>tween</code> or <code>attrTween</code> to modify your elements</li>
-<li>set up a <code>factory</code> correcty and pass it to the <code>tween</code> function</li>
+<li>set up a <code>factory</code> correctly and pass it to the <code>tween</code> function</li>
 <li>make sure the returned function works properly with passed in <code>current normalized time</code> values</li>
 </ul>
 
