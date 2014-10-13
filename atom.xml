@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-14T00:52:09+02:00</updated>
+  <updated>2014-10-14T00:53:29+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -85,7 +85,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>But, that is not what I wanted, I wanted the square to keep the properties defined in the animation. So I googled a bit and landed on <a href="http://stackoverflow.com/questions/4359627/stopping-a-css3-animation-on-last-frame">stackoverflow</a>. The first answer you will find there, is to set up the base styling of the animated element to the end state of the animation.</p>
+<p>But, that is not what I wanted, I wanted the square to keep the properties defined in the last frame of the animation. So I googled a bit and landed on <a href="http://stackoverflow.com/questions/4359627/stopping-a-css3-animation-on-last-frame">stackoverflow</a>. The first answer you will find there, is to set up the base styling of the animated element to the end state of the animation.</p>
 
 <pre class="codepen" data-height="400" data-type="result" data-href="GmCIf" data-user="stefanjudis"><code> </code></pre>
 
