@@ -4,7 +4,7 @@
   <title><![CDATA[Category: css | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/css/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-14T00:19:17+02:00</updated>
+  <updated>2014-10-14T00:52:09+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -114,10 +114,10 @@
 
 <p>  transform : translate( 100%, 0 );</p>
 
-<p>  @for $i from 1 through 4 {</p>
+<p>  @for $i from 0 through 3 {</p>
 
-<pre><code>&amp;:nth-child(#{$i}) {
-  top : 1 + ( $i - 1 ) * 6rem;
+<pre><code>&amp;:nth-child(#{$i + 1}) {
+  top : 1 + $i * 6rem;
   animation-delay : #{$i}s;
 }
 </code></pre>

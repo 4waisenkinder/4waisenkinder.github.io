@@ -250,9 +250,9 @@ $(document).ready(
 </span><span class='line'>
 </span><span class='line'>  <span class="n">transform</span> <span class="o">:</span> <span class="n">translate</span><span class="p">(</span> <span class="m">100</span><span class="o">%,</span> <span class="m">0</span> <span class="p">);</span>
 </span><span class='line'>
-</span><span class='line'>  <span class="o">@</span><span class="n">for</span> <span class="err">$</span><span class="n">i</span> <span class="n">from</span> <span class="m">1</span> <span class="n">through</span> <span class="m">4</span> <span class="err">{</span>
-</span><span class='line'>    <span class="o">&amp;:</span><span class="n">nth</span><span class="o">-</span><span class="n">child</span><span class="p">(</span><span class="err">#{$</span><span class="n">i</span><span class="p">}</span><span class="o">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">top</span> <span class="o">:</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span> <span class="err">$</span><span class="n">i</span> <span class="o">-</span> <span class="m">1</span> <span class="p">)</span> <span class="o">*</span> <span class="m">6</span><span class="n">rem</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">@</span><span class="n">for</span> <span class="err">$</span><span class="n">i</span> <span class="n">from</span> <span class="m">0</span> <span class="n">through</span> <span class="m">3</span> <span class="err">{</span>
+</span><span class='line'>    <span class="o">&amp;:</span><span class="n">nth</span><span class="o">-</span><span class="n">child</span><span class="p">(</span><span class="err">#{$</span><span class="n">i</span> <span class="o">+</span> <span class="m">1</span><span class="p">}</span><span class="o">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">top</span> <span class="o">:</span> <span class="m">1</span> <span class="o">+</span> <span class="err">$</span><span class="n">i</span> <span class="o">*</span> <span class="m">6</span><span class="n">rem</span><span class="p">;</span>
 </span><span class='line'>      <span class="n">animation</span><span class="o">-</span><span class="n">delay</span> <span class="o">:</span> <span class="err">#{$</span><span class="n">i</span><span class="p">}</span><span class="nt">s</span><span class="o">;</span>
 </span><span class='line'>    <span class="err">}</span>
 </span><span class='line'>  <span class="err">}</span>
