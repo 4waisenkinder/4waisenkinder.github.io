@@ -4,7 +4,7 @@
   <title><![CDATA[Category: npm | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/npm/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-14T00:53:29+02:00</updated>
+  <updated>2014-10-14T01:00:29+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -23,7 +23,7 @@
 <p><code>``
 a
 +-- b &lt;-- depends on c@1.0.x
-|  </code>&mdash; <a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#x63;&#x40;&#49;&#46;&#x30;&#x2e;&#x31;&#48;">&#99;&#x40;&#49;&#x2e;&#x30;&#46;&#x31;&#48;</a>
+|  </code>&mdash; <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#99;&#x40;&#49;&#x2e;&#x30;&#46;&#49;&#x30;">&#x63;&#x40;&#49;&#46;&#48;&#46;&#49;&#48;</a>
 `&mdash; d &lt;&mdash; depends on c@~1.0.9</p>
 
 <pre><code>`-- c@1.0.10
@@ -50,7 +50,7 @@ a
 
 <p>```</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#105;&#108;&#116;&#111;&#58;&#112;&#x68;&#97;&#110;&#x74;&#x6f;&#x6d;&#106;&#115;&#64;&#x31;&#x2e;&#x39;&#46;&#55;&#x2d;&#x38;">&#x70;&#x68;&#97;&#110;&#116;&#x6f;&#x6d;&#x6a;&#x73;&#x40;&#x31;&#x2e;&#x39;&#x2e;&#x37;&#x2d;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+<blockquote><p><a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x70;&#104;&#97;&#110;&#x74;&#111;&#x6d;&#106;&#115;&#x40;&#49;&#x2e;&#57;&#x2e;&#55;&#x2d;&#56;">&#x70;&#x68;&#97;&#x6e;&#116;&#111;&#109;&#x6a;&#x73;&#x40;&#49;&#46;&#x39;&#46;&#x37;&#x2d;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
@@ -60,7 +60,7 @@ Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phanto
 Writing location.js file
 Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#112;&#104;&#x61;&#110;&#116;&#111;&#x6d;&#106;&#115;&#x40;&#49;&#46;&#x39;&#x2e;&#x37;&#45;&#x38;">&#x70;&#104;&#97;&#110;&#x74;&#x6f;&#109;&#x6a;&#115;&#64;&#49;&#x2e;&#x39;&#x2e;&#x37;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+<blockquote><p><a href="&#109;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x70;&#x68;&#x61;&#110;&#x74;&#111;&#109;&#106;&#115;&#64;&#49;&#46;&#57;&#46;&#x37;&#x2d;&#x38;">&#x70;&#x68;&#x61;&#110;&#x74;&#111;&#x6d;&#x6a;&#x73;&#64;&#49;&#x2e;&#x39;&#x2e;&#55;&#45;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
