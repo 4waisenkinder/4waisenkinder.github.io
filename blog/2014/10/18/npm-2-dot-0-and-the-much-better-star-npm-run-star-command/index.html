@@ -1,0 +1,463 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>NPM 2.0 and how it helps avoiding global dependencies  | 4waisenkinder</title>
+
+<meta name="author" content="Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn"> 
+
+<meta name="description" content="Today I was listening to the NodeUp episode 70, which is all about the npm command line client. And there is tons of useful information in this &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="4waisenkinder" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">4waisenkinder</a></h1>
+<h4>A blogging diaspora.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="http://google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:4waisenkinder.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">NPM 2.0 and How It Helps Avoiding Global Dependencies</h2>
+	<div class="entry-content"><p>Today I was listening to the NodeUp <a href="http://nodeup.com/seventy">episode 70</a>, which is all about the <a href="https://www.npmjs.org/package/npm">npm command line client</a>. And there is tons of useful information in this episode. It is all about where npm is at the moment and what the plans are for the future. Especially the recent changes inside of the command line client are a heavy discussed topic and I highly recommend to listen to this episode, when you are dealing with <a href="https://www.npmjs.org/">npm</a> on a daily basis.</p>
+
+<p>One thing that is mentioned and really gets me excited is the change regarding the functionality to run scripts via npm which was introduced in the latest major version of npm &ndash; <a href="http://blog.npmjs.org/post/98131109725/npm-2-0-0">npm@2.0.0</a>.<!-- more --></p>
+
+<p>So let us recover how to run scripts via npm, what has changed in version 2.0.0 and check why this is such a big deal.</p>
+
+<h3>Running scripts via npm</h3>
+
+<p>The configuration file for any project based on node and npm is the <code>package.json</code>. This file includes meta information like name, version and author of the depending project, but also defines all dependencies, which need to be installed via calling <code>npm install</code>. If you are not familiar with this file, there is an excellent <a href="http://browsenpm.org/package.json">interative cheat sheet</a> out there and you may want to check it out.</p>
+
+<p>One thing to notice is that you can also run scripts and execute commands via npm. To do so you can define an optional object as the <code>scripts</code> property inside of the <code>package.json</code> and define your wished commands. <a href="https://twitter.com/substack">@substack</a> wrote a <a href="http://substack.net/task_automation_with_npm_run">great article</a> about how to use this functionality extensively.</p>
+
+<p>There is not much magic about this.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-npm-run-scripts&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;echo&quot;</span> <span class="p">:</span> <span class="s2">&quot;echo \&quot;Hello world\&quot;&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then you can use <code>npm run</code> to kick it off &ndash; pretty straight forward.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt; npm run <span class="nb">echo</span>
+</span><span class='line'>
+</span><span class='line'>&gt; blog-npm-run-scripts@1.0.0 <span class="nb">echo</span> /Users/stefan/Sites/blog-npm-run-scripts
+</span><span class='line'>&gt; <span class="nb">echo</span> <span class="s2">&quot;Hello world&quot;</span>
+</span><span class='line'>
+</span><span class='line'>Hello world
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This functionality had one downside so far. It was not able to pass arguments to the <code>npm run</code> command. And that is why you had to hardcode the arguments, which made the whole thing less flexible and harder to use. The only solution for having similar commands with different arguments was to define specific named scripts inside of the <code>package.json</code> including different arguments.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-npm-run-scripts&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;echo_helloWorld&quot;</span> <span class="p">:</span> <span class="s2">&quot;echo \&quot;Hello world\&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;echo_foo&quot;</span> <span class="p">:</span> <span class="s2">&quot;echo \&quot;Foo\&quot;&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Passing arguments to <code>npm run</code></h3>
+
+<p>Since version 2.0.0 it is now possible to pass arguments to the scripts defined in the <code>package.json</code>. And this is a big improvement on flexibility and makes the whole thing much more powerful. The <code>package.json</code> above including two scripts running the <code>echo</code> command can be combined into one and can accept the wished arguments.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-npm-run-scripts&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;echo&quot;</span> <span class="p">:</span> <span class="s2">&quot;echo&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The syntax to pass arguments to the defined scripts is as follows. You have to use <code>npm run</code> and then devided by two dashes(<code>--</code>) you can pass any arguments you like to the command.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt; npm run <span class="nb">echo</span> -- <span class="s2">&quot;hello world&quot;</span>
+</span><span class='line'>
+</span><span class='line'>&gt; blog-npm-run-scripts@1.0.0 <span class="nb">echo</span> /Users/stefan/Sites/blog-npm-run-scripts
+</span><span class='line'>&gt; <span class="nb">echo</span> <span class="s2">&quot;hello world&quot;</span>
+</span><span class='line'>
+</span><span class='line'>hello world
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Setting up Grunt and gulp without the global dependency</h3>
+
+<p>Using the <code>echo</code> command might not seem really useful, but we will come to a much more useful example now. I am doing mostly frontend development and that is why in almost every project that I work on either <a href="http://gruntjs.com/">Grunt</a> or <a href="http://gulpjs.com/">gulp</a> is included. Grunt and gulp are task runners, that come with huge plugin registries to help automate any task you can think of.</p>
+
+<p>When you check the getting started guide of both projects you will find the instruction to install them globally.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># install gulp globally</span>
+</span><span class='line'><span class="nv">$ </span>npm install -g gulp
+</span><span class='line'><span class="c"># install grunt globally</span>
+</span><span class='line'><span class="nv">$ </span>npm install -g grunt-cli
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or you process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
+
+<p>So let us have a look how to avoid that. First step is to install the needed modules in our project and not globally anymore.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># install gulp in the project</span>
+</span><span class='line'><span class="nv">$ </span>npm install gulp
+</span><span class='line'><span class="c"># install grunt in the project</span>
+</span><span class='line'><span class="nv">$ </span>npm install grunt-cli
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>By calling <code>npm install</code> npm will install the module and depending, if it has the <a href="http://browsenpm.org/package.json#bin"><code>bin</code></a> property defined, it will create a <code>.bin</code> folder inside of the <code>node_modules</code> folder. This means that this folder will include all defined command line interfaces of your installed modules. In this case the <code>.bin</code> folder includes the binaries <code>gulp</code> and <code>grunt</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>node_modules
+</span><span class='line'>  |_  .bin
+</span><span class='line'>      |_ gulp
+</span><span class='line'>      |_ grunt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to use either Grunt or gulp via the <code>npm run</code> command now, you can set them up inside of your <code>package.json</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-npm-run-scripts&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;gulp&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/bin/gulp&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;grunt&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/bin/grunt&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then you can easily run your defined tasks with npm.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># run &#39;dev&#39; task with in project install grunt</span>
+</span><span class='line'><span class="nv">$ </span>npm run grunt -- dev
+</span><span class='line'><span class="c"># run &#39;dev&#39; task with in project install gulp</span>
+</span><span class='line'><span class="nv">$ </span>npm run gulp -- dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To make it even a bit nicer npm provides a nifty feature, when setting up custom scripts.</p>
+
+<blockquote><p>Packages that contain a command line interface and are installed locally can be called without a relative path. So instead of doing ./node-modules/.bin/mocha you can directly call mocha.</p></blockquote>
+
+<p>This means, we can make the <code>package.json</code> a bit cleaner.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blog-npm-run-scripts&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;gulp&quot;</span> <span class="p">:</span> <span class="s2">&quot;gulp&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;grunt&quot;</span> <span class="p">:</span> <span class="s2">&quot;grunt&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>For me this is pure awesomeness!</strong></p>
+
+<p>It means not only dropping a global dependency but rather simplifying the whole work and setup flow.</p>
+
+<p>Getting everything up and running is not</p>
+
+<ul>
+<li>installing node (which will install npm also)</li>
+<li>installing dependencies</li>
+<li>installing global dependencies</li>
+<li>and run e.g. Grunt</li>
+</ul>
+
+
+<p>anymore.</p>
+
+<p>It becomes</p>
+
+<ul>
+<li>installing node</li>
+<li>installing dependencies</li>
+<li>and run everything via npm scripts</li>
+</ul>
+
+
+<p>only.</p>
+
+<p>If you want to play around with this I set up an <a href="https://github.com/stefanjudis/npm2-run-scripts-tryout">example repository</a>, which includes Grunt and gulp ready to use without any global installation.</p>
+
+<h3>Sum up</h3>
+
+<p>For me it is clear, that I will drop any project required global dependency that can be installed via npm in the future, because having less global dependencies just means less troubles and quicker setup.</p>
+
+<p>And that is it for now and if you have any comments or ideas on that, please let me know. I hope you enjoyed it. :)</p>
+<div class='octopress-authorbox'>
+	<div class="author-pic">
+		<img src="http://www.gravatar.com/avatar/22725c2d3eb331146549bf0d5d3c050c" alt="Stefan Judis" />
+	</div>
+	
+	<div class="author-about">
+		<h3>Stefan Judis</h3>
+		<p>Frontend lover</p>
+		<ul class="author-links">
+			
+			<li>
+			<a href="http://twitter.com/stefanjudis">@stefanjudis</a>
+			</li>
+			
+			
+		</ul>
+	</div>
+</div></div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-18T20:50:00+02:00" pubdate data-updated="true">Oct 18<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/grunt/'>grunt</a>, <a class='category' href='/blog/categories/gulp/'>gulp</a>, <a class='category' href='/blog/categories/node/'>node</a>, <a class='category' href='/blog/categories/npm/'>npm</a>
+
+
+</div>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> --->
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
+
+    Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = '4waisenkinderde';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://4waisenkinder.github.io/blog/2014/10/18/npm-2-dot-0-and-the-much-better-star-npm-run-star-command/';
+        var disqus_url = 'http://4waisenkinder.github.io/blog/2014/10/18/npm-2-dot-0-and-the-much-better-star-npm-run-star-command/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-41986756-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+</body>
+</html>

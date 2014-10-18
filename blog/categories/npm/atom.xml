@@ -4,7 +4,7 @@
   <title><![CDATA[Category: npm | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/npm/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-14T01:03:07+02:00</updated>
+  <updated>2014-10-19T00:20:08+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -12,6 +12,230 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[NPM 2.0 and how it helps avoiding global dependencies]]></title>
+    <link href="http://4waisenkinder.github.io/blog/2014/10/18/npm-2-dot-0-and-the-much-better-star-npm-run-star-command/"/>
+    <updated>2014-10-18T20:50:00+02:00</updated>
+    <id>http://4waisenkinder.github.io/blog/2014/10/18/npm-2-dot-0-and-the-much-better-star-npm-run-star-command</id>
+    <content type="html"><![CDATA[<p>Today I was listening to the NodeUp <a href="http://nodeup.com/seventy">episode 70</a>, which is all about the <a href="https://www.npmjs.org/package/npm">npm command line client</a>. And there is tons of useful information in this episode. It is all about where npm is at the moment and what the plans are for the future. Especially the recent changes inside of the command line client are a heavy discussed topic and I highly recommend to listen to this episode, when you are dealing with <a href="https://www.npmjs.org/">npm</a> on a daily basis.</p>
+
+<p>One thing that is mentioned and really gets me excited is the change regarding the functionality to run scripts via npm which was introduced in the latest major version of npm &ndash; <a href="http://blog.npmjs.org/post/98131109725/npm-2-0-0">npm@2.0.0</a>.<!-- more --></p>
+
+<p>So let us recover how to run scripts via npm, what has changed in version 2.0.0 and check why this is such a big deal.</p>
+
+<h3>Running scripts via npm</h3>
+
+<p>The configuration file for any project based on node and npm is the <code>package.json</code>. This file includes meta information like name, version and author of the depending project, but also defines all dependencies, which need to be installed via calling <code>npm install</code>. If you are not familiar with this file, there is an excellent <a href="http://browsenpm.org/package.json">interative cheat sheet</a> out there and you may want to check it out.</p>
+
+<p>One thing to notice is that you can also run scripts and execute commands via npm. To do so you can define an optional object as the <code>scripts</code> property inside of the <code>package.json</code> and define your wished commands. <a href="https://twitter.com/substack">@substack</a> wrote a <a href="http://substack.net/task_automation_with_npm_run">great article</a> about how to use this functionality extensively.</p>
+
+<p>There is not much magic about this.</p>
+
+<p>```json
+{
+  &ldquo;name&rdquo;: &ldquo;blog-npm-run-scripts&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;1.0.0&rdquo;,
+  &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
+  &ldquo;scripts&rdquo;: {</p>
+
+<pre><code>"echo" : "echo \"Hello world\""
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>And then you can use <code>npm run</code> to kick it off &ndash; pretty straight forward.</p>
+
+<p>```bash</p>
+
+<blockquote><p>npm run echo</p>
+
+<p><a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#x62;&#x6c;&#111;&#103;&#45;&#110;&#x70;&#x6d;&#x2d;&#114;&#x75;&#110;&#x2d;&#115;&#x63;&#114;&#105;&#112;&#116;&#x73;&#64;&#49;&#46;&#48;&#x2e;&#48;">&#x62;&#108;&#x6f;&#x67;&#x2d;&#110;&#x70;&#x6d;&#45;&#x72;&#x75;&#110;&#x2d;&#115;&#99;&#114;&#105;&#x70;&#116;&#115;&#x40;&#49;&#46;&#48;&#46;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+echo &ldquo;Hello world&rdquo;</p></blockquote>
+
+<p>Hello world
+```</p>
+
+<p>This functionality had one downside so far. It was not able to pass arguments to the <code>npm run</code> command. And that is why you had to hardcode the arguments, which made the whole thing less flexible and harder to use. The only solution for having similar commands with different arguments was to define specific named scripts inside of the <code>package.json</code> including different arguments.</p>
+
+<p>```json
+{
+  &ldquo;name&rdquo;: &ldquo;blog-npm-run-scripts&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;1.0.0&rdquo;,
+  &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
+  &ldquo;scripts&rdquo;: {</p>
+
+<pre><code>"echo_helloWorld" : "echo \"Hello world\"",
+"echo_foo" : "echo \"Foo\""
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h3>Passing arguments to <code>npm run</code></h3>
+
+<p>Since version 2.0.0 it is now possible to pass arguments to the scripts defined in the <code>package.json</code>. And this is a big improvement on flexibility and makes the whole thing much more powerful. The <code>package.json</code> above including two scripts running the <code>echo</code> command can be combined into one and can accept the wished arguments.</p>
+
+<p>```json
+{
+  &ldquo;name&rdquo;: &ldquo;blog-npm-run-scripts&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;1.0.0&rdquo;,
+  &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
+  &ldquo;scripts&rdquo;: {</p>
+
+<pre><code>"echo" : "echo"
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>The syntax to pass arguments to the defined scripts is as follows. You have to use <code>npm run</code> and then devided by two dashes(<code>--</code>) you can pass any arguments you like to the command.</p>
+
+<p>```bash</p>
+
+<blockquote><p>npm run echo &mdash; &ldquo;hello world&rdquo;</p>
+
+<p><a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#58;&#x62;&#108;&#111;&#x67;&#x2d;&#x6e;&#112;&#109;&#x2d;&#114;&#x75;&#x6e;&#45;&#115;&#99;&#114;&#105;&#112;&#x74;&#x73;&#64;&#x31;&#x2e;&#x30;&#46;&#x30;">&#98;&#108;&#x6f;&#x67;&#45;&#x6e;&#x70;&#109;&#45;&#114;&#117;&#110;&#45;&#x73;&#99;&#114;&#105;&#x70;&#116;&#115;&#x40;&#49;&#46;&#48;&#x2e;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+echo &ldquo;hello world&rdquo;</p></blockquote>
+
+<p>hello world
+```</p>
+
+<h3>Setting up Grunt and gulp without the global dependency</h3>
+
+<p>Using the <code>echo</code> command might not seem really useful, but we will come to a much more useful example now. I am doing mostly frontend development and that is why in almost every project that I work on either <a href="http://gruntjs.com/">Grunt</a> or <a href="http://gulpjs.com/">gulp</a> is included. Grunt and gulp are task runners, that come with huge plugin registries to help automate any task you can think of.</p>
+
+<p>When you check the getting started guide of both projects you will find the instruction to install them globally.</p>
+
+<p>```bash</p>
+
+<h1>install gulp globally</h1>
+
+<p>$ npm install -g gulp</p>
+
+<h1>install grunt globally</h1>
+
+<p>$ npm install -g grunt-cli
+```</p>
+
+<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or you process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
+
+<p>So let us have a look how to avoid that. First step is to install the needed modules in our project and not globally anymore.</p>
+
+<p>```</p>
+
+<h1>install gulp in the project</h1>
+
+<p>$ npm install gulp</p>
+
+<h1>install grunt in the project</h1>
+
+<p>$ npm install grunt-cli
+```</p>
+
+<p>By calling <code>npm install</code> npm will install the module and depending, if it has the <a href="http://browsenpm.org/package.json#bin"><code>bin</code></a> property defined, it will create a <code>.bin</code> folder inside of the <code>node_modules</code> folder. This means that this folder will include all defined command line interfaces of your installed modules. In this case the <code>.bin</code> folder includes the binaries <code>gulp</code> and <code>grunt</code>.</p>
+
+<p>```
+node_modules
+  |_  .bin</p>
+
+<pre><code>  |_ gulp
+  |_ grunt
+</code></pre>
+
+<p>```</p>
+
+<p>If you want to use either Grunt or gulp via the <code>npm run</code> command now, you can set them up inside of your <code>package.json</code>.</p>
+
+<p>```json
+{
+  &ldquo;name&rdquo;: &ldquo;blog-npm-run-scripts&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;1.0.0&rdquo;,
+  &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
+  &ldquo;scripts&rdquo;: {</p>
+
+<pre><code>"gulp" : "./node_modules/bin/gulp",
+"grunt" : "./node_modules/bin/grunt"
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>And then you can easily run your defined tasks with npm.</p>
+
+<p>```bash</p>
+
+<h1>run &lsquo;dev&rsquo; task with in project install grunt</h1>
+
+<p>$ npm run grunt &mdash; dev</p>
+
+<h1>run &lsquo;dev&rsquo; task with in project install gulp</h1>
+
+<p>$ npm run gulp &mdash; dev
+```</p>
+
+<p>To make it even a bit nicer npm provides a nifty feature, when setting up custom scripts.</p>
+
+<blockquote><p>Packages that contain a command line interface and are installed locally can be called without a relative path. So instead of doing ./node-modules/.bin/mocha you can directly call mocha.</p></blockquote>
+
+<p>This means, we can make the <code>package.json</code> a bit cleaner.</p>
+
+<p>```json
+{
+  &ldquo;name&rdquo;: &ldquo;blog-npm-run-scripts&rdquo;,
+  &ldquo;version&rdquo;: &ldquo;1.0.0&rdquo;,
+  &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
+  &ldquo;scripts&rdquo;: {</p>
+
+<pre><code>"gulp" : "gulp",
+"grunt" : "grunt"
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p><strong>For me this is pure awesomeness!</strong></p>
+
+<p>It means not only dropping a global dependency but rather simplifying the whole work and setup flow.</p>
+
+<p>Getting everything up and running is not</p>
+
+<ul>
+<li>installing node (which will install npm also)</li>
+<li>installing dependencies</li>
+<li>installing global dependencies</li>
+<li>and run e.g. Grunt</li>
+</ul>
+
+
+<p>anymore.</p>
+
+<p>It becomes</p>
+
+<ul>
+<li>installing node</li>
+<li>installing dependencies</li>
+<li>and run everything via npm scripts</li>
+</ul>
+
+
+<p>only.</p>
+
+<p>If you want to play around with this I set up an <a href="https://github.com/stefanjudis/npm2-run-scripts-tryout">example repository</a>, which includes Grunt and gulp ready to use without any global installation.</p>
+
+<h3>Sum up</h3>
+
+<p>For me it is clear, that I will drop any project required global dependency that can be installed via npm in the future, because having less global dependencies just means less troubles and quicker setup.</p>
+
+<p>And that is it for now and if you have any comments or ideas on that, please let me know. I hope you enjoyed it. :)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Flatten your npm dependencies with dedupe]]></title>
@@ -23,7 +247,7 @@
 <p><code>``
 a
 +-- b &lt;-- depends on c@1.0.x
-|  </code>&mdash; <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#x63;&#64;&#49;&#46;&#x30;&#x2e;&#49;&#48;">&#x63;&#64;&#x31;&#x2e;&#48;&#46;&#49;&#48;</a>
+|  </code>&mdash; <a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#x63;&#64;&#49;&#46;&#x30;&#x2e;&#49;&#x30;">&#x63;&#x40;&#x31;&#46;&#x30;&#x2e;&#49;&#48;</a>
 `&mdash; d &lt;&mdash; depends on c@~1.0.9</p>
 
 <pre><code>`-- c@1.0.10
@@ -50,7 +274,7 @@ a
 
 <p>```</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#58;&#112;&#104;&#97;&#x6e;&#116;&#x6f;&#x6d;&#106;&#115;&#64;&#49;&#x2e;&#x39;&#x2e;&#x37;&#x2d;&#56;">&#x70;&#x68;&#x61;&#110;&#x74;&#111;&#109;&#106;&#115;&#x40;&#49;&#x2e;&#x39;&#x2e;&#x37;&#x2d;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+<blockquote><p><a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#112;&#104;&#97;&#x6e;&#116;&#x6f;&#109;&#106;&#115;&#64;&#49;&#46;&#x39;&#x2e;&#x37;&#45;&#56;">&#112;&#x68;&#97;&#x6e;&#x74;&#x6f;&#109;&#106;&#115;&#x40;&#49;&#x2e;&#x39;&#46;&#55;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
@@ -60,7 +284,7 @@ Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phanto
 Writing location.js file
 Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs</p>
 
-<blockquote><p><a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#x6f;&#58;&#x70;&#104;&#97;&#x6e;&#x74;&#x6f;&#x6d;&#x6a;&#115;&#x40;&#x31;&#x2e;&#x39;&#x2e;&#55;&#x2d;&#56;">&#112;&#104;&#x61;&#x6e;&#x74;&#111;&#x6d;&#106;&#115;&#64;&#x31;&#x2e;&#x39;&#x2e;&#x37;&#45;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+<blockquote><p><a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#112;&#104;&#97;&#x6e;&#x74;&#111;&#109;&#x6a;&#x73;&#64;&#x31;&#46;&#x39;&#x2e;&#x37;&#x2d;&#56;">&#x70;&#x68;&#97;&#x6e;&#x74;&#x6f;&#x6d;&#106;&#x73;&#x40;&#x31;&#46;&#x39;&#46;&#55;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
