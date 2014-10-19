@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Import once in Sass the foundation way"
+title: "Import once in Sass the 'Foundation way'"
 date: 2014-03-06 22:52
 comments: true
 author : stefanjudis
@@ -9,9 +9,9 @@ categories:
 - foundation
 ---
 
-Currently I am working on a huge so called "redesign", which means to make a big ecommerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and nice to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more -->
+Currently I am working on a huge so called "redesign", which means to make a big e-commerce plattform responsive. But it is not only about fiddling a few media queries into some existant CSS. For me that is the perfect opportunity to clean up everything and build up a nice and modular CSS architecture. Each component separated into its own file. Margins, paddings, widths, colors, etc. controlled by a main config file. Maintainable and easy to work with. The tech stack is quite modern, so that I had the perfect basement to do fancy stuff.<!-- more -->
 
-I decided to include the [Foundation front-end framework](http://foundation.zurb.com/) into our stack and started playing around with. No matter, if you want to use all their styles or just a few components (the `block-grid` is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate with your own components.
+I decided to include the [Foundation front-end framework](http://foundation.zurb.com/) into our stack and started playing around with it. No matter, if you want to use all their styles or just a few components (the `block-grid` is awesome by the way) the source code is really worth a look. It is highly configurable and easily to integrate next to your own components.
 
 Any complex system consists of tons of little components. When starting to model them in a CSS architecture multiple dependencies come up rather quickly. [Brad Frost](https://twitter.com/brad_frost) describes this principle really good in his article [Atomic Design](http://bradfrostweb.com/blog/post/atomic-web-design/). Basically it's really simple.
 
@@ -56,7 +56,7 @@ Generated file : *styles.css*
 
 ```
 
-Sass will now include the same file twice and you end up with a doubled set of CSS rules in your generated Stylesheet. The more components you have, the worse it gets. Talking about this problem my friend [Tomasz](https://twitter.com/stryju) pointed me to the direction of a [Foundation mixin](https://github.com/zurb/foundation/blob/master/scss/foundation/_functions.scss#L8) solving exactly this use case.
+Sass will now include the same file twice and you end up with a doubled set of CSS rules in your generated Stylesheet. The more components you have, the worse it gets. Talking about this problem my friend [Tomasz](https://google.com/+TomaszStryjewski) pointed me to the direction of a [Foundation mixin](https://github.com/zurb/foundation/blob/master/scss/foundation/_functions.scss#L8) solving exactly this use case.
 
 ```css
 // IMPORT ONCE
@@ -88,7 +88,7 @@ After that a [mixin](http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 This mixin now accepts one argument which represents the actual name of the component. It is used to "register" new code.
 First of all it checks if there was already a component (or whatever valid Sass code you like) with the same name included in `$modules`using the [index](http://sass-lang.com/documentation/Sass/Script/Functions.html#index-instance_method) function provided by Sass lists.
 
-**Side node** : `index` either returns the index of the value or `false`.
+**Side note** : `index` either returns the index of the value or `false`.
 
 If the name of the snippet is not included inside of the list it includes the particalar code and [appends](http://sass-lang.com/documentation/Sass/Script/Functions.html#append-instance_method) a new value to `$modules`.
 If the name is already inside of the `$modules` list it just ignores it and prevents including the same code multiple times by just doing nothing and going on.
@@ -137,7 +137,8 @@ Generated file : *styles.css*
 }
 ```
 
-And problem solved. I generally do not use Sass for logical mixins or similar, but this shows perfectly how much power to do fancy stuff is included. I definetely have to dig deeper into that. ;)
+Problem solved. :)
+I generally do not use Sass for logical mixins or similar, but this shows perfectly what is possible. I definitely have to dig deeper into that. ;)
 
 In my case of the "redesign" I wrapped all my components using this mixin and it works pretty well with ~30 components included in different stylesheets. Maybe that will help someone dealing with a lot of components. ;)
 

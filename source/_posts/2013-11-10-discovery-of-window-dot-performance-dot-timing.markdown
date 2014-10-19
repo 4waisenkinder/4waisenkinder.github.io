@@ -9,7 +9,7 @@ categories:
 - javascript
 ---
 
-A few days ago I was at the [Developer Conference Hamburg](http://www.developer-conference.eu/). Topics of the talks were nearly everything you could think of ( from Java to PHP to JavaScript and much more ). For me only frontend related talks were important and that was why I attended the talk of [Alois Reitbauer](https://twitter.com/AloisReitbauer) with the title "W3C Web Performance - A detailed overview" ( slides of his talk can be found [here](http://de.slideshare.net/AloisReitbauer/w3c-web-performance-a-detailed-overview) ).
+A few days ago I was attending the [Developer Conference Hamburg](http://www.developer-conference.eu/). Topics of the talks were nearly everything you could think of ( from Java to PHP to JavaScript and much more ). For me only frontend related talks were important and that was why I attended the talk of [Alois Reitbauer](https://twitter.com/AloisReitbauer) with the title "W3C Web Performance - A detailed overview" ( slides of his talk can be found [here](http://de.slideshare.net/AloisReitbauer/w3c-web-performance-a-detailed-overview) ).
 
 And well, what should I say? He introduced the ```window.performance``` object to the audience and that absolutely blew my mind, <!-- more -->because there is really a lot of useful stuff in there and I did not know, that there was such an object available in the global window scope.
 
