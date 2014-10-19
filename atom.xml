@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-19T10:43:51+02:00</updated>
+  <updated>2014-10-19T14:34:06+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -22,7 +22,7 @@
 
 <p>One thing that is mentioned and really gets me excited is the change regarding the functionality to run scripts via npm which was introduced in the latest major version of npm &ndash; <a href="http://blog.npmjs.org/post/98131109725/npm-2-0-0">npm@2.0.0</a>.<!-- more --></p>
 
-<p>So let us recover how to run scripts via npm, have a loot at what has changed in version 2.0.0 and check why this is such a big deal.</p>
+<p>So let us reassess how to run scripts via npm, have a look at what has changed in version 2.0.0 and check why this is such a big deal.</p>
 
 <h3>Running scripts via npm</h3>
 
