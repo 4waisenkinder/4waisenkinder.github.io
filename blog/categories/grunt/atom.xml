@@ -4,7 +4,7 @@
   <title><![CDATA[Category: grunt | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/grunt/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-19T00:22:12+02:00</updated>
+  <updated>2014-10-19T10:43:51+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -26,7 +26,7 @@
 
 <h3>Running scripts via npm</h3>
 
-<p>The configuration file for any project based on node and npm is the <code>package.json</code>. This file includes meta information like name, version and author of the depending project, but also defines all dependencies, which need to be installed via calling <code>npm install</code>. If you are not familiar with this file, there is an excellent <a href="http://browsenpm.org/package.json">interative cheat sheet</a> out there and you may want to check it out.</p>
+<p>The configuration file for any project based on node and npm is the <code>package.json</code>. This file includes meta information like name, version and author of the depending project, but also defines all dependencies, which need to be installed via calling <code>npm install</code>. If you are not familiar with this file, there is an excellent <a href="http://browsenpm.org/package.json">interactive cheat sheet</a> out there and you may want to check it out.</p>
 
 <p>One thing to notice is that you can also run scripts and execute commands via npm. To do so you can define an optional object as the <code>scripts</code> property inside of the <code>package.json</code> and define your wished commands. <a href="https://twitter.com/substack">@substack</a> wrote a <a href="http://substack.net/task_automation_with_npm_run">great article</a> about how to use this functionality extensively.</p>
 
@@ -52,7 +52,7 @@
 
 <blockquote><p>npm run echo</p>
 
-<p><a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#98;&#108;&#111;&#103;&#45;&#x6e;&#x70;&#x6d;&#45;&#114;&#117;&#x6e;&#45;&#115;&#99;&#114;&#105;&#112;&#116;&#115;&#64;&#49;&#x2e;&#x30;&#46;&#48;">&#x62;&#x6c;&#111;&#x67;&#x2d;&#110;&#112;&#109;&#x2d;&#114;&#x75;&#110;&#x2d;&#x73;&#99;&#x72;&#105;&#112;&#x74;&#x73;&#64;&#49;&#x2e;&#x30;&#46;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x6c;&#111;&#103;&#45;&#x6e;&#112;&#109;&#45;&#114;&#x75;&#110;&#x2d;&#115;&#99;&#x72;&#x69;&#x70;&#116;&#x73;&#64;&#x31;&#x2e;&#48;&#x2e;&#48;">&#x62;&#108;&#x6f;&#103;&#45;&#x6e;&#x70;&#109;&#45;&#114;&#x75;&#110;&#45;&#x73;&#99;&#x72;&#x69;&#x70;&#116;&#115;&#x40;&#x31;&#x2e;&#x30;&#46;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <p>Hello world
@@ -99,7 +99,7 @@ echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <blockquote><p>npm run echo &mdash; &ldquo;hello world&rdquo;</p>
 
-<p><a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#98;&#x6c;&#111;&#x67;&#x2d;&#110;&#112;&#x6d;&#45;&#114;&#117;&#x6e;&#45;&#x73;&#99;&#114;&#x69;&#x70;&#x74;&#x73;&#64;&#49;&#x2e;&#48;&#x2e;&#x30;">&#x62;&#108;&#x6f;&#x67;&#x2d;&#110;&#112;&#109;&#x2d;&#114;&#117;&#x6e;&#x2d;&#115;&#x63;&#114;&#105;&#x70;&#x74;&#115;&#x40;&#49;&#x2e;&#48;&#x2e;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#98;&#x6c;&#111;&#103;&#x2d;&#110;&#112;&#x6d;&#45;&#114;&#x75;&#x6e;&#45;&#115;&#x63;&#x72;&#105;&#x70;&#116;&#x73;&#64;&#49;&#x2e;&#x30;&#46;&#48;">&#x62;&#108;&#111;&#103;&#x2d;&#110;&#112;&#x6d;&#45;&#x72;&#117;&#110;&#45;&#115;&#99;&#x72;&#x69;&#112;&#x74;&#115;&#64;&#49;&#x2e;&#48;&#x2e;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;hello world&rdquo;</p></blockquote>
 
 <p>hello world
