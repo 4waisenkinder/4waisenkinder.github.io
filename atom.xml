@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-19T14:34:06+02:00</updated>
+  <updated>2014-10-21T18:48:27+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -192,8 +192,8 @@
 </span><span class='line'>  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
 </span><span class='line'>  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Show of the new npm run command&quot;</span><span class="p">,</span>
 </span><span class='line'>  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;gulp&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/bin/gulp&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;grunt&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/bin/grunt&quot;</span>
+</span><span class='line'>    <span class="nt">&quot;gulp&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/.bin/gulp&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;grunt&quot;</span> <span class="p">:</span> <span class="s2">&quot;./node_modules/.bin/grunt&quot;</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -212,9 +212,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>To make it even a bit nicer npm provides a nifty feature, when setting up custom scripts.</p>
+<p><strong>But wait, it comes even better!</strong></p>
 
-<blockquote><p>Packages that contain a command line interface and are installed locally can be called without a relative path. So instead of doing ./node-modules/.bin/mocha you can directly call mocha.</p></blockquote>
+<p>To make it a bit nicer npm provides a nifty feature, when setting up custom scripts. It puts <code>./node_modules/.bin</code> in the <code>PATH</code> environment, when it executes the script.</p>
 
 <p>This means, we can make the <code>package.json</code> a bit cleaner.</p>
 

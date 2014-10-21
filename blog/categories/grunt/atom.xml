@@ -4,7 +4,7 @@
   <title><![CDATA[Category: grunt | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/grunt/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-19T14:34:06+02:00</updated>
+  <updated>2014-10-21T18:48:27+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -52,7 +52,7 @@
 
 <blockquote><p>npm run echo</p>
 
-<p><a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x62;&#x6c;&#x6f;&#103;&#x2d;&#110;&#x70;&#109;&#x2d;&#x72;&#117;&#x6e;&#45;&#115;&#99;&#x72;&#105;&#x70;&#116;&#115;&#64;&#x31;&#46;&#48;&#x2e;&#x30;">&#98;&#x6c;&#x6f;&#x67;&#x2d;&#110;&#x70;&#109;&#45;&#114;&#x75;&#x6e;&#45;&#115;&#99;&#x72;&#x69;&#112;&#x74;&#x73;&#64;&#x31;&#x2e;&#48;&#46;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#x62;&#x6c;&#x6f;&#x67;&#45;&#x6e;&#112;&#109;&#45;&#x72;&#x75;&#110;&#x2d;&#x73;&#x63;&#x72;&#x69;&#112;&#116;&#115;&#x40;&#49;&#46;&#x30;&#x2e;&#48;">&#98;&#108;&#x6f;&#x67;&#45;&#x6e;&#112;&#x6d;&#45;&#114;&#117;&#110;&#45;&#115;&#x63;&#114;&#105;&#x70;&#x74;&#x73;&#64;&#49;&#46;&#x30;&#46;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <p>Hello world
@@ -99,7 +99,7 @@ echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <blockquote><p>npm run echo &mdash; &ldquo;hello world&rdquo;</p>
 
-<p><a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#98;&#x6c;&#111;&#103;&#45;&#110;&#112;&#109;&#x2d;&#x72;&#x75;&#110;&#45;&#115;&#x63;&#114;&#x69;&#x70;&#116;&#x73;&#64;&#x31;&#x2e;&#x30;&#x2e;&#x30;">&#x62;&#108;&#111;&#103;&#x2d;&#110;&#x70;&#x6d;&#45;&#x72;&#x75;&#110;&#45;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#115;&#64;&#49;&#x2e;&#48;&#x2e;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#108;&#x6f;&#x67;&#45;&#110;&#x70;&#109;&#x2d;&#x72;&#117;&#x6e;&#45;&#115;&#99;&#x72;&#x69;&#x70;&#116;&#x73;&#x40;&#x31;&#x2e;&#x30;&#46;&#48;">&#98;&#x6c;&#111;&#x67;&#x2d;&#110;&#x70;&#109;&#x2d;&#x72;&#x75;&#110;&#x2d;&#115;&#x63;&#x72;&#x69;&#112;&#116;&#x73;&#x40;&#x31;&#x2e;&#x30;&#x2e;&#48;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;hello world&rdquo;</p></blockquote>
 
 <p>hello world
@@ -158,8 +158,8 @@ node_modules
   &ldquo;description&rdquo;: &ldquo;Show of the new npm run command&rdquo;,
   &ldquo;scripts&rdquo;: {</p>
 
-<pre><code>"gulp" : "./node_modules/bin/gulp",
-"grunt" : "./node_modules/bin/grunt"
+<pre><code>"gulp" : "./node_modules/.bin/gulp",
+"grunt" : "./node_modules/.bin/grunt"
 </code></pre>
 
 <p>  }
@@ -179,9 +179,9 @@ node_modules
 <p>$ npm run gulp &mdash; dev
 ```</p>
 
-<p>To make it even a bit nicer npm provides a nifty feature, when setting up custom scripts.</p>
+<p><strong>But wait, it comes even better!</strong></p>
 
-<blockquote><p>Packages that contain a command line interface and are installed locally can be called without a relative path. So instead of doing ./node-modules/.bin/mocha you can directly call mocha.</p></blockquote>
+<p>To make it a bit nicer npm provides a nifty feature, when setting up custom scripts. It puts <code>./node_modules/.bin</code> in the <code>PATH</code> environment, when it executes the script.</p>
 
 <p>This means, we can make the <code>package.json</code> a bit cleaner.</p>
 
