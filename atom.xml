@@ -4,7 +4,7 @@
   <title><![CDATA[4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-21T18:48:27+02:00</updated>
+  <updated>2014-10-21T18:50:33+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -148,7 +148,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or you process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
+<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or your process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
 
 <p>So let us have a look how to avoid that. First step is to install the needed modules in our project and not globally anymore.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: node | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/node/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2014-10-21T18:48:27+02:00</updated>
+  <updated>2014-10-21T18:50:33+02:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -52,7 +52,7 @@
 
 <blockquote><p>npm run echo</p>
 
-<p><a href="&#109;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#x62;&#108;&#x6f;&#x67;&#x2d;&#110;&#x70;&#109;&#x2d;&#x72;&#x75;&#x6e;&#x2d;&#x73;&#99;&#x72;&#x69;&#112;&#116;&#115;&#x40;&#49;&#x2e;&#x30;&#46;&#48;">&#x62;&#x6c;&#111;&#103;&#45;&#x6e;&#x70;&#x6d;&#x2d;&#114;&#x75;&#110;&#x2d;&#115;&#x63;&#114;&#x69;&#112;&#x74;&#115;&#x40;&#49;&#46;&#48;&#x2e;&#x30;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x62;&#108;&#x6f;&#103;&#45;&#x6e;&#112;&#109;&#45;&#x72;&#117;&#x6e;&#45;&#x73;&#99;&#114;&#x69;&#x70;&#x74;&#115;&#x40;&#49;&#x2e;&#48;&#46;&#x30;">&#98;&#108;&#x6f;&#103;&#x2d;&#110;&#112;&#109;&#45;&#114;&#117;&#110;&#45;&#115;&#x63;&#x72;&#x69;&#112;&#116;&#115;&#64;&#x31;&#x2e;&#x30;&#46;&#48;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <p>Hello world
@@ -99,7 +99,7 @@ echo &ldquo;Hello world&rdquo;</p></blockquote>
 
 <blockquote><p>npm run echo &mdash; &ldquo;hello world&rdquo;</p>
 
-<p><a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#58;&#x62;&#108;&#111;&#103;&#x2d;&#x6e;&#x70;&#x6d;&#x2d;&#x72;&#117;&#x6e;&#x2d;&#x73;&#x63;&#x72;&#105;&#x70;&#x74;&#x73;&#x40;&#x31;&#46;&#48;&#x2e;&#48;">&#98;&#x6c;&#x6f;&#103;&#x2d;&#110;&#112;&#x6d;&#45;&#x72;&#x75;&#110;&#45;&#115;&#x63;&#x72;&#x69;&#112;&#116;&#115;&#64;&#49;&#x2e;&#x30;&#x2e;&#48;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
+<p><a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x62;&#x6c;&#111;&#x67;&#45;&#x6e;&#x70;&#109;&#x2d;&#x72;&#x75;&#x6e;&#x2d;&#115;&#x63;&#x72;&#105;&#x70;&#x74;&#115;&#64;&#49;&#46;&#48;&#x2e;&#x30;">&#x62;&#x6c;&#x6f;&#103;&#45;&#x6e;&#x70;&#x6d;&#45;&#x72;&#117;&#110;&#45;&#x73;&#x63;&#x72;&#105;&#112;&#x74;&#x73;&#x40;&#x31;&#46;&#48;&#x2e;&#48;</a> echo /Users/stefan/Sites/blog-npm-run-scripts
 echo &ldquo;hello world&rdquo;</p></blockquote>
 
 <p>hello world
@@ -122,7 +122,7 @@ echo &ldquo;hello world&rdquo;</p></blockquote>
 <p>$ npm install -g grunt-cli
 ```</p>
 
-<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or you process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
+<p>This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or your process includes a <a href="http://www.martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.</p>
 
 <p>So let us have a look how to avoid that. First step is to install the needed modules in our project and not globally anymore.</p>
 
@@ -247,7 +247,7 @@ node_modules
 <p><code>``
 a
 +-- b &lt;-- depends on c@1.0.x
-|  </code>&mdash; <a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x63;&#x40;&#49;&#x2e;&#x30;&#x2e;&#x31;&#48;">&#99;&#x40;&#49;&#46;&#x30;&#x2e;&#49;&#x30;</a>
+|  </code>&mdash; <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#99;&#64;&#x31;&#x2e;&#x30;&#46;&#x31;&#x30;">&#99;&#x40;&#x31;&#x2e;&#x30;&#46;&#49;&#x30;</a>
 `&mdash; d &lt;&mdash; depends on c@~1.0.9</p>
 
 <pre><code>`-- c@1.0.10
@@ -274,7 +274,7 @@ a
 
 <p>```</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#112;&#104;&#x61;&#x6e;&#x74;&#x6f;&#109;&#106;&#115;&#x40;&#49;&#x2e;&#57;&#x2e;&#55;&#45;&#56;">&#112;&#104;&#97;&#x6e;&#116;&#111;&#109;&#x6a;&#x73;&#64;&#x31;&#x2e;&#57;&#x2e;&#x37;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
+<blockquote><p><a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#112;&#104;&#x61;&#x6e;&#116;&#111;&#x6d;&#x6a;&#115;&#x40;&#49;&#x2e;&#x39;&#x2e;&#55;&#45;&#x38;">&#112;&#x68;&#x61;&#x6e;&#x74;&#x6f;&#109;&#106;&#115;&#x40;&#49;&#46;&#x39;&#46;&#x37;&#x2d;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
@@ -284,7 +284,7 @@ Copying extracted folder /var/folders/03/cgg2bwfd6j92tfllylt5b91m0000gn/T/phanto
 Writing location.js file
 Done. Phantomjs binary available at /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs</p>
 
-<blockquote><p><a href="&#109;&#97;&#x69;&#108;&#116;&#x6f;&#x3a;&#112;&#104;&#x61;&#110;&#116;&#x6f;&#109;&#106;&#115;&#64;&#x31;&#46;&#x39;&#46;&#x37;&#45;&#56;">&#x70;&#x68;&#97;&#110;&#116;&#x6f;&#109;&#x6a;&#115;&#x40;&#x31;&#46;&#57;&#x2e;&#x37;&#45;&#56;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
+<blockquote><p><a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#112;&#x68;&#97;&#x6e;&#x74;&#111;&#x6d;&#x6a;&#x73;&#64;&#49;&#46;&#x39;&#x2e;&#55;&#x2d;&#56;">&#x70;&#104;&#x61;&#x6e;&#x74;&#111;&#x6d;&#x6a;&#x73;&#x40;&#x31;&#x2e;&#x39;&#x2e;&#55;&#45;&#x38;</a> install /Users/stefan/Sites/blog-npm-dedupe/node_modules/grunt-phantomas/node_modules/phantomas/node_modules/phantomjs
 node install.js</p></blockquote>
 
 <p>PhantomJS detected, but wrong version 1.9.2 @ /opt/local/bin/phantomjs.
