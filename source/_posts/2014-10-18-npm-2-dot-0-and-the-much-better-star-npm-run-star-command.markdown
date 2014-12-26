@@ -100,7 +100,7 @@ $ npm install -g gulp
 $ npm install -g grunt-cli
 ```
 
-This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or you process includes a [continuous integration](http://www.martinfowler.com/articles/continuousIntegration.html) system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.
+This is absolutely fine when you are working alone and these tools are only supposed to be executed on your machine. But when you work together with other colleagues on a project or your process includes a [continuous integration](http://www.martinfowler.com/articles/continuousIntegration.html) system, then every global dependency can be quite troublesome. It simply moves the entry barrier a bit higher and increases the complexity to get everything up and running.
 
 So let us have a look how to avoid that. First step is to install the needed modules in our project and not globally anymore.
 
@@ -128,8 +128,8 @@ If you want to use either Grunt or gulp via the `npm run` command now, you can s
   "version": "1.0.0",
   "description": "Show of the new npm run command",
   "scripts": {
-    "gulp" : "./node_modules/bin/gulp",
-    "grunt" : "./node_modules/bin/grunt"
+    "gulp" : "./node_modules/.bin/gulp",
+    "grunt" : "./node_modules/.bin/grunt"
   }
 }
 ```
@@ -143,9 +143,9 @@ $ npm run grunt -- dev
 $ npm run gulp -- dev
 ```
 
-To make it even a bit nicer npm provides a nifty feature, when setting up custom scripts.
+**But wait, it comes even better!**
 
-> Packages that contain a command line interface and are installed locally can be called without a relative path. So instead of doing ./node-modules/.bin/mocha you can directly call mocha.
+To make it a bit nicer npm provides a nifty feature, when setting up custom scripts. It puts `./node_modules/.bin` in the `PATH` environment, when it executes the script.
 
 This means, we can make the `package.json` a bit cleaner.
 
