@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rwd | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/rwd/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2015-01-03T15:16:38+01:00</updated>
+  <updated>2015-01-03T17:52:59+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -20,7 +20,7 @@
     <id>http://4waisenkinder.github.io/blog/2014/12/26/handle-environment-changes-via-window-dot-matchmedia</id>
     <content type="html"><![CDATA[<p>I was at my parents place over Christmas. Besides eating the whole day and playing board games I tried to read two books I brought with me.</p>
 
-<p>One of the books was <a href="http://www.abookapart.com/products/responsible-responsive-design">RESPONSIBLE RESPONSIVE DESIGN</a> by <a href="https://twitter.com/scottjehl">Scott Jehl</a>. It was released recently and it is a really good read. I did not finish it yet, but I enjoy it pretty much and it is for sure in the TOP5 list of my favourite books about responsive web design.</p>
+<p>One of the books was <a href="http://www.abookapart.com/products/responsible-responsive-design">RESPONSIBLE RESPONSIVE DESIGN</a> by <a href="https://twitter.com/scottjehl">Scott Jehl</a>. It was released recently and it is a really good read. I have not finished it yet, but I enjoy it and it is for sure in the TOP5 list of my favourite books about responsive web design.</p>
 
 <!-- more -->
 
@@ -29,23 +29,23 @@
 
 <p>If you are interested in what may come in the future the spec for <a href="http://dev.w3.org/csswg/mediaqueries4">Media Queries Level 4</a> is quite interesting &ndash; check out the spec for <a href="http://dev.w3.org/csswg/mediaqueries4/#light-level">light-level</a>. ;)</p>
 
-<p>Media queries are mostly used inside of the CSS files to adapt the styling to the particular device the visitor is using. And this makes total sense, but responsive web design should not be only about &ldquo;making it look pretty&rdquo;.</p>
+<p>Media queries are mostly used inside of the CSS files to adapt the styling to the particular device the visitor is using. This makes total sense, but responsive web design should not be only about &ldquo;making it look pretty&rdquo;.</p>
 
-<h4>It should also be about using and initializing only needed things.</h4>
+<h4>It should also be about only using and initializing needed components.</h4>
 
 <p>At my last job I was working with <a href="http://foundation.zurb.com/">Foundation</a> a lot. And I really loved it. The <a href="http://foundation.zurb.com/docs/components/block_grid.html">block grid</a> is awesome! And also the <a href="http://foundation.zurb.com/docs/components/offcanvas.html">Off-canvas implementation</a> is quite nice in my opinion.</p>
 
 <p>The only thing that always bothered me about the implementations in famous frameworks like <a href="http://getbootstrap.com/">Bootstrap</a> and <a href="http://foundation.zurb.com/">Foundation</a> is that the scripts and modules used for smaller devices are also executed on larger devices and vice versa.</p>
 
-<p>No matter if the modules and their functionality are needed or not. The given code is executed and all event handlers are still bound. These event handlers will not be triggered in a lot of cases, because the given DOM elements connected to the functionality are hidden via CSS in several environment combinations.</p>
+<p>No matter if the modules and their functionality are needed or not, the given code is executed and all event handlers are still bound. These event handlers will not be triggered in a lot of cases, because the given DOM elements connected to the functionality are hidden via CSS in several environment combinations.</p>
 
-<p>When having a look at the navigation solutions for smaller devices in both projects you will see, that the JavaScript modules to guarantee a good experience on smaller devices are initialized and event handlers are bound for no reason &ndash; no matter if they are needed or not. For me this is a simple waste of CPU and not needed at all.</p>
+<p>When having a look at navigation solutions for smaller devices in both projects you will see that the JavaScript modules to guarantee a good experience on smaller devices are initialized and event handlers are bound for no reason &ndash; regardless of whether they are needed. This is a simple waste of CPU and not needed at all.</p>
 
 <p><img class="center" src="/images/blog/stefanjudis/mobileNavigationOnDesktop.jpg" width="600" height="324" title="&lsquo;Mobile event handlers still bound on larger devices&rsquo; &lsquo;Mobile event handlers still bound on larger devices&rsquo;" ></p>
 
-<p>There are a lot of discussions on the subject what to serve to our customers held talking about feature detection and custom builds, but not every project has enough time and resources to implement complicated build systems.</p>
+<p>There is a lot of discussion regarding what to serve to a customer in terms of feature detection and custom builds, but not every project has enough time and resources to implement complicated build systems.</p>
 
-<p>Nevertheless the fact that modules are initialized for &ldquo;nothing&rdquo; is something I really do not like. And this is why I started to initialize given modules only when needed. A custom build of <a href="http://modernizr.com/">Modernizr</a> is usually included in my projects so that the handy <code>Modernizr.mq</code> function is mostly used to not initialize things that are not needed at all.</p>
+<p>This is why I started to initialize given modules only when needed. A custom build of <a href="http://modernizr.com/">Modernizr</a> is usually included in my projects so that the handy <code>Modernizr.mq</code> function is largely used to not initialize things that are not needed at all.</p>
 
 <p><code>javascript
 // only initialize the off-canvas
@@ -58,7 +58,7 @@ if ( Modernizr.mq( '(max-width: 50em)' ) ) {
 
 <h3><code>Modernizr.mq</code> &ndash; how does it work?</h3>
 
-<p>But let us have a look at how this function works. The functionality is defined in <a href="https://github.com/Modernizr/Modernizr/blob/master/src/mq.js">mq.js</a> and <a href="https://github.com/Modernizr/Modernizr/blob/master/src/testMediaQuery.js">testMediaQuery.js</a>.</p>
+<p>Let us have a look at how this function works. The functionality is defined in <a href="https://github.com/Modernizr/Modernizr/blob/master/src/mq.js">mq.js</a> and <a href="https://github.com/Modernizr/Modernizr/blob/master/src/testMediaQuery.js">testMediaQuery.js</a>.</p>
 
 <p>```javascript
 // &ndash;> testMediaQuery.js
@@ -99,9 +99,9 @@ return function ( mq ) {
 
 <h3><code>window.matchMedia</code> &ndash; so what?</h3>
 
-<p><code>matchMedia</code> provides the functionality to check media queries on the JavaScript side. And the great thing about it is, that it is actual quite good supported according to <a href="http://caniuse.com/#feat=matchmedia">caniuse.com</a>.</p>
+<p><code>matchMedia</code> provides the functionality to check media queries on the JavaScript side. And the great thing about it is, that it is actual quite widely supported according to <a href="http://caniuse.com/#feat=matchmedia">caniuse.com</a>.</p>
 
-<p><code>Modernizr.mq</code> already gives us support to get the information whether the given media query is matching or not. One key thing to watch out here is, that <code>matchMedia</code> does not return a boolean value to work with. Instead it returns a <a href="http://dev.w3.org/csswg/cssom-view/#the-mediaquerylist-interface">MediaQueryList Interface</a>.</p>
+<p><code>Modernizr.mq</code> already gives us support to get information on whether the given media query is matching or not. One key thing to watch out here is, that <code>matchMedia</code> does not return a boolean value to work with &ndash; nstead it returns a <a href="http://dev.w3.org/csswg/cssom-view/#the-mediaquerylist-interface">MediaQueryList Interface</a>.</p>
 
 <p>The information holding the information if the media query matches is stored inside of the property <code>matches</code>.</p>
 
@@ -127,7 +127,7 @@ return function ( mq ) {
 } )( window, document );
 ```</p>
 
-<p>This is already great &ndash; because this way we can easily evaluate if a particular JavaScript module needs to be initialized or not. But what about the case of changing environments like a  changed viewport from portrait to landscape mode? This is something I am struggling with for a while already &ndash; and while reading Scott Jehl&rsquo;s book I just came across a super neat solution.</p>
+<p>This is already great because this way we can easily evaluate if a particular JavaScript module needs to be initialized or not. But what about the case of changing environments like a  changed viewport from portrait to landscape mode? This is something I have been struggling with for a while already &ndash; and while reading Scott Jehl&rsquo;s book I just came across a super neat solution.</p>
 
 <p>I already read a lot of articles about <code>matchMedia</code>, but I did not know before that it provides more than just the matches property.</p>
 
@@ -173,11 +173,11 @@ container.appendChild( paragraph );
 } )( window, document );
 ```</p>
 
-<p>This is exactly what I was looking for a while, because it gives an easy way to enhance an interface on changing environments on the fly and save resources at the beginning.</p>
+<p>This is exactly what I was looking for a while, it gives an easy way to enhance an interface on changing environments on the fly and save resources from the beginning.</p>
 
 <p>If you want to play around with it I created a <a href="http://codepen.io/stefanjudis/pen/qEaxKR">pen</a> for you to play around with.</p>
 
-<p>And this is it for today &ndash; I hope you enjoyed the short read. Any ideas and comments on this are more than welcome. :)</p>
+<p>And this is it for today &ndash; I hope you enjoyed the short read. Any ideas and comments are more than welcome. :)</p>
 ]]></content>
   </entry>
   
