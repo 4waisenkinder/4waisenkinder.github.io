@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rwd | 4waisenkinder]]></title>
   <link href="http://4waisenkinder.github.io/blog/categories/rwd/atom.xml" rel="self"/>
   <link href="http://4waisenkinder.github.io/"/>
-  <updated>2015-01-03T17:52:59+01:00</updated>
+  <updated>2015-01-03T18:24:07+01:00</updated>
   <id>http://4waisenkinder.github.io/</id>
   <author>
     <name><![CDATA[Stefan Judis, Patrick Venetz, André Kussmann, Bernhard Weisshuhn]]></name>
@@ -101,9 +101,9 @@ return function ( mq ) {
 
 <p><code>matchMedia</code> provides the functionality to check media queries on the JavaScript side. And the great thing about it is, that it is actual quite widely supported according to <a href="http://caniuse.com/#feat=matchmedia">caniuse.com</a>.</p>
 
-<p><code>Modernizr.mq</code> already gives us support to get information on whether the given media query is matching or not. One key thing to watch out here is, that <code>matchMedia</code> does not return a boolean value to work with &ndash; nstead it returns a <a href="http://dev.w3.org/csswg/cssom-view/#the-mediaquerylist-interface">MediaQueryList Interface</a>.</p>
+<p><code>Modernizr.mq</code> already gives us support to get information on whether the given media query is matching or not. One key thing to watch out here is, that <code>matchMedia</code> does not return a boolean value to work with &ndash; instead it returns a <a href="http://dev.w3.org/csswg/cssom-view/#the-mediaquerylist-interface">MediaQueryList Interface</a>.</p>
 
-<p>The information holding the information if the media query matches is stored inside of the property <code>matches</code>.</p>
+<p>The information if the media query matches is stored inside of the property <code>matches</code>.</p>
 
 <p>```javascript
 ( function( window, document ) {
@@ -129,7 +129,7 @@ return function ( mq ) {
 
 <p>This is already great because this way we can easily evaluate if a particular JavaScript module needs to be initialized or not. But what about the case of changing environments like a  changed viewport from portrait to landscape mode? This is something I have been struggling with for a while already &ndash; and while reading Scott Jehl&rsquo;s book I just came across a super neat solution.</p>
 
-<p>I already read a lot of articles about <code>matchMedia</code>, but I did not know before that it provides more than just the matches property.</p>
+<p>I already read a lot of articles about <code>matchMedia</code>, but I did not know before that it provides more than just the <code>matches</code> property.</p>
 
 <p>The returned <code>MediaQueryList Interface</code> also provides the ability to attach listeners to the moment whenever the media query changes from matching to not matching or the other way around.</p>
 
